@@ -29,6 +29,7 @@ import PriceChangeIcon from '@mui/icons-material/PriceChange';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 
 export const SideNavigation = () => {
   const navigate = useNavigate();
@@ -124,19 +125,19 @@ export const SideNavigation = () => {
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }} onClick={() => navigate('/assets')}>
               <ListItemIcon>
-                <AccountBalanceIcon />
+                <MapsHomeWorkIcon />
               </ListItemIcon>
               <ListItemText primary="자산 목록" />
             </ListItemButton>
             <ListItemButton sx={{ pl: 4 }} onClick={() => navigate('/income')}>
               <ListItemIcon>
-                <TrendingUpIcon />
+              <PriceChangeIcon />
               </ListItemIcon>
               <ListItemText primary="소득" />
             </ListItemButton>
             <ListItemButton sx={{ pl: 4 }} onClick={() => navigate('/investments')}>
               <ListItemIcon>
-                <PriceChangeIcon />
+              <TrendingUpIcon />
               </ListItemIcon>
               <ListItemText primary="투자" />
             </ListItemButton>
@@ -145,6 +146,12 @@ export const SideNavigation = () => {
                 <LocalAtmIcon />
               </ListItemIcon>
               <ListItemText primary="대출" />
+            </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }} onClick={() => navigate('/taxes')}>
+              <ListItemIcon>
+                <AssessmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="세금" />
             </ListItemButton>
           </List>
         </Collapse>

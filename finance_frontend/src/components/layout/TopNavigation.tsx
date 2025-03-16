@@ -1,12 +1,14 @@
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 export const TopNavigation = () => {
-  const location = useLocation();
   const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
 
-  const isActive = (path: string) => {
-    return location.pathname === path;
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -15,13 +17,23 @@ export const TopNavigation = () => {
         <Typography variant="h6" component="div" sx={{ flexGrow: 0, mr: 4 }}>
           Financial Management
         </Typography>
-        <Box sx={{ flexGrow: 1 }}>    
-          <Button
-            onClick={() => navigate('/taxes')}
-            color={isActive('/taxes') ? 'primary' : 'inherit'}
-          >
-            세금
-          </Button>
+        <Box>
+          {isAuthenticated ? (
+            <Button 
+              color="inherit" 
+              onClick={handleLogout}
+            >
+              로그아웃
+            </Button>
+          ) : (
+            <Button 
+              color="primary" 
+              variant="contained"
+              onClick={() => navigate('/login')}
+            >
+              로그인
+            </Button>
+          )}
         </Box>
       </Toolbar>
     </AppBar>
