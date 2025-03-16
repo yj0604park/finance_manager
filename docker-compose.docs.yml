@@ -1,0 +1,16 @@
+services:
+  docs:
+    image: finance_backend_local_docs
+    container_name: finance_backend_local_docs
+    build:
+      context: .
+      dockerfile: ./compose/local/docs/Dockerfile
+    env_file:
+      - ./.envs/.local/.django
+    volumes:
+      - ./finance_backend/docs:/docs:z
+      - ./finance_backend/config:/app/config:z
+      - ./finance_backend/finance_backend:/app/finance_backend:z
+    ports:
+      - '9000:9000'
+    command: /start-docs
