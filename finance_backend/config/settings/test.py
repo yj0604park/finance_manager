@@ -36,3 +36,10 @@ TEMPLATES[0]["OPTIONS"]["debug"] = True  # type: ignore[index]
 MEDIA_URL = "http://media.testserver/"
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+# django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^http://localhost:8080",
+    r"^http://127.0.0.1:8080",
+]
