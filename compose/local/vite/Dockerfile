@@ -5,7 +5,7 @@ RUN useradd -m appuser
 USER appuser
 
 # Add a HEALTHCHECK instruction
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD curl -f http://localhost:5173/ || exit 1
+# HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD curl -f http://localhost:5173/ || exit 1
 
 WORKDIR /work
 COPY /finance_frontend/package.json .
@@ -14,5 +14,8 @@ RUN yarn install && yarn cache clean
 COPY /finance_frontend/src ./src
 COPY /finance_frontend/public ./public
 COPY /finance_frontend/tsconfig.json .
+COPY /finance_frontend/vite.config.ts .
+
+EXPOSE 8080
 
 CMD [ "yarn", "dev" ]

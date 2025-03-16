@@ -39,8 +39,8 @@ services:
     image: finance_frontend_local_vite
     container_name: finance_frontend_local_vite
     volumes:
-      - ./finance_frontend:/app:z
+      - ./finance_frontend/src:/work/src:z
     env_file:
       - ./.envs/.local/.vite
     ports:
-      - 5173:5173
+      - 8080:8080

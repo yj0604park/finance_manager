@@ -15,7 +15,7 @@ import { Charts } from './pages/charts/Charts';
 import { Shopping } from './pages/shopping/Shopping';
 import { NotFound } from './pages/NotFound';
 import { Box, CssBaseline } from '@mui/material';
-import { client } from './lib/apollo';
+import { client } from './library/apollo';
 import { CreateTransactionPage } from './pages/transactions/CreateTransaction';
 import TransactionList from './pages/transactions/TransactionList';
 import RetailerDetail from './pages/retailer/RetailerDetail';
