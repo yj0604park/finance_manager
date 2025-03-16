@@ -12,5 +12,5 @@ services:
       - ./finance_backend/config:/app/config:z
       - ./finance_backend/finance_backend:/app/finance_backend:z
     ports:
-      - '9000:9000'
+      - 9000:9000
     command: /start-docs
