@@ -1,9 +1,9 @@
 import { ReactNode, useState } from 'react';
 import {
   AppBar, Toolbar, Typography, Box,
-  useTheme, useMediaQuery, Avatar, Stack, IconButton
+  useTheme, useMediaQuery, Avatar, Stack, IconButton, Button
 } from '@mui/material';
-import { AccountBalanceWallet, Menu as MenuIcon } from '@mui/icons-material';
+import { AccountBalanceWallet, Menu as MenuIcon, Login as LoginIcon, Logout as LogoutIcon } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 import {
   appBarStyle,
@@ -20,7 +20,7 @@ interface LayoutProps {
 const DRAWER_WIDTH = 240;
 
 export const Layout = ({ children }: LayoutProps) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -72,6 +72,30 @@ export const Layout = ({ children }: LayoutProps) => {
               금융 관리 시스템
             </Typography>
           </Stack>
+          <Box sx={{ flexGrow: 1 }} />
+          {isAuthenticated ? (
+            <Button
+              color="inherit"
+              startIcon={<LogoutIcon />}
+              onClick={() => {
+                // 로그아웃 함수 호출
+                logout();
+              }}
+            >
+              로그아웃
+            </Button>
+          ) : (
+            <Button
+              color="inherit"
+              startIcon={<LoginIcon />}
+              onClick={() => {
+                // 로그인 페이지로 이동 또는 로그인 모달 오픈
+                window.location.href = '/login';
+              }}
+            >
+              로그인
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
 

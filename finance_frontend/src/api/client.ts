@@ -38,8 +38,6 @@ export function initializeApiClient(): void {
 export function setAuthToken(token: string): void {
   if (!token) return;
 
-  console.log('API 클라이언트에 토큰 설정:', token);
-
   // 토큰 저장
   OpenAPI.TOKEN = token;
 
@@ -49,9 +47,6 @@ export function setAuthToken(token: string): void {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   };
-
-  // 토큰이 제대로 설정되었는지 확인
-  console.log('API 헤더 설정 확인:', OpenAPI.HEADERS);
 }
 
 /**
