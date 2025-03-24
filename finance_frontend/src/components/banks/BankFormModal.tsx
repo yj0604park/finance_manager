@@ -12,14 +12,18 @@ import {
 import { Bank } from '../../api/models/Bank';
 import { CountryEnum } from '../../api/models/CountryEnum';
 
-interface BankModalProps {
+/**
+ * 은행 추가 및 수정을 위한 모달 컴포넌트
+ * bank prop 유무에 따라 수정/추가 모드로 동작합니다.
+ */
+interface BankFormModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (bank: Partial<Bank>) => void;
   bank?: Bank;
 }
 
-const BankModal: React.FC<BankModalProps> = ({
+const BankFormModal: React.FC<BankFormModalProps> = ({
   open,
   onClose,
   onSubmit,
@@ -111,4 +115,4 @@ const BankModal: React.FC<BankModalProps> = ({
   );
 };
 
-export default BankModal;
+export default BankFormModal;

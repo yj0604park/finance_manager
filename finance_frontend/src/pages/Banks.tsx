@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Alert, Snackbar } from '@mui/material';
 import BankList from '../components/banks/BankList';
-import BankModal from '../components/banks/BankModal';
+import BankFormModal from '../components/banks/BankFormModal';
 import { BanksService } from '../api/services/BanksService';
 import { Bank } from '../api/models/Bank';
 
@@ -129,7 +129,7 @@ const Banks: React.FC = () => {
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
-      <BankModal
+      <BankFormModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
