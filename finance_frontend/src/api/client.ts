@@ -36,10 +36,22 @@ export function initializeApiClient(): void {
  * Set the authentication token for API requests
  */
 export function setAuthToken(token: string): void {
+  if (!token) return;
+
+  console.log('API 클라이언트에 토큰 설정:', token);
+
+  // 토큰 저장
   OpenAPI.TOKEN = token;
+
+  // 인증 헤더 설정
   OpenAPI.HEADERS = {
-    'Authorization': `Token ${token}`
+    'Authorization': `Token ${token}`,
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
   };
+
+  // 토큰이 제대로 설정되었는지 확인
+  console.log('API 헤더 설정 확인:', OpenAPI.HEADERS);
 }
 
 /**
@@ -106,7 +118,10 @@ export async function loginWithAuthToken(email: string, password: string): Promi
  */
 export async function logout(): Promise<void> {
   try {
-    await RestAuthService.restAuthLogoutCreate();
+    // 토큰이 있을 때만 로그아웃 API 호출
+    if (OpenAPI.TOKEN) {
+      await RestAuthService.restAuthLogoutCreate();
+    }
   } catch (error) {
     console.error('Logout error:', error);
   } finally {

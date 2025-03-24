@@ -8,42 +8,59 @@ import {
 import { ArrowBack, AccountBalance, PriceCheck, Flag } from '@mui/icons-material';
 import { BanksService } from '../api/services/BanksService';
 import type { Bank } from '../api/models/Bank';
+import { useAuth } from '../contexts/AuthContext';
+import { banksStyles } from '../styles/pageStyles';
+import { headerContainerStyle, headerAvatarStyle, headerTitleStyle, loadingContainerStyle } from '../styles/commonStyles';
 
 const Banks = () => {
   const [banks, setBanks] = useState<Bank[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchBanks = async () => {
       setLoading(true);
+      setError('');
+
       try {
+        console.log('인증 토큰으로 요청:', token);
         const data = await BanksService.banksList();
+        console.log('은행 데이터 응답:', data);
         setBanks(data);
-      } catch (err) {
+      } catch (err: any) {
         console.error('은행 목록 조회 오류:', err);
-        setError('은행 목록을 불러오는 중 오류가 발생했습니다.');
+
+        // 오류 메시지 처리 개선
+        let errorMessage = '은행 목록을 불러오는 중 오류가 발생했습니다.';
+
+        if (err.status === 401) {
+          errorMessage = '인증 토큰이 유효하지 않습니다. 다시 로그인해주세요.';
+        } else if (err.status === 403) {
+          errorMessage = '접근 권한이 없습니다.';
+        } else if (err.status === 404) {
+          errorMessage = '요청한 리소스를 찾을 수 없습니다.';
+        } else if (err.status >= 500) {
+          errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+        }
+
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
     };
 
     fetchBanks();
-  }, []);
+  }, [token]);
 
   // 은행 데이터가 없을 때 보여줄 컴포넌트
   const EmptyBanksView = () => (
     <Card
       elevation={2}
-      sx={{
-        p: 4,
-        textAlign: 'center',
-        borderRadius: 2,
-        backgroundColor: '#f9f9f9'
-      }}
+      sx={banksStyles.emptyCard}
     >
-      <AccountBalance sx={{ fontSize: 60, color: 'text.secondary', opacity: 0.5, mb: 2 }} />
+      <AccountBalance sx={banksStyles.emptyIcon} />
       <Typography variant="h6" color="text.secondary" gutterBottom>
         등록된 은행이 없습니다
       </Typography>
@@ -55,20 +72,13 @@ const Banks = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          mb: 4,
-          borderBottom: '1px solid #e0e0e0',
-          pb: 2
-        }}>
+      <Box sx={banksStyles.container}>
+        <Box sx={headerContainerStyle}>
           <Stack direction="row" spacing={2} alignItems="center">
-            <Avatar sx={{ bgcolor: 'primary.main', width: 46, height: 46 }}>
+            <Avatar sx={headerAvatarStyle}>
               <AccountBalance />
             </Avatar>
-            <Typography variant="h4" component="h1" fontWeight="bold" color="primary.main">
+            <Typography variant="h4" component="h1" sx={headerTitleStyle}>
               은행 목록
             </Typography>
           </Stack>
@@ -79,7 +89,7 @@ const Banks = () => {
                 color="primary"
                 onClick={() => navigate('/dashboard')}
                 startIcon={<ArrowBack />}
-                sx={{ borderRadius: 2 }}
+                sx={banksStyles.backButton}
               >
                 대시보드
               </Button>
@@ -90,29 +100,20 @@ const Banks = () => {
         {error && (
           <Alert
             severity="error"
-            sx={{
-              mb: 3,
-              borderRadius: 2,
-              fontWeight: 'medium'
-            }}
+            sx={banksStyles.alert}
           >
             {error}
           </Alert>
         )}
 
         {loading ? (
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            p: 8
-          }}>
+          <Box sx={loadingContainerStyle}>
             <CircularProgress size={60} thickness={4} />
           </Box>
         ) : (
           <>
             {banks.length > 0 ? (
-              <Card elevation={3} sx={{ borderRadius: 2, overflow: 'hidden' }}>
+              <Card elevation={3} sx={banksStyles.tableCard}>
                 <TableContainer>
                   <Table aria-label="은행 목록 테이블">
                     <TableHead sx={{ backgroundColor: 'primary.main' }}>
@@ -171,12 +172,7 @@ const Banks = () => {
                           <TableCell>
                             <Stack direction="row" spacing={1} alignItems="center">
                               <Avatar
-                                sx={{
-                                  width: 32,
-                                  height: 32,
-                                  bgcolor: 'primary.light',
-                                  fontSize: '0.75rem'
-                                }}
+                                sx={banksStyles.avatar}
                               >
                                 {bank.name.substring(0, 2).toUpperCase()}
                               </Avatar>

@@ -137,13 +137,10 @@ export const resolve = async <T>(options: ApiRequestOptions, resolver?: T | Reso
 };
 
 export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Promise<Headers> => {
-    const [token, username, password, additionalHeaders] = await Promise.all([
-        resolve(options, config.TOKEN),
-        resolve(options, config.USERNAME),
-        resolve(options, config.PASSWORD),
-        resolve(options, config.HEADERS),
-    ]);
-
+    const token = await resolve(options, config.TOKEN);
+    const username = await resolve(options, config.USERNAME);
+    const password = await resolve(options, config.PASSWORD);
+    const additionalHeaders = await resolve(options, config.HEADERS);
     const headers = Object.entries({
         Accept: 'application/json',
         ...additionalHeaders,
@@ -156,7 +153,8 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         }), {} as Record<string, string>);
 
     if (isStringWithValue(token)) {
-        headers['Authorization'] = `Bearer ${token}`;
+        headers['Authorization'] = `Token ${token}`;
+        console.log('요청 헤더에 인증 토큰 추가:', headers['Authorization']);
     }
 
     if (isStringWithValue(username) && isStringWithValue(password)) {
@@ -164,7 +162,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         headers['Authorization'] = `Basic ${credentials}`;
     }
 
-    if (options.body !== undefined) {
+    if (options.body) {
         if (options.mediaType) {
             headers['Content-Type'] = options.mediaType;
         } else if (isBlob(options.body)) {

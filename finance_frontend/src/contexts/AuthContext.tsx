@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getAuthToken, setAuthToken as saveAuthToken, removeAuthToken as clearAuthToken, isAuthenticated as checkAuth } from '../utils/auth';
+import { setAuthToken as setApiAuthToken, clearAuthToken as clearApiAuthToken } from '../api/client';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -19,13 +20,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsAuthenticated(!!token);
   }, [token]);
 
+  // 컴포넌트 마운트 시 토큰 상태 초기화
+  useEffect(() => {
+    const storedToken = getAuthToken();
+    if (storedToken) {
+      setToken(storedToken);
+      setApiAuthToken(storedToken);
+    }
+  }, []);
+
   const login = (newToken: string) => {
     saveAuthToken(newToken);
+    setApiAuthToken(newToken); // API 클라이언트에 토큰 설정
     setToken(newToken);
   };
 
   const logout = () => {
     clearAuthToken();
+    clearApiAuthToken(); // API 클라이언트 토큰 제거
     setToken(null);
   };
 
@@ -42,4 +54,4 @@ export const useAuth = (): AuthContextType => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}; 
+};
