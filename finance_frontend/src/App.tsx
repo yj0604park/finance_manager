@@ -23,7 +23,7 @@ import { Layout } from './components/layout/Layout';
 import Login from './pages/auth/Login';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
-
+import Signup from './pages/auth/Signup';
 function App() {
   return (
     <AuthProvider>
@@ -45,6 +45,7 @@ function App() {
             <Layout>
               <Routes>
                 <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 
                 {/* Protected Routes */}

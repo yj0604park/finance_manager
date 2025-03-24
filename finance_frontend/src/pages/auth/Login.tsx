@@ -95,6 +95,14 @@ export const Login = () => {
             >
               {loading ? '로그인 중...' : '로그인'}
             </Button>
+            <Button
+              onClick={() => navigate('/signup')}
+              fullWidth
+              variant="outlined"
+              sx={{ mt: 2 }}
+            >
+              회원가입
+            </Button>            
           </Box>
         </Paper>
       </Box>

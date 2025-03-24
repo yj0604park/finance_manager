@@ -1,0 +1,9 @@
+{% load i18n %}
+{% block content %}
+    <h2>{% trans "Confirm Email" %}</h2>
+    <p>{% trans "Please confirm your email by clicking the button below." %}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">{% trans "Confirm" %}</button>
+    </form>
+{% endblock %}
