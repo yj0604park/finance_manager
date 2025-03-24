@@ -1,18 +1,22 @@
-from django import forms
 from django.contrib import admin
 
 from finance_backend.money.choices import TransactionCategory
-from finance_backend.money.models.accounts import Account, Bank, AccountSnapshot
+from finance_backend.money.models.accounts import Account
+from finance_backend.money.models.accounts import AccountSnapshot
+from finance_backend.money.models.accounts import Bank
 from finance_backend.money.models.exchanges import Exchange
 from finance_backend.money.models.incomes import Salary
+from finance_backend.money.models.items import Item
+from finance_backend.money.models.items import ItemPrice
 from finance_backend.money.models.shoppings import Retailer
-from finance_backend.money.models.items import Item, ItemPrice
-from finance_backend.money.models.transactions import Transaction, ItemTransaction
+from finance_backend.money.models.transactions import ItemTransaction
+from finance_backend.money.models.transactions import Transaction
 
 
 @admin.register(Bank)
 class BankAdmin(admin.ModelAdmin):
-    list_display = ["name", "id"]
+    list_display = ["name", "id", "user"]
+    list_filter = ["user"]
 
 
 @admin.register(Account)

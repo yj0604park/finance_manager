@@ -1,4 +1,5 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from finance_backend.money.api.serializers.accounts_serializers import AccountSerializer
 from finance_backend.money.api.serializers.accounts_serializers import (
@@ -32,51 +33,63 @@ from finance_backend.money.models.transactions import ItemTransaction
 from finance_backend.money.models.transactions import Transaction
 
 
-class BankViewSet(ModelViewSet):
+class BaseUserViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """기본적으로 사용자의 데이터만 필터링하여 반환"""
+        return self.queryset.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        """사용자가 생성하는 객체에 user를 자동으로 할당"""
+        serializer.save(user=self.request.user)
+
+
+class BankViewSet(BaseUserViewSet):
     queryset = Bank.objects.all()
     serializer_class = BankSerializer
 
 
-class AccountViewSet(ModelViewSet):
+class AccountViewSet(BaseUserViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
 
 
-class AccountSnapshotViewSet(ModelViewSet):
+class AccountSnapshotViewSet(BaseUserViewSet):
     queryset = AccountSnapshot.objects.all()
     serializer_class = AccountSnapshotSerializer
 
 
-class TransactionViewSet(ModelViewSet):
+class TransactionViewSet(BaseUserViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
 
 
-class ItemTransactionViewSet(ModelViewSet):
+class ItemTransactionViewSet(BaseUserViewSet):
     queryset = ItemTransaction.objects.all()
     serializer_class = ItemTransactionSerializer
 
 
-class ExchangeViewSet(ModelViewSet):
+class ExchangeViewSet(BaseUserViewSet):
     queryset = Exchange.objects.all()
     serializer_class = ExchangeSerializer
 
 
-class SalaryViewSet(ModelViewSet):
+class SalaryViewSet(BaseUserViewSet):
     queryset = Salary.objects.all()
     serializer_class = SalarySerializer
 
 
-class ItemViewSet(ModelViewSet):
+class ItemViewSet(BaseUserViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
 
-class RetailerViewSet(ModelViewSet):
+class RetailerViewSet(BaseUserViewSet):
     queryset = Retailer.objects.all()
     serializer_class = RetailerSerializer
 
 
-class ItemPriceViewSet(ModelViewSet):
+class ItemPriceViewSet(BaseUserViewSet):
     queryset = ItemPrice.objects.all()
     serializer_class = ItemPriceSerializer

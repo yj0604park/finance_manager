@@ -7,7 +7,13 @@ from finance_backend.money.models.accounts import Bank
 
 
 class BankSerializer(serializers.ModelSerializer[Bank]):
-    user = serializers.ReadOnlyField(source="user.username")
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    amount = serializers.HiddenField(default=0)  # API 입력에서 아예 제거됨
+
+    def create(self, validated_data):
+        validated_data["user"] = self.context["request"].user
+        validated_data["amount"] = 0
+        return super().create(validated_data)
 
     class Meta:
         model = Bank

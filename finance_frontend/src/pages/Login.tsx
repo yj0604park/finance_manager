@@ -29,7 +29,7 @@ const Login = () => {
         password,
       });
 
-      login(response.key);
+      login(response.key, email);
       navigate('/dashboard');
     } catch (err) {
       console.error('로그인 오류:', err);

@@ -27,7 +27,7 @@ export const headerTitleStyle: SxProps<Theme> = {
 export const contentCardStyle: SxProps<Theme> = {
   display: 'flex',
   flexDirection: 'column',
-  height: 250,
+  height: 300,
   borderRadius: 3,
   transition: 'transform 0.3s, box-shadow 0.3s',
   overflow: 'hidden',
