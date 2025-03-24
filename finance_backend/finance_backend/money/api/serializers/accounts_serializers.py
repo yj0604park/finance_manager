@@ -8,7 +8,7 @@ from finance_backend.money.models.accounts import Bank
 
 class BankSerializer(serializers.ModelSerializer[Bank]):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    amount = serializers.HiddenField(default=0)  # API 입력에서 아예 제거됨
+    amount = serializers.DecimalField(max_digits=15, decimal_places=2, default=0)
 
     def create(self, validated_data):
         validated_data["user"] = self.context["request"].user

@@ -9,6 +9,24 @@ import { RestAuthService } from '../api/services/RestAuthService';
 import { useAuth } from '../contexts/AuthContext';
 import { loginStyles } from '../styles/pageStyles';
 
+// ApiError 인터페이스 정의
+interface ApiError {
+  url: string;
+  status: number;
+  statusText: string;
+  body: {
+    non_field_errors?: string[];
+    [key: string]: any;
+  };
+  request: {
+    method: string;
+    url: string;
+    body: any;
+    mediaType: string;
+  };
+  name: string;
+}
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,7 +51,19 @@ const Login = () => {
       navigate('/dashboard');
     } catch (err) {
       console.error('로그인 오류:', err);
-      setError('이메일 또는 비밀번호가 올바르지 않습니다.');
+
+      if (err && typeof err === 'object' && 'name' in err && err.name === 'ApiError') {
+        const apiError = err as ApiError;
+
+        if (apiError.body && apiError.body.non_field_errors && apiError.body.non_field_errors.length > 0) {
+          // API에서 반환된 실제 에러 메시지 표시
+          setError(apiError.body.non_field_errors[0]);
+        } else {
+          setError(`요청 오류: ${apiError.status} ${apiError.statusText}`);
+        }
+      } else {
+        setError('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
     } finally {
       setIsLoading(false);
     }

@@ -40,7 +40,6 @@ const BankList: React.FC<BankListProps> = ({ banks, onEdit, onDelete, onAdd }) =
               <TableCell>은행명</TableCell>
               <TableCell>국가</TableCell>
               <TableCell align="right">잔액</TableCell>
-              <TableCell align="right">생성일</TableCell>
               <TableCell align="center">작업</TableCell>
             </TableRow>
           </TableHead>
@@ -51,9 +50,6 @@ const BankList: React.FC<BankListProps> = ({ banks, onEdit, onDelete, onAdd }) =
                 <TableCell>{bank.country}</TableCell>
                 <TableCell align="right">
                   {parseFloat(bank.amount).toLocaleString()}원
-                </TableCell>
-                <TableCell align="right">
-                  {new Date().toLocaleDateString()}
                 </TableCell>
                 <TableCell align="center">
                   <Tooltip title="수정">
