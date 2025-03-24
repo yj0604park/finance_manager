@@ -5,8 +5,16 @@ from django_choices_field import TextChoicesField
 from finance_backend.money.choices import CurrencyType
 
 
+class BaseUserModel(models.Model):
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+
 class BaseTimeStampModel(models.Model):
     date = models.DateField()
+    time = models.TimeField(default="12:00:00")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

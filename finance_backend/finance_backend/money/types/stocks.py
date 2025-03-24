@@ -2,19 +2,19 @@ import strawberry
 import strawberry.django
 from strawberry import auto, relay
 
-from finance_backend.money.models import stocks
+from finance_backend.finance_backend.money.models import items
 from finance_backend.money.types.accounts import AccountNode
 from finance_backend.money.types.transactions import TransactionNode
 
 
 # region: Stock
-@strawberry.django.filters.filter(stocks.Stock, lookups=True)
+@strawberry.django.filters.filter(items.Stock, lookups=True)
 class StockFilter:
     id: auto
     name: auto
 
 
-@strawberry.django.type(stocks.Stock, filters=StockFilter)
+@strawberry.django.type(items.Stock, filters=StockFilter)
 class Stock:
     id: auto
     name: auto
@@ -22,14 +22,14 @@ class Stock:
     currency: auto
 
 
-@strawberry.django.input(stocks.Stock)
+@strawberry.django.input(items.Stock)
 class StockInput:
     ticker: auto
     name: auto
     currency: auto
 
 
-@strawberry.django.type(stocks.Stock)
+@strawberry.django.type(items.Stock)
 class StockNode(relay.Node):
     id: relay.GlobalID
     ticker: auto
@@ -41,7 +41,7 @@ class StockNode(relay.Node):
 
 
 # region: StockTransaction
-@strawberry.django.input(stocks.StockTransaction)
+@strawberry.django.input(items.StockTransaction)
 class StockTransactionInput:
     date: auto
     account: AccountNode
@@ -54,7 +54,7 @@ class StockTransactionInput:
     note: auto
 
 
-@strawberry.django.type(stocks.StockTransaction)
+@strawberry.django.type(items.StockTransaction)
 class StockTransactionNode(relay.Node):
     id: relay.GlobalID
     account: AccountNode

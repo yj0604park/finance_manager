@@ -21,7 +21,6 @@ urlpatterns = [
     # User management
     path("users/", include("finance_backend.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
-    path("money/", include("finance_backend.money.urls", namespace="money")),
     # Media files
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]
