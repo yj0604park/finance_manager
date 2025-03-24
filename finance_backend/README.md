@@ -1,52 +1,68 @@
-# finance_backend
+# 금융 내역 관리 시스템 요구사항  
 
-Finance
+## 1. 은행 (Bank) CRUD  
+- 은행 정보를 추가, 수정, 삭제, 조회할 수 있어야 함.  
+- 필드:  
+  - `id`: 고유 식별자  
+  - `name`: 은행명  
 
-[![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+## 2. 계좌 (Account) CRUD  
+- 계좌 정보를 추가, 수정, 삭제, 조회할 수 있어야 함.  
+- 필드:  
+  - `id`: 고유 식별자  
+  - `name`: 계좌명  
+  - `nickname`: 계좌 별명 (선택 사항)  
+  - `account_type`: 계좌 종류 (`입출금`, `적금`, `예금`, `세이빙`, `주식거래`, `신용카드`, `대출`)  
+  - `currency`: 통화 (ENUM, `KRW`, `USD`)  
+  - `bank_id`: 해당 은행 ID  
 
-## Settings
+## 3. 사전 정의된 거래 유형 (Predefined Transaction Types)  
+### ✅ 소득 (Income)  
+- `월급`, `이자`, `부동산`, `현금`  
 
-Moved to [settings](https://cookiecutter-django.readthedocs.io/en/latest/1-getting-started/settings.html).
+### ✅ 지출 (Expense)  
+- `생필품`, `맴버쉽`, `식료품`, `외식`, `옷`, `선물`, `이동수단`, `월세`, `여가`, `의료`, `육아`, `이자`, `현금`  
 
-## Basic Commands
+### ✅ 계좌 간 이체 (Transfer)  
+- 계좌 간 이동 기록 (내부 이체)  
 
-### Setting Up Your Users
+## 4. 리테일러 (Retailer) CRUD  
+- 리테일러 정보를 추가, 수정, 삭제, 조회할 수 있어야 함.  
+- 필드:  
+  - `id`: 고유 식별자  
+  - `name`: 리테일러명  
+  - `retailer_type`: 리테일러 타입 (`상점`, `개인`, `은행`, `서비스`, `수입`, `식당`, `인터넷`)  
+  - `default_transaction_type`: 기본 거래 유형  
 
-- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+## 5. 거래 (Transaction) CRUD  
+- 거래 정보를 추가, 수정, 삭제, 조회할 수 있어야 함.  
+- 필드:  
+  - `id`: 고유 식별자  
+  - `account_id`: 해당 계좌 ID  
+  - `retailer_id`: 해당 리테일러 ID (선택 가능)  
+  - `transaction_type`: 거래 유형 (리테일러 선택 시 자동 지정되나 수정 가능)  
+  - `amount`: 거래 금액  
+  - `date`: 거래 일시  
+  - `notes`: 거래 메모  
+  - `linked_transaction_id`: 내부 이체 시 연결된 거래 ID  
 
-- To create a **superuser account**, use this command:
+> **📌 내부 이체 처리 방식**  
+> - 내부 이체는 자동으로 연결되지 않음.  
+> - 사용자가 추후 내부 이체 거래만 모아 금액과 날짜를 비교하여 수동으로 링크할 계획.  
 
-      $ python manage.py createsuperuser
+## 6. 계좌 스냅샷 (Account Snapshot) CRUD  
+- 계좌의 특정 시점 잔액을 저장하여 과거 데이터를 비교 가능하도록 함.  
+- 필드:  
+  - `id`: 고유 식별자  
+  - `account_id`: 해당 계좌 ID  
+  - `balance`: 잔액  
+  - `date`: 기록 일시  
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+## 7. 태그 (Labels) 기능 추가  
+- 거래에 태그를 추가하여 더 세부적인 분류가 가능하도록 함.  
 
-### Type checks
+## 8. 예산 (Budget) 기능 (추후 추가 예정)  
+- 현재는 도입하지 않고, 추후 기능 추가 고려.  
 
-Running type checks with mypy:
-
-    $ mypy finance_backend
-
-### Test coverage
-
-To run the tests, check your test coverage, and generate an HTML coverage report:
-
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
-
-#### Running tests with pytest
-
-    $ pytest
-
-### Live reloading and Sass CSS compilation
-
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/2-local-development/developing-locally.html#using-webpack-or-gulp).
-
-## Deployment
-
-The following details how to deploy this application.
-
-### Docker
-
-See detailed [cookiecutter-django Docker documentation](https://cookiecutter-django.readthedocs.io/en/latest/3-deployment/deployment-with-docker.html).
+## 9. 자동 카테고리 매핑 (Auto-Categorization) (추후 추가 예정)  
+- AI/규칙 기반으로 거래 내역의 자동 분류 가능성 검토.  

@@ -4,6 +4,7 @@ from django.db.models import Sum
 from strawberry_django import mutations
 from strawberry_django.optimizer import DjangoOptimizerExtension
 from strawberry_django.relay import ListConnectionWithTotalCount
+from strawberry.types import Info
 
 from finance_backend.money.models.incomes import Salary
 from finance_backend.money.types import types
@@ -39,6 +40,15 @@ def get_salary_summary() -> list[types.SalarySummaryNode]:
     summary_list = []
 
     return summary_list
+
+
+class IsAuthenticated:
+    """GraphQL 요청이 인증된 사용자만 실행 가능하도록 하는 권한 클래스"""
+
+    message = "인증된 사용자만 접근 가능합니다."
+
+    def has_permission(self, source, info: Info, **kwargs) -> bool:
+        return info.context.request.user.is_authenticated
 
 
 @strawberry.type

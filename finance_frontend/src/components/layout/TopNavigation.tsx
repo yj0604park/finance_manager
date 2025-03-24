@@ -1,5 +1,5 @@
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 export const TopNavigation = () => {
