@@ -11,11 +11,10 @@ from finance_backend.money.models.base import (
     BaseTimeStampModel,
     BaseUserModel,
 )
-from finance_backend.money.types.common import BankBalance
 from finance_backend.money.models.items import Item
 
 
-class Bank(BaseUserModel):
+class Bank(BaseUserModel, BaseAmountModel):
     """
     Model for a bank.
     """
@@ -30,17 +29,6 @@ class Bank(BaseUserModel):
 
     def __str__(self):
         return self.name
-
-    @property
-    def balance(self) -> list[BankBalance]:
-        sum_dict = defaultdict(Decimal)
-
-        for account in Account.objects.filter(bank=self):
-            sum_dict[account.currency] += account.amount
-        return [
-            BankBalance(currency=currency, value=value)
-            for currency, value in sum_dict.items()
-        ]
 
 
 class Account(BaseUserModel, BaseAmountModel, BaseCurrencyModel):
