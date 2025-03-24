@@ -46,6 +46,11 @@ const navItems: NavItem[] = [
     icon: <BankIcon />
   },
   {
+    title: '계좌 관리',
+    path: '/accounts',
+    icon: <CardIcon />
+  },
+  {
     title: '거래',
     path: '/transactions',
     icon: <TransactionIcon />,
