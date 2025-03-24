@@ -1,20 +1,28 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  Box, List, ListItem, ListItemButton, ListItemIcon,
-  ListItemText, Drawer, Collapse,
-  useTheme, useMediaQuery
-} from '@mui/material';
-import {
-  Dashboard as DashboardIcon,
-  AccountBalance as BankIcon,
-  Receipt as TransactionIcon,
-  CreditCard as CardIcon,
-  ExpandLess, ExpandMore,
-  AttachMoney as MoneyIcon,
   Article as ArticleIcon,
-  BarChart as BarChartIcon
+  AccountBalance as BankIcon,
+  BarChart as BarChartIcon,
+  CreditCard as CardIcon,
+  Dashboard as DashboardIcon,
+  ExpandLess, ExpandMore,
+  ExitToApp as LogoutIcon,
+  AttachMoney as MoneyIcon,
+  Settings as SettingsIcon,
+  Receipt as TransactionIcon
 } from '@mui/icons-material';
+import {
+  Box,
+  Collapse, Divider,
+  Drawer,
+  List, ListItem, ListItemButton, ListItemIcon,
+  ListItemText,
+  Tooltip,
+  useMediaQuery,
+  useTheme
+} from '@mui/material';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 // 네비게이션 항목 인터페이스
 interface NavItem {
@@ -41,7 +49,6 @@ const navItems: NavItem[] = [
     title: '거래',
     path: '/transactions',
     icon: <TransactionIcon />,
-    disabled: true,
     children: [
       {
         title: '거래 내역',
@@ -58,14 +65,17 @@ const navItems: NavItem[] = [
   {
     title: '카드',
     path: '/cards',
-    icon: <CardIcon />,
-    disabled: true
+    icon: <CardIcon />
   },
   {
     title: '자산 관리',
     path: '/assets',
-    icon: <MoneyIcon />,
-    disabled: true
+    icon: <MoneyIcon />
+  },
+  {
+    title: '설정',
+    path: '/settings',
+    icon: <SettingsIcon />
   }
 ];
 
@@ -81,6 +91,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, drawerWidth }: SidebarProps) 
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { logout, user } = useAuth();
 
   // 앱바 높이 정의
   const appBarHeight = 64; // MUI의 기본 AppBar 높이
@@ -137,7 +148,8 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, drawerWidth }: SidebarProps) 
               '&:hover': {
                 backgroundColor: 'rgba(0, 0, 0, 0.08)',
               },
-              borderRight: isActive(item.path) ? `4px solid ${theme.palette.primary.main}` : 'none',
+              borderLeft: isActive(item.path) ? `4px solid ${theme.palette.primary.main}` : 'none',
+              color: isActive(item.path) ? 'primary.main' : 'inherit',
             }}
             disabled={item.disabled}
           >
@@ -208,10 +220,36 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, drawerWidth }: SidebarProps) 
 
   // 드로어 컨텐츠
   const drawerContent = (
-    <Box sx={{ mt: 1 }}>
-      <List sx={{ pt: 2 }}>
-        {renderNavItems(navItems)}
-      </List>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      {/* 메뉴 항목 */}
+      <Box sx={{ mt: 1, flexGrow: 1 }}>
+        <List sx={{ pt: 1 }}>
+          {renderNavItems(navItems)}
+        </List>
+      </Box>
+
+      {/* 로그아웃 버튼 */}
+      {user && (
+        <Box sx={{ p: 2 }}>
+          <Divider sx={{ mb: 1 }} />
+          <Tooltip title="로그아웃">
+            <ListItemButton
+              onClick={logout}
+              sx={{
+                borderRadius: 2,
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText primary="로그아웃" />
+            </ListItemButton>
+          </Tooltip>
+        </Box>
+      )}
     </Box>
   );
 

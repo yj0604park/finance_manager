@@ -2,24 +2,60 @@ import { SxProps, Theme } from '@mui/material';
 
 // 앱바 스타일
 export const appBarStyle: SxProps<Theme> = {
-  background: 'linear-gradient(90deg, #1976d2 0%, #1565c0 100%)',
+  backgroundColor: 'primary.main',
+  boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.1)',
 };
 
-// 메인 로고 아바타 스타일
+// 로고 아바타 스타일
 export const logoAvatarStyle = (): SxProps<Theme> => ({
-  bgcolor: 'white',
+  backgroundColor: 'white',
   color: 'primary.main',
   width: 36,
   height: 36,
-  boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
 });
 
-// 로고 타이포그래피 스타일
+// 로고 텍스트 스타일
 export const logoTypographyStyle = (isMobile: boolean): SxProps<Theme> => ({
-  flexGrow: 1,
   fontWeight: 'bold',
-  fontSize: isMobile ? '1.1rem' : '1.25rem',
-  letterSpacing: '0.5px',
+  color: 'white',
+  fontSize: isMobile ? '1.1rem' : '1.3rem',
+  fontFamily: '"Roboto", "Noto Sans KR", sans-serif',
+});
+
+// 헤더 사용자 칩 스타일
+export const userChipStyle: SxProps<Theme> = {
+  color: 'white',
+  borderColor: 'rgba(255, 255, 255, 0.5)',
+  '& .MuiChip-avatar': {
+    bgcolor: 'secondary.main',
+    color: 'white',
+  }
+};
+
+// 메인 컨텐츠 래퍼 스타일
+export const mainContentWrapperStyle = (
+  isAuthenticated: boolean,
+  drawerWidth: number,
+  theme: Theme
+): SxProps<Theme> => ({
+  flexGrow: 1,
+  width: isAuthenticated ? { md: `calc(100% - ${drawerWidth}px)` } : '100%',
+  p: { xs: 2, md: 3 },
+  minHeight: 'calc(100vh - 64px)',
+  backgroundColor: 'background.default',
+  transition: theme.transitions.create('margin', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+});
+
+// 메인 컨텐츠 박스 스타일
+export const mainContentBoxStyle = (isAuthenticated: boolean): SxProps<Theme> => ({
+  backgroundColor: 'white',
+  borderRadius: 2,
+  p: { xs: 2, md: 3 },
+  boxShadow: isAuthenticated ? '0px 3px 15px rgba(0,0,0,0.05)' : 'none',
+  minHeight: 'calc(100vh - 120px)',
 });
 
 // 메인 컨테이너 스타일

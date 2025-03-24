@@ -4,6 +4,7 @@ import Dashboard from '../pages/Dashboard';
 import Banks from '../pages/Banks';
 import Accounts from '../pages/Accounts';
 import Transactions from '../pages/Transactions';
+import Settings from '../pages/Settings';
 import Login from '../pages/Login';
 import { NotFound } from '../pages/NotFound';
 import { useAuth } from '../contexts/AuthContext';
@@ -53,6 +54,14 @@ const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <Transactions />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
           </ProtectedRoute>
         }
       />
