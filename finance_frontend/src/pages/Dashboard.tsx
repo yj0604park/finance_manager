@@ -1,145 +1,169 @@
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Container, Grid, Typography, Box, Paper } from '@mui/material';
 import {
-  Box, Button, Typography, Grid, Card, CardContent,
-  CardActions, Divider, Stack, Tooltip, Avatar
-} from '@mui/material';
-import { AccountBalanceWallet, Logout, AccountBalance, CreditCard } from '@mui/icons-material';
+  AccountBalance,
+  TrendingUp,
+  TrendingDown,
+  AccountBalanceWallet,
+} from '@mui/icons-material';
+import SummaryCard from '../components/dashboard/SummaryCard';
+import ChartCard from '../components/dashboard/ChartCard';
 import { useAuth } from '../contexts/AuthContext';
-import {
-  headerContainerStyle,
-  headerAvatarStyle,
-  headerTitleStyle,
-  contentCardStyle,
-  cardContentStyle,
-  cardActionStyle,
-  cardIconHeaderStyle
-} from '../styles/commonStyles';
-import { dashboardStyles } from '../styles/pageStyles';
+import { BanksService } from '../api/services/BanksService';
+import { AccountsService } from '../api/services/AccountsService';
+import { TransactionsService } from '../api/services/TransactionsService';
+import { Bank } from '../api/models/Bank';
+import { Account } from '../api/models/Account';
+import { Transaction } from '../api/models/Transaction';
 
-const Dashboard = () => {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
+const Dashboard: React.FC = () => {
+  const { user } = useAuth();
+  const [banks, setBanks] = useState<Bank[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [banksResponse, accountsResponse, transactionsResponse] = await Promise.all([
+          BanksService.banksList(),
+          AccountsService.accountsList(),
+          TransactionsService.transactionsList(),
+        ]);
+
+        setBanks(banksResponse);
+        setAccounts(accountsResponse);
+        setRecentTransactions(transactionsResponse.slice(0, 5)); // 최근 5개만 표시
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // 샘플 데이터 (실제 API 연동 전까지 사용)
+  const monthlyData = [
+    { name: '1월', income: 5000000, expense: 3000000 },
+    { name: '2월', income: 5500000, expense: 3200000 },
+    { name: '3월', income: 4800000, expense: 3500000 },
+    { name: '4월', income: 5200000, expense: 3100000 },
+    { name: '5월', income: 5800000, expense: 3400000 },
+    { name: '6월', income: 6000000, expense: 3600000 },
+  ];
+
+  const categoryData = [
+    { name: '식비', value: 35 },
+    { name: '주거', value: 25 },
+    { name: '교통', value: 15 },
+    { name: '의료', value: 10 },
+    { name: '기타', value: 15 },
+  ];
+
+  const totalBalance = accounts.reduce((sum, account) => sum + parseFloat(account.amount), 0);
+  const monthlyIncome = monthlyData[monthlyData.length - 1].income;
+  const monthlyExpense = monthlyData[monthlyData.length - 1].expense;
+
+  if (loading) {
+    return (
+      <Container>
+        <Typography>로딩 중...</Typography>
+      </Container>
+    );
+  }
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Box sx={headerContainerStyle}>
-        <Stack direction="row" spacing={2} alignItems="center">
-          <Avatar sx={headerAvatarStyle}>
-            <AccountBalanceWallet />
-          </Avatar>
-          <Typography variant="h4" component="h1" sx={headerTitleStyle}>
-            금융 대시보드
-          </Typography>
-        </Stack>
-        <Tooltip title="로그아웃">
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleLogout}
-            startIcon={<Logout />}
-            sx={dashboardStyles.logoutButton}
-          >
-            로그아웃
-          </Button>
-        </Tooltip>
-      </Box>
-
-      <Typography variant="h6" color="text.secondary" gutterBottom sx={dashboardStyles.sectionTitle}>
-        금융 정보 관리
-      </Typography>
-
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6} lg={4}>
-          <Card
-            elevation={3}
-            sx={contentCardStyle}
-          >
-            <CardContent sx={cardContentStyle}>
-              <Box sx={cardIconHeaderStyle}>
-                <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
-                  <AccountBalance />
-                </Avatar>
-                <Typography variant="h6" fontWeight="bold">
-                  은행 관리
-                </Typography>
-              </Box>
-              <Divider sx={{ mb: 2 }} />
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                등록된 은행 계좌 정보를 조회하고 관리합니다.
-              </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                계좌의 잔액 정보와 국가 정보를 확인할 수 있습니다.
-              </Typography>
-              <Typography variant="body2" color="primary" sx={{ mt: 'auto' }}>
-                은행 데이터를 관리하고 계좌를 추가하세요.
-              </Typography>
-            </CardContent>
-            <CardActions sx={cardActionStyle}>
-              <Button
-                variant="contained"
-                fullWidth
-                sx={{
-                  borderRadius: 2,
-                  textTransform: 'none',
-                  py: 1
-                }}
-                onClick={() => navigate('/banks')}
-              >
-                은행 목록
-              </Button>
-            </CardActions>
-          </Card>
+        {/* 요약 카드 */}
+        <Grid item xs={12} sm={6} md={3}>
+          <SummaryCard
+            title="총 자산"
+            value={`${totalBalance.toLocaleString()}원`}
+            icon={<AccountBalance />}
+            color="#1976d2"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <SummaryCard
+            title="이번 달 수입"
+            value={`${monthlyIncome.toLocaleString()}원`}
+            icon={<TrendingUp />}
+            color="#2e7d32"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <SummaryCard
+            title="이번 달 지출"
+            value={`${monthlyExpense.toLocaleString()}원`}
+            icon={<TrendingDown />}
+            color="#d32f2f"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <SummaryCard
+            title="순수입"
+            value={`${(monthlyIncome - monthlyExpense).toLocaleString()}원`}
+            icon={<AccountBalanceWallet />}
+            color="#ed6c02"
+          />
         </Grid>
 
-        <Grid item xs={12} md={6} lg={4}>
-          <Card
-            elevation={3}
-            sx={contentCardStyle}
-          >
-            <CardContent sx={cardContentStyle}>
-              <Box sx={cardIconHeaderStyle}>
-                <Avatar sx={{ bgcolor: 'secondary.main', mr: 2 }}>
-                  <CreditCard />
-                </Avatar>
-                <Typography variant="h6" fontWeight="bold">
-                  거래 관리
-                </Typography>
-              </Box>
-              <Divider sx={{ mb: 2 }} />
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                금융 거래 내역을 조회하고 분석합니다.
-              </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                각종 거래 내역과 통계 정보를 확인할 수 있습니다.
-              </Typography>
-              <Typography variant="body2" color="secondary" sx={{ mt: 'auto' }}>
-                준비 중인 기능입니다.
-              </Typography>
-            </CardContent>
-            <CardActions sx={cardActionStyle}>
-              <Button
-                variant="contained"
-                fullWidth
-                color="secondary"
-                sx={{
-                  borderRadius: 2,
-                  textTransform: 'none',
-                  py: 1
-                }}
-                disabled
-              >
-                준비 중
-              </Button>
-            </CardActions>
-          </Card>
+        {/* 차트 */}
+        <Grid item xs={12} md={8}>
+          <ChartCard
+            title="월별 수입/지출 추이"
+            type="line"
+            data={monthlyData}
+            height={400}
+          />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <ChartCard
+            title="카테고리별 지출"
+            type="pie"
+            data={categoryData}
+            height={400}
+          />
+        </Grid>
+
+        {/* 최근 거래 내역 */}
+        <Grid item xs={12}>
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              최근 거래 내역
+            </Typography>
+            <Box sx={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr>
+                    <th style={{ textAlign: 'left', padding: '8px' }}>날짜</th>
+                    <th style={{ textAlign: 'left', padding: '8px' }}>설명</th>
+                    <th style={{ textAlign: 'right', padding: '8px' }}>금액</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentTransactions.map((transaction) => (
+                    <tr key={transaction.id}>
+                      <td style={{ padding: '8px' }}>
+                        {new Date(transaction.date).toLocaleDateString()}
+                      </td>
+                      <td style={{ padding: '8px' }}>{transaction.note || '거래 내역'}</td>
+                      <td style={{ textAlign: 'right', padding: '8px' }}>
+                        {parseFloat(transaction.amount).toLocaleString()}원
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Box>
+          </Paper>
         </Grid>
       </Grid>
-    </Box>
+    </Container>
   );
 };
 

@@ -154,7 +154,6 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
 
     if (isStringWithValue(token)) {
         headers['Authorization'] = `Token ${token}`;
-        console.log('요청 헤더에 인증 토큰 추가:', headers['Authorization']);
     }
 
     if (isStringWithValue(username) && isStringWithValue(password)) {
