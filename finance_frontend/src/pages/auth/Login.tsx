@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Box, Button, Container, TextField, Typography, Paper, Alert } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { AUTH_ENDPOINTS } from '../../constants/api';
+import { api } from '../../utils/apiClient';
 
 export const Login = () => {
   const [username, setUsername] = useState('');
@@ -21,19 +23,7 @@ export const Login = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/auth-token/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.non_field_errors?.[0] || 'Authentication failed');
-      }
+      const data = await api.post(AUTH_ENDPOINTS.LOGIN, { username, password });
 
       // AuthContext를 통해 로그인 처리
       login(data.token);

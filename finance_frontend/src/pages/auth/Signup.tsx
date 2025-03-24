@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { Box, Button, Container, TextField, Typography, Paper, Alert, Grid } from '@mui/material';
-import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { AUTH_ENDPOINTS } from '../../constants/api';
+import { api } from '../../utils/apiClient';
 
 export const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -42,36 +43,18 @@ export const Signup = () => {
     
     setLoading(true);
     setError('');
+    setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/register/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      await api.post(AUTH_ENDPOINTS.REGISTER, { email, password });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.username?.[0] || 
-          data.email?.[0] || 
-          data.password?.[0] || 
-          data.non_field_errors?.[0] || 
-          '회원가입에 실패했습니다.'
-        );
-      }
-
-      // 회원가입 성공 후 로그인 처리
-      if (data.token) {
-        login(data.token);
-        navigate('/dashboard');
-      } else {
-        // 토큰이 없으면 로그인 페이지로 이동
+      // 회원가입 성공
+      setSuccess('회원가입이 완료되었습니다. 이메일 인증을 위해 메일함을 확인해 주세요.');
+      
+      // 바로 로그인하지 않고 성공 메시지 표시
+      setTimeout(() => {
         navigate('/login');
-      }
+      }, 5000);
     } catch (err) {
       setError(err instanceof Error ? err.message : '회원가입에 실패했습니다.');
     } finally {
@@ -93,63 +76,86 @@ export const Signup = () => {
             </Alert>
           )}
           
-          <Box component="form" onSubmit={handleSignup} sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="이메일 주소"
-              name="email"
-              autoComplete="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="비밀번호"
-              type="password"
-              id="password"
-              autoComplete="new-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="confirmPassword"
-              label="비밀번호 확인"
-              type="password"
-              id="confirmPassword"
-              autoComplete="new-password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              disabled={loading}
-            >
-              {loading ? '처리 중...' : '회원가입'}
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Button
-                  onClick={() => navigate('/login')}
-                  variant="text"
-                >
-                  이미 계정이 있으신가요? 로그인
-                </Button>
+          {success && (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              {success}
+            </Alert>
+          )}
+          
+          {!success && (
+            <Box component="form" onSubmit={handleSignup} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="이메일 주소"
+                name="email"
+                autoComplete="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="비밀번호"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="confirmPassword"
+                label="비밀번호 확인"
+                type="password"
+                id="confirmPassword"
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                disabled={loading}
+              >
+                {loading ? '처리 중...' : '회원가입'}
+              </Button>
+              <Grid container justifyContent="flex-end">
+                <Grid item>
+                  <Button
+                    onClick={() => navigate('/login')}
+                    variant="text"
+                  >
+                    이미 계정이 있으신가요? 로그인
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
-          </Box>
+            </Box>
+          )}
+          
+          {success && (
+            <Box sx={{ mt: 3, textAlign: 'center' }}>
+              <Typography variant="body2" color="textSecondary" gutterBottom>
+                잠시 후 로그인 페이지로 이동합니다...
+              </Typography>
+              <Button
+                onClick={() => navigate('/login')}
+                variant="outlined"
+                sx={{ mt: 2 }}
+              >
+                로그인 페이지로 이동
+              </Button>
+            </Box>
+          )}
         </Paper>
       </Box>
     </Container>
