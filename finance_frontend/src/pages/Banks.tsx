@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Alert, Snackbar } from '@mui/material';
+import { Container, Typography, Alert, Snackbar } from '@mui/material';
 import BankList from '../components/banks/BankList';
 import BankModal from '../components/banks/BankModal';
 import { BanksService } from '../api/services/BanksService';
@@ -72,7 +72,7 @@ const Banks: React.FC = () => {
   const handleSubmit = async (bankData: Partial<Bank>) => {
     try {
       if (selectedBank) {
-        await BanksService.banksUpdate(selectedBank.id, bankData);
+        await BanksService.banksUpdate(selectedBank.id, bankData as Bank);
         setBanks(
           banks.map((b) =>
             b.id === selectedBank.id ? { ...b, ...bankData } : b
@@ -84,7 +84,7 @@ const Banks: React.FC = () => {
           severity: 'success',
         });
       } else {
-        const newBank = await BanksService.banksCreate(bankData);
+        const newBank = await BanksService.banksCreate(bankData as Bank);
         setBanks([...banks, newBank]);
         setNotification({
           open: true,

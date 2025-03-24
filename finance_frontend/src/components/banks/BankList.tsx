@@ -53,7 +53,7 @@ const BankList: React.FC<BankListProps> = ({ banks, onEdit, onDelete, onAdd }) =
                   {parseFloat(bank.amount).toLocaleString()}원
                 </TableCell>
                 <TableCell align="right">
-                  {new Date(bank.created_at).toLocaleDateString()}
+                  {new Date().toLocaleDateString()}
                 </TableCell>
                 <TableCell align="center">
                   <Tooltip title="수정">

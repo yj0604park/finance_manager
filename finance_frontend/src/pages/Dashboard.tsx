@@ -1,24 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, Typography, Box, Paper } from '@mui/material';
-import {
-  AccountBalance,
-  TrendingUp,
-  TrendingDown,
-  AccountBalanceWallet,
-} from '@mui/icons-material';
-import SummaryCard from '../components/dashboard/SummaryCard';
+import { Container, Grid, Paper, Typography, Box } from '@mui/material';
+import { AccountBalance as BankIcon, CreditCard as CardIcon, TrendingUp as TrendingUpIcon, TrendingDown as TrendingDownIcon } from '@mui/icons-material';
 import ChartCard from '../components/dashboard/ChartCard';
-import { useAuth } from '../contexts/AuthContext';
-import { BanksService } from '../api/services/BanksService';
+import SummaryCard from '../components/dashboard/SummaryCard';
 import { AccountsService } from '../api/services/AccountsService';
 import { TransactionsService } from '../api/services/TransactionsService';
-import { Bank } from '../api/models/Bank';
 import { Account } from '../api/models/Account';
 import { Transaction } from '../api/models/Transaction';
 
 const Dashboard: React.FC = () => {
-  const { user } = useAuth();
-  const [banks, setBanks] = useState<Bank[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,13 +16,11 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [banksResponse, accountsResponse, transactionsResponse] = await Promise.all([
-          BanksService.banksList(),
+        const [accountsResponse, transactionsResponse] = await Promise.all([
           AccountsService.accountsList(),
           TransactionsService.transactionsList(),
         ]);
 
-        setBanks(banksResponse);
         setAccounts(accountsResponse);
         setRecentTransactions(transactionsResponse.slice(0, 5)); // 최근 5개만 표시
       } catch (error) {
@@ -83,7 +71,7 @@ const Dashboard: React.FC = () => {
           <SummaryCard
             title="총 자산"
             value={`${totalBalance.toLocaleString()}원`}
-            icon={<AccountBalance />}
+            icon={<BankIcon />}
             color="#1976d2"
           />
         </Grid>
@@ -91,7 +79,7 @@ const Dashboard: React.FC = () => {
           <SummaryCard
             title="이번 달 수입"
             value={`${monthlyIncome.toLocaleString()}원`}
-            icon={<TrendingUp />}
+            icon={<TrendingUpIcon />}
             color="#2e7d32"
           />
         </Grid>
@@ -99,7 +87,7 @@ const Dashboard: React.FC = () => {
           <SummaryCard
             title="이번 달 지출"
             value={`${monthlyExpense.toLocaleString()}원`}
-            icon={<TrendingDown />}
+            icon={<TrendingDownIcon />}
             color="#d32f2f"
           />
         </Grid>
@@ -107,7 +95,7 @@ const Dashboard: React.FC = () => {
           <SummaryCard
             title="순수입"
             value={`${(monthlyIncome - monthlyExpense).toLocaleString()}원`}
-            icon={<AccountBalanceWallet />}
+            icon={<CardIcon />}
             color="#ed6c02"
           />
         </Grid>

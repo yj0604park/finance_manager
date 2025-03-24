@@ -37,8 +37,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const [formData, setFormData] = useState<Partial<Transaction>>({
     date: new Date().toISOString().split('T')[0],
     account: accounts[0]?.id || 0,
-    type: TransactionTypeEnum.EXPENSE,
-    item: items[0]?.id || 0,
+    transaction_type: TransactionTypeEnum.WITHDRAW,
     amount: '0',
     note: '',
   });
@@ -48,8 +47,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       setFormData({
         date: transaction.date.split('T')[0],
         account: transaction.account,
-        type: transaction.type,
-        item: transaction.item,
+        transaction_type: transaction.transaction_type,
         amount: transaction.amount,
         note: transaction.note || '',
       });
@@ -57,8 +55,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       setFormData({
         date: new Date().toISOString().split('T')[0],
         account: accounts[0]?.id || 0,
-        type: TransactionTypeEnum.EXPENSE,
-        item: items[0]?.id || 0,
+        transaction_type: TransactionTypeEnum.WITHDRAW,
         amount: '0',
         note: '',
       });
@@ -66,7 +63,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   }, [transaction, accounts, items]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }> |
+    { target: { name?: string; value: unknown } }
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -114,20 +112,20 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             <FormControl fullWidth required>
               <InputLabel>유형</InputLabel>
               <Select
-                name="type"
-                value={formData.type}
+                name="transaction_type"
+                value={formData.transaction_type}
                 onChange={handleChange}
                 label="유형"
               >
-                <MenuItem value={TransactionTypeEnum.INCOME}>수입</MenuItem>
-                <MenuItem value={TransactionTypeEnum.EXPENSE}>지출</MenuItem>
+                <MenuItem value={TransactionTypeEnum.DEPOSIT}>수입</MenuItem>
+                <MenuItem value={TransactionTypeEnum.WITHDRAW}>지출</MenuItem>
               </Select>
             </FormControl>
             <FormControl fullWidth required>
               <InputLabel>항목</InputLabel>
               <Select
-                name="item"
-                value={formData.item}
+                name="retailer"
+                value={formData.retailer || ''}
                 onChange={handleChange}
                 label="항목"
               >

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Box, List, ListItem, ListItemButton, ListItemIcon,
-  ListItemText, Divider, Drawer, IconButton, Typography,
-  useTheme, useMediaQuery, Collapse
+  ListItemText, Drawer, Collapse,
+  useTheme, useMediaQuery
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -11,12 +11,10 @@ import {
   Receipt as TransactionIcon,
   CreditCard as CardIcon,
   ExpandLess, ExpandMore,
-  Menu as MenuIcon,
   AttachMoney as MoneyIcon,
   Article as ArticleIcon,
   BarChart as BarChartIcon
 } from '@mui/icons-material';
-import { useAuth } from '../../contexts/AuthContext';
 
 // 네비게이션 항목 인터페이스
 interface NavItem {
@@ -82,7 +80,6 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, drawerWidth }: SidebarProps) 
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // 앱바 높이 정의

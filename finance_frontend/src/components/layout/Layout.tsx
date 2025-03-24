@@ -58,7 +58,7 @@ export const Layout = ({ children }: LayoutProps) => {
           <Stack direction="row" spacing={1.5} alignItems="center">
             <Avatar
               sx={{
-                ...logoAvatarStyle(theme),
+                ...logoAvatarStyle(),
                 display: { xs: 'none', md: 'flex' }
               }}
             >
@@ -67,7 +67,7 @@ export const Layout = ({ children }: LayoutProps) => {
             <Typography
               variant="h6"
               component="div"
-              sx={logoTypographyStyle(theme, isMobile)}
+              sx={logoTypographyStyle(isMobile)}
             >
               금융 관리 시스템
             </Typography>

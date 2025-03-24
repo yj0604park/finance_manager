@@ -98,14 +98,14 @@ const Transactions: React.FC = () => {
   const handleSubmit = async (transactionData: Partial<Transaction>) => {
     try {
       if (selectedTransaction) {
-        await TransactionsService.transactionsUpdate(selectedTransaction.id, transactionData);
+        await TransactionsService.transactionsUpdate(selectedTransaction.id, transactionData as Transaction);
         setSnackbar({
           open: true,
           message: '거래 내역이 수정되었습니다.',
           severity: 'success',
         });
       } else {
-        await TransactionsService.transactionsCreate(transactionData);
+        await TransactionsService.transactionsCreate(transactionData as Transaction);
         setSnackbar({
           open: true,
           message: '거래 내역이 추가되었습니다.',

@@ -28,7 +28,7 @@ const BankModal: React.FC<BankModalProps> = ({
   const [formData, setFormData] = useState<Partial<Bank>>({
     name: '',
     amount: '0',
-    country: CountryEnum.KR,
+    country: CountryEnum.KOREA,
   });
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const BankModal: React.FC<BankModalProps> = ({
       setFormData({
         name: '',
         amount: '0',
-        country: CountryEnum.KR,
+        country: CountryEnum.KOREA,
       });
     }
   }, [bank]);

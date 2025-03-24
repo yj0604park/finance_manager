@@ -14,7 +14,7 @@ import {
   Cell,
 } from 'recharts';
 
-const StyledCard = styled(Card)(({ theme }) => ({
+const StyledCard = styled(Card)(() => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -66,7 +66,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
             outerRadius={80}
             label
           >
-            {data.map((entry, index) => (
+            {data.map((_, index) => (
               <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
             ))}
           </Pie>

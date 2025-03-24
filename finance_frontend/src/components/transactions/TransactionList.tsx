@@ -59,15 +59,14 @@ const TransactionList: React.FC<TransactionListProps> = ({
                 <TableCell>
                   {new Date(transaction.date).toLocaleDateString()}
                 </TableCell>
-                <TableCell>{transaction.account_name}</TableCell>
+                <TableCell>{transaction.account}</TableCell>
                 <TableCell>
                   <Chip
-                    label={transaction.type === TransactionTypeEnum.INCOME ? '수입' : '지출'}
-                    color={transaction.type === TransactionTypeEnum.INCOME ? 'success' : 'error'}
+                    label={transaction.transaction_type === TransactionTypeEnum.DEPOSIT ? '수입' : '지출'}
+                    color={transaction.transaction_type === TransactionTypeEnum.DEPOSIT ? 'success' : 'error'}
                     size="small"
                   />
                 </TableCell>
-                <TableCell>{transaction.item_name}</TableCell>
                 <TableCell>{transaction.note || '-'}</TableCell>
                 <TableCell align="right">
                   {parseFloat(transaction.amount).toLocaleString()}원

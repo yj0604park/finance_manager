@@ -6,7 +6,7 @@ export const appBarStyle: SxProps<Theme> = {
 };
 
 // 메인 로고 아바타 스타일
-export const logoAvatarStyle = (theme: Theme): SxProps<Theme> => ({
+export const logoAvatarStyle = (): SxProps<Theme> => ({
   bgcolor: 'white',
   color: 'primary.main',
   width: 36,
@@ -15,7 +15,7 @@ export const logoAvatarStyle = (theme: Theme): SxProps<Theme> => ({
 });
 
 // 로고 타이포그래피 스타일
-export const logoTypographyStyle = (theme: Theme, isMobile: boolean): SxProps<Theme> => ({
+export const logoTypographyStyle = (isMobile: boolean): SxProps<Theme> => ({
   flexGrow: 1,
   fontWeight: 'bold',
   fontSize: isMobile ? '1.1rem' : '1.25rem',
@@ -30,7 +30,7 @@ export const mainContainerStyle: SxProps<Theme> = {
 };
 
 // 컨텐츠 박스 스타일
-export const contentBoxStyle = (theme: Theme, isMobile: boolean, isAuthenticated: boolean): SxProps<Theme> => ({
+export const contentBoxStyle = (isMobile: boolean, isAuthenticated: boolean): SxProps<Theme> => ({
   backgroundColor: 'white',
   borderRadius: 2,
   px: isMobile ? 2 : 4,

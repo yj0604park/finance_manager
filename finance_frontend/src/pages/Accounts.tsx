@@ -85,14 +85,14 @@ const Accounts: React.FC = () => {
   const handleSubmit = async (accountData: Partial<Account>) => {
     try {
       if (selectedAccount) {
-        await AccountsService.accountsUpdate(selectedAccount.id, accountData);
+        await AccountsService.accountsUpdate(selectedAccount.id, accountData as Account);
         setSnackbar({
           open: true,
           message: '계좌가 수정되었습니다.',
           severity: 'success',
         });
       } else {
-        await AccountsService.accountsCreate(accountData);
+        await AccountsService.accountsCreate(accountData as Account);
         setSnackbar({
           open: true,
           message: '계좌가 추가되었습니다.',
