@@ -17,7 +17,11 @@ import { TransactionTypeEnum } from '../../api/models/TransactionTypeEnum';
 import { Account } from '../../api/models/Account';
 import { Item } from '../../api/models/Item';
 
-interface TransactionModalProps {
+/**
+ * 거래 추가 및 수정을 위한 모달 컴포넌트
+ * transaction prop 유무에 따라 수정/추가 모드로 동작합니다.
+ */
+interface TransactionFormModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (transaction: Partial<Transaction>) => void;
@@ -26,7 +30,7 @@ interface TransactionModalProps {
   items: Item[];
 }
 
-const TransactionModal: React.FC<TransactionModalProps> = ({
+const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
   open,
   onClose,
   onSubmit,
@@ -167,4 +171,4 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   );
 };
 
-export default TransactionModal;
+export default TransactionFormModal;

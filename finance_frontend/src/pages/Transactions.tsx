@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Box, Alert, Snackbar } from '@mui/material';
 import TransactionList from '../components/transactions/TransactionList';
-import TransactionModal from '../components/transactions/TransactionModal';
+import TransactionFormModal from '../components/transactions/TransactionFormModal';
 import { Transaction } from '../api/models/Transaction';
 import { Account } from '../api/models/Account';
 import { Item } from '../api/models/Item';
@@ -149,7 +149,7 @@ const Transactions: React.FC = () => {
           onDelete={handleDelete}
           onAdd={handleAdd}
         />
-        <TransactionModal
+        <TransactionFormModal
           open={modalOpen}
           onClose={() => setModalOpen(false)}
           onSubmit={handleSubmit}

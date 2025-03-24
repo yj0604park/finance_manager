@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Box, Alert, Snackbar } from '@mui/material';
 import AccountList from '../components/accounts/AccountList';
-import AccountModal from '../components/accounts/AccountModal';
+import AccountFormModal from '../components/accounts/AccountFormModal';
 import { Account } from '../api/models/Account';
 import { Bank } from '../api/models/Bank';
 import { AccountsService } from '../api/services/AccountsService';
@@ -136,7 +136,7 @@ const Accounts: React.FC = () => {
           onDelete={handleDelete}
           onAdd={handleAdd}
         />
-        <AccountModal
+        <AccountFormModal
           open={modalOpen}
           onClose={() => setModalOpen(false)}
           onSubmit={handleSubmit}

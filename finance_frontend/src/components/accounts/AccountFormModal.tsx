@@ -15,7 +15,11 @@ import { Account } from '../../api/models/Account';
 import { CurrencyToEnum } from '../../api/models/CurrencyToEnum';
 import { Bank } from '../../api/models/Bank';
 
-interface AccountModalProps {
+/**
+ * 계좌 추가 및 수정을 위한 모달 컴포넌트
+ * account prop 유무에 따라 수정/추가 모드로 동작합니다.
+ */
+interface AccountFormModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (account: Partial<Account>) => void;
@@ -23,7 +27,7 @@ interface AccountModalProps {
   banks: Bank[];
 }
 
-const AccountModal: React.FC<AccountModalProps> = ({
+const AccountFormModal: React.FC<AccountFormModalProps> = ({
   open,
   onClose,
   onSubmit,
@@ -160,4 +164,4 @@ const AccountModal: React.FC<AccountModalProps> = ({
   );
 };
 
-export default AccountModal;
+export default AccountFormModal;
