@@ -4,6 +4,300 @@ info:
   version: 1.0.0
   description: Documentation of API endpoints of finance_backend
 paths:
+  /api/account-snapshots/:
+    get:
+      operationId: account_snapshots_list
+      tags:
+      - account-snapshots
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountSnapshot'
+          description: ''
+    post:
+      operationId: account_snapshots_create
+      tags:
+      - account-snapshots
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountSnapshot'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AccountSnapshot'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AccountSnapshot'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountSnapshot'
+          description: ''
+  /api/account-snapshots/{id}/:
+    get:
+      operationId: account_snapshots_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this account snapshot.
+        required: true
+      tags:
+      - account-snapshots
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountSnapshot'
+          description: ''
+    put:
+      operationId: account_snapshots_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this account snapshot.
+        required: true
+      tags:
+      - account-snapshots
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountSnapshot'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AccountSnapshot'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AccountSnapshot'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountSnapshot'
+          description: ''
+    patch:
+      operationId: account_snapshots_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this account snapshot.
+        required: true
+      tags:
+      - account-snapshots
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAccountSnapshot'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAccountSnapshot'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAccountSnapshot'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountSnapshot'
+          description: ''
+    delete:
+      operationId: account_snapshots_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this account snapshot.
+        required: true
+      tags:
+      - account-snapshots
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/accounts/:
+    get:
+      operationId: accounts_list
+      tags:
+      - accounts
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+          description: ''
+    post:
+      operationId: accounts_create
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Account'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Account'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+          description: ''
+  /api/accounts/{id}/:
+    get:
+      operationId: accounts_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this account.
+        required: true
+      tags:
+      - accounts
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+          description: ''
+    put:
+      operationId: accounts_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this account.
+        required: true
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Account'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Account'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+          description: ''
+    patch:
+      operationId: accounts_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this account.
+        required: true
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAccount'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAccount'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAccount'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+          description: ''
+    delete:
+      operationId: accounts_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this account.
+        required: true
+      tags:
+      - accounts
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
   /api/auth-token/:
     post:
       operationId: auth_token_create
@@ -31,305 +325,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/AuthToken'
           description: ''
-  /api/money/account-snapshots/:
+  /api/banks/:
     get:
-      operationId: money_account_snapshots_list
+      operationId: banks_list
       tags:
-      - money
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AccountSnapshot'
-          description: ''
-    post:
-      operationId: money_account_snapshots_create
-      tags:
-      - money
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AccountSnapshot'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AccountSnapshot'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AccountSnapshot'
-        required: true
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountSnapshot'
-          description: ''
-  /api/money/account-snapshots/{id}/:
-    get:
-      operationId: money_account_snapshots_retrieve
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this account snapshot.
-        required: true
-      tags:
-      - money
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountSnapshot'
-          description: ''
-    put:
-      operationId: money_account_snapshots_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this account snapshot.
-        required: true
-      tags:
-      - money
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AccountSnapshot'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AccountSnapshot'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AccountSnapshot'
-        required: true
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountSnapshot'
-          description: ''
-    patch:
-      operationId: money_account_snapshots_partial_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this account snapshot.
-        required: true
-      tags:
-      - money
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedAccountSnapshot'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedAccountSnapshot'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedAccountSnapshot'
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountSnapshot'
-          description: ''
-    delete:
-      operationId: money_account_snapshots_destroy
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this account snapshot.
-        required: true
-      tags:
-      - money
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      responses:
-        '204':
-          description: No response body
-  /api/money/accounts/:
-    get:
-      operationId: money_accounts_list
-      tags:
-      - money
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Account'
-          description: ''
-    post:
-      operationId: money_accounts_create
-      tags:
-      - money
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Account'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Account'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Account'
-        required: true
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Account'
-          description: ''
-  /api/money/accounts/{id}/:
-    get:
-      operationId: money_accounts_retrieve
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this account.
-        required: true
-      tags:
-      - money
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Account'
-          description: ''
-    put:
-      operationId: money_accounts_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this account.
-        required: true
-      tags:
-      - money
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Account'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Account'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Account'
-        required: true
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Account'
-          description: ''
-    patch:
-      operationId: money_accounts_partial_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this account.
-        required: true
-      tags:
-      - money
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedAccount'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedAccount'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedAccount'
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Account'
-          description: ''
-    delete:
-      operationId: money_accounts_destroy
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this account.
-        required: true
-      tags:
-      - money
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      responses:
-        '204':
-          description: No response body
-  /api/money/banks/:
-    get:
-      operationId: money_banks_list
-      tags:
-      - money
+      - banks
       security:
       - cookieAuth: []
       - tokenAuth: []
@@ -343,9 +343,9 @@ paths:
                   $ref: '#/components/schemas/Bank'
           description: ''
     post:
-      operationId: money_banks_create
+      operationId: banks_create
       tags:
-      - money
+      - banks
       requestBody:
         content:
           application/json:
@@ -368,9 +368,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bank'
           description: ''
-  /api/money/banks/{id}/:
+  /api/banks/{id}/:
     get:
-      operationId: money_banks_retrieve
+      operationId: banks_retrieve
       parameters:
       - in: path
         name: id
@@ -379,7 +379,7 @@ paths:
         description: A unique integer value identifying this bank.
         required: true
       tags:
-      - money
+      - banks
       security:
       - cookieAuth: []
       - tokenAuth: []
@@ -391,7 +391,7 @@ paths:
                 $ref: '#/components/schemas/Bank'
           description: ''
     put:
-      operationId: money_banks_update
+      operationId: banks_update
       parameters:
       - in: path
         name: id
@@ -400,7 +400,7 @@ paths:
         description: A unique integer value identifying this bank.
         required: true
       tags:
-      - money
+      - banks
       requestBody:
         content:
           application/json:
@@ -424,7 +424,7 @@ paths:
                 $ref: '#/components/schemas/Bank'
           description: ''
     patch:
-      operationId: money_banks_partial_update
+      operationId: banks_partial_update
       parameters:
       - in: path
         name: id
@@ -433,7 +433,7 @@ paths:
         description: A unique integer value identifying this bank.
         required: true
       tags:
-      - money
+      - banks
       requestBody:
         content:
           application/json:
@@ -456,7 +456,7 @@ paths:
                 $ref: '#/components/schemas/Bank'
           description: ''
     delete:
-      operationId: money_banks_destroy
+      operationId: banks_destroy
       parameters:
       - in: path
         name: id
@@ -465,7 +465,889 @@ paths:
         description: A unique integer value identifying this bank.
         required: true
       tags:
-      - money
+      - banks
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/exchanges/:
+    get:
+      operationId: exchanges_list
+      tags:
+      - exchanges
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exchange'
+          description: ''
+    post:
+      operationId: exchanges_create
+      tags:
+      - exchanges
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Exchange'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Exchange'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Exchange'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exchange'
+          description: ''
+  /api/exchanges/{id}/:
+    get:
+      operationId: exchanges_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this exchange.
+        required: true
+      tags:
+      - exchanges
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exchange'
+          description: ''
+    put:
+      operationId: exchanges_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this exchange.
+        required: true
+      tags:
+      - exchanges
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Exchange'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Exchange'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Exchange'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exchange'
+          description: ''
+    patch:
+      operationId: exchanges_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this exchange.
+        required: true
+      tags:
+      - exchanges
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedExchange'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedExchange'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedExchange'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exchange'
+          description: ''
+    delete:
+      operationId: exchanges_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this exchange.
+        required: true
+      tags:
+      - exchanges
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/incomes/:
+    get:
+      operationId: incomes_list
+      tags:
+      - incomes
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Salary'
+          description: ''
+    post:
+      operationId: incomes_create
+      tags:
+      - incomes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Salary'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Salary'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Salary'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Salary'
+          description: ''
+  /api/incomes/{id}/:
+    get:
+      operationId: incomes_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this salary.
+        required: true
+      tags:
+      - incomes
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Salary'
+          description: ''
+    put:
+      operationId: incomes_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this salary.
+        required: true
+      tags:
+      - incomes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Salary'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Salary'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Salary'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Salary'
+          description: ''
+    patch:
+      operationId: incomes_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this salary.
+        required: true
+      tags:
+      - incomes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSalary'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSalary'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSalary'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Salary'
+          description: ''
+    delete:
+      operationId: incomes_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this salary.
+        required: true
+      tags:
+      - incomes
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/item-prices/:
+    get:
+      operationId: item_prices_list
+      tags:
+      - item-prices
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemPrice'
+          description: ''
+    post:
+      operationId: item_prices_create
+      tags:
+      - item-prices
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemPrice'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ItemPrice'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ItemPrice'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemPrice'
+          description: ''
+  /api/item-prices/{id}/:
+    get:
+      operationId: item_prices_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this item price.
+        required: true
+      tags:
+      - item-prices
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemPrice'
+          description: ''
+    put:
+      operationId: item_prices_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this item price.
+        required: true
+      tags:
+      - item-prices
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemPrice'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ItemPrice'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ItemPrice'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemPrice'
+          description: ''
+    patch:
+      operationId: item_prices_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this item price.
+        required: true
+      tags:
+      - item-prices
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedItemPrice'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedItemPrice'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedItemPrice'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemPrice'
+          description: ''
+    delete:
+      operationId: item_prices_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this item price.
+        required: true
+      tags:
+      - item-prices
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/item-transactions/:
+    get:
+      operationId: item_transactions_list
+      tags:
+      - item-transactions
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemTransaction'
+          description: ''
+    post:
+      operationId: item_transactions_create
+      tags:
+      - item-transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemTransaction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ItemTransaction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ItemTransaction'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemTransaction'
+          description: ''
+  /api/item-transactions/{id}/:
+    get:
+      operationId: item_transactions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this item transaction.
+        required: true
+      tags:
+      - item-transactions
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemTransaction'
+          description: ''
+    put:
+      operationId: item_transactions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this item transaction.
+        required: true
+      tags:
+      - item-transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemTransaction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ItemTransaction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ItemTransaction'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemTransaction'
+          description: ''
+    patch:
+      operationId: item_transactions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this item transaction.
+        required: true
+      tags:
+      - item-transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedItemTransaction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedItemTransaction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedItemTransaction'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemTransaction'
+          description: ''
+    delete:
+      operationId: item_transactions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this item transaction.
+        required: true
+      tags:
+      - item-transactions
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/items/:
+    get:
+      operationId: items_list
+      tags:
+      - items
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+          description: ''
+    post:
+      operationId: items_create
+      tags:
+      - items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Item'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Item'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+          description: ''
+  /api/items/{id}/:
+    get:
+      operationId: items_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this item.
+        required: true
+      tags:
+      - items
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+          description: ''
+    put:
+      operationId: items_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this item.
+        required: true
+      tags:
+      - items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Item'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Item'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+          description: ''
+    patch:
+      operationId: items_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this item.
+        required: true
+      tags:
+      - items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedItem'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+          description: ''
+    delete:
+      operationId: items_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this item.
+        required: true
+      tags:
+      - items
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/reatilers/:
+    get:
+      operationId: reatilers_list
+      tags:
+      - reatilers
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Retailer'
+          description: ''
+    post:
+      operationId: reatilers_create
+      tags:
+      - reatilers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Retailer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Retailer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Retailer'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Retailer'
+          description: ''
+  /api/reatilers/{id}/:
+    get:
+      operationId: reatilers_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this retailer.
+        required: true
+      tags:
+      - reatilers
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Retailer'
+          description: ''
+    put:
+      operationId: reatilers_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this retailer.
+        required: true
+      tags:
+      - reatilers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Retailer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Retailer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Retailer'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Retailer'
+          description: ''
+    patch:
+      operationId: reatilers_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this retailer.
+        required: true
+      tags:
+      - reatilers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRetailer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRetailer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRetailer'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Retailer'
+          description: ''
+    delete:
+      operationId: reatilers_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this retailer.
+        required: true
+      tags:
+      - reatilers
       security:
       - cookieAuth: []
       - tokenAuth: []
@@ -617,6 +1499,153 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ''
+  /api/transactions/:
+    get:
+      operationId: transactions_list
+      tags:
+      - transactions
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+          description: ''
+    post:
+      operationId: transactions_create
+      tags:
+      - transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+          description: ''
+  /api/transactions/{id}/:
+    get:
+      operationId: transactions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transaction.
+        required: true
+      tags:
+      - transactions
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+          description: ''
+    put:
+      operationId: transactions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transaction.
+        required: true
+      tags:
+      - transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+          description: ''
+    patch:
+      operationId: transactions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transaction.
+        required: true
+      tags:
+      - transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTransaction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTransaction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTransaction'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+          description: ''
+    delete:
+      operationId: transactions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transaction.
+        required: true
+      tags:
+      - transactions
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
   /api/users/:
     get:
       operationId: users_list
@@ -1093,7 +2122,7 @@ components:
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
         currency:
-          $ref: '#/components/schemas/CurrencyEnum'
+          $ref: '#/components/schemas/CurrencyToEnum'
         name:
           type: string
           maxLength: 100
@@ -1150,7 +2179,7 @@ components:
         currency:
           nullable: true
           oneOf:
-          - $ref: '#/components/schemas/CurrencyEnum'
+          - $ref: '#/components/schemas/CurrencyToEnum'
           - $ref: '#/components/schemas/BlankEnum'
           - $ref: '#/components/schemas/NullEnum'
         user:
@@ -1214,6 +2243,60 @@ components:
     BlankEnum:
       enum:
       - ''
+    CategoryEnum:
+      enum:
+      - ETC_INCOME
+      - SALARY
+      - BONUS
+      - INTEREST_INCOME
+      - STOCK_INCOME
+      - RENT_INCOME
+      - DIVIDEND
+      - DEPOSIT
+      - ETC_EXPENSE
+      - DAILY_NECESSITY
+      - GROCERY
+      - MEMBERSHIP
+      - SERVICE
+      - EAT_OUT
+      - CLOTHING
+      - PRESENT
+      - CAR
+      - HOUSING
+      - LEISURE
+      - MEDICAL
+      - PARENTING
+      - INTEREST_EXPENSE
+      - WITHDRAW
+      - TRANSFER
+      - UNKNOWN
+      type: string
+      description: |-
+        * `ETC_INCOME` - 기타소득
+        * `SALARY` - 월급
+        * `BONUS` - 보너스
+        * `INTEREST_INCOME` - 이자소득
+        * `STOCK_INCOME` - 주식
+        * `RENT_INCOME` - 임대
+        * `DIVIDEND` - 배당
+        * `DEPOSIT` - 입금
+        * `ETC_EXPENSE` - 기타지출
+        * `DAILY_NECESSITY` - 생필품
+        * `GROCERY` - 식료품
+        * `MEMBERSHIP` - 맴버십
+        * `SERVICE` - 서비스
+        * `EAT_OUT` - 외식
+        * `CLOTHING` - 옷
+        * `PRESENT` - 선물
+        * `CAR` - 이동수단
+        * `HOUSING` - 월세
+        * `LEISURE` - 여가
+        * `MEDICAL` - 의료
+        * `PARENTING` - 육아
+        * `INTEREST_EXPENSE` - 이자지출
+        * `WITHDRAW` - 출금
+        * `TRANSFER` - 이체
+        * `UNKNOWN` - 알 수 없음
     CountryEnum:
       enum:
       - KOREA
@@ -1222,7 +2305,7 @@ components:
       description: |-
         * `KOREA` - 한국
         * `USA` - 미국
-    CurrencyEnum:
+    CurrencyToEnum:
       enum:
       - KRW
       - USD
@@ -1230,6 +2313,211 @@ components:
       description: |-
         * `KRW` - 원화
         * `USD` - 달러
+    Exchange:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        amount_from:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        amount_to:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        currency_from:
+          $ref: '#/components/schemas/CurrencyToEnum'
+        currency_to:
+          $ref: '#/components/schemas/CurrencyToEnum'
+        exchange_ratio:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,4})?$
+          nullable: true
+        exchange_brokder:
+          $ref: '#/components/schemas/ExchangeBrokderEnum'
+        user:
+          type: integer
+        transaction_from:
+          type: integer
+        transaction_to:
+          type: integer
+      required:
+      - amount_from
+      - amount_to
+      - created_at
+      - currency_from
+      - currency_to
+      - date
+      - id
+      - transaction_from
+      - transaction_to
+      - updated_at
+      - user
+    ExchangeBrokderEnum:
+      enum:
+      - ETC
+      - BANK
+      - WIREBARLEY
+      - CREDITCARD
+      type: string
+      description: |-
+        * `ETC` - 기타
+        * `BANK` - 은행
+        * `WIREBARLEY` - 와이어바알리
+        * `CREDITCARD` - 신용카드
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        currency:
+          $ref: '#/components/schemas/CurrencyToEnum'
+        name:
+          type: string
+          maxLength: 20
+        code:
+          type: string
+          nullable: true
+          maxLength: 20
+        item_type:
+          $ref: '#/components/schemas/ItemTypeEnum'
+        user:
+          type: integer
+      required:
+      - id
+      - name
+      - user
+    ItemPrice:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        currency:
+          $ref: '#/components/schemas/CurrencyToEnum'
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        user:
+          type: integer
+        item:
+          type: integer
+      required:
+      - created_at
+      - date
+      - id
+      - item
+      - price
+      - updated_at
+      - user
+    ItemTransaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        purchase_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        quantity:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,11}(?:\.\d{0,4})?$
+        tax:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          nullable: true
+        fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          nullable: true
+        subsidy:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          nullable: true
+        note:
+          type: string
+          nullable: true
+        user:
+          type: integer
+        item:
+          type: integer
+        transaction:
+          type: integer
+          nullable: true
+      required:
+      - amount
+      - created_at
+      - date
+      - id
+      - item
+      - purchase_price
+      - quantity
+      - updated_at
+      - user
+    ItemTypeEnum:
+      enum:
+      - ITEM
+      - STOCK
+      type: string
+      description: |-
+        * `ITEM` - 아이템
+        * `STOCK` - 주식
     Login:
       type: object
       properties:
@@ -1296,7 +2584,7 @@ components:
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
         currency:
-          $ref: '#/components/schemas/CurrencyEnum'
+          $ref: '#/components/schemas/CurrencyToEnum'
         name:
           type: string
           maxLength: 100
@@ -1347,7 +2635,7 @@ components:
         currency:
           nullable: true
           oneOf:
-          - $ref: '#/components/schemas/CurrencyEnum'
+          - $ref: '#/components/schemas/CurrencyToEnum'
           - $ref: '#/components/schemas/BlankEnum'
           - $ref: '#/components/schemas/NullEnum'
         user:
@@ -1378,6 +2666,268 @@ components:
           $ref: '#/components/schemas/CountryEnum'
         user:
           type: integer
+    PatchedExchange:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        amount_from:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        amount_to:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        currency_from:
+          $ref: '#/components/schemas/CurrencyToEnum'
+        currency_to:
+          $ref: '#/components/schemas/CurrencyToEnum'
+        exchange_ratio:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,4})?$
+          nullable: true
+        exchange_brokder:
+          $ref: '#/components/schemas/ExchangeBrokderEnum'
+        user:
+          type: integer
+        transaction_from:
+          type: integer
+        transaction_to:
+          type: integer
+    PatchedItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        currency:
+          $ref: '#/components/schemas/CurrencyToEnum'
+        name:
+          type: string
+          maxLength: 20
+        code:
+          type: string
+          nullable: true
+          maxLength: 20
+        item_type:
+          $ref: '#/components/schemas/ItemTypeEnum'
+        user:
+          type: integer
+    PatchedItemPrice:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        currency:
+          $ref: '#/components/schemas/CurrencyToEnum'
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        user:
+          type: integer
+        item:
+          type: integer
+    PatchedItemTransaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        purchase_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        quantity:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,11}(?:\.\d{0,4})?$
+        tax:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          nullable: true
+        fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          nullable: true
+        subsidy:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          nullable: true
+        note:
+          type: string
+          nullable: true
+        user:
+          type: integer
+        item:
+          type: integer
+        transaction:
+          type: integer
+          nullable: true
+    PatchedRetailer:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 30
+        retailer_type:
+          $ref: '#/components/schemas/RetailerTypeEnum'
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        user:
+          type: integer
+    PatchedSalary:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        currency:
+          $ref: '#/components/schemas/CurrencyToEnum'
+        gross_pay:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        adjustment:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        tax_withheld:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        deduction:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        net_pay:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        gross_pay_detail: {}
+        adjustment_detail: {}
+        tax_withheld_detail: {}
+        deduction_detail: {}
+        user:
+          type: integer
+        transaction:
+          type: integer
+    PatchedTransaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        balance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          nullable: true
+        note:
+          type: string
+          nullable: true
+        transaction_type:
+          $ref: '#/components/schemas/TransactionTypeEnum'
+        is_reviewed:
+          type: boolean
+        user:
+          type: integer
+        account:
+          type: integer
+        retailer:
+          type: integer
+          nullable: true
+        linked_transaction:
+          type: integer
+          nullable: true
     PatchedUser:
       type: object
       properties:
@@ -1444,6 +2994,111 @@ components:
           readOnly: true
       required:
       - detail
+    Retailer:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 30
+        retailer_type:
+          $ref: '#/components/schemas/RetailerTypeEnum'
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        user:
+          type: integer
+      required:
+      - id
+      - name
+      - user
+    RetailerTypeEnum:
+      enum:
+      - ETC
+      - STORE
+      - PERSON
+      - BANK
+      - SERVICE
+      - INCOME
+      - RESTAURANT
+      - INTERNET
+      type: string
+      description: |-
+        * `ETC` - 기타
+        * `STORE` - 상점
+        * `PERSON` - 개인
+        * `BANK` - 은행
+        * `SERVICE` - 서비스
+        * `INCOME` - 수입
+        * `RESTAURANT` - 식당
+        * `INTERNET` - 인터넷
+    Salary:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        currency:
+          $ref: '#/components/schemas/CurrencyToEnum'
+        gross_pay:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        adjustment:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        tax_withheld:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        deduction:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        net_pay:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        gross_pay_detail: {}
+        adjustment_detail: {}
+        tax_withheld_detail: {}
+        deduction_detail: {}
+        user:
+          type: integer
+        transaction:
+          type: integer
+      required:
+      - adjustment
+      - adjustment_detail
+      - created_at
+      - date
+      - deduction
+      - deduction_detail
+      - gross_pay
+      - gross_pay_detail
+      - id
+      - net_pay
+      - tax_withheld
+      - tax_withheld_detail
+      - transaction
+      - updated_at
+      - user
     Token:
       type: object
       description: Serializer for Token model.
@@ -1454,6 +3109,114 @@ components:
           maxLength: 40
       required:
       - key
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        balance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          nullable: true
+        note:
+          type: string
+          nullable: true
+        transaction_type:
+          $ref: '#/components/schemas/TransactionTypeEnum'
+        is_reviewed:
+          type: boolean
+        user:
+          type: integer
+        account:
+          type: integer
+        retailer:
+          type: integer
+          nullable: true
+        linked_transaction:
+          type: integer
+          nullable: true
+      required:
+      - account
+      - amount
+      - created_at
+      - date
+      - id
+      - updated_at
+      - user
+    TransactionTypeEnum:
+      enum:
+      - ETC_INCOME
+      - SALARY
+      - BONUS
+      - INTEREST_INCOME
+      - STOCK_INCOME
+      - RENT_INCOME
+      - DIVIDEND
+      - DEPOSIT
+      - ETC_EXPENSE
+      - DAILY_NECESSITY
+      - GROCERY
+      - MEMBERSHIP
+      - SERVICE
+      - EAT_OUT
+      - CLOTHING
+      - PRESENT
+      - CAR
+      - HOUSING
+      - LEISURE
+      - MEDICAL
+      - PARENTING
+      - INTEREST_EXPENSE
+      - WITHDRAW
+      - TRANSFER
+      - UNKNOWN
+      type: string
+      description: |-
+        * `ETC_INCOME` - 기타소득
+        * `SALARY` - 월급
+        * `BONUS` - 보너스
+        * `INTEREST_INCOME` - 이자소득
+        * `STOCK_INCOME` - 주식
+        * `RENT_INCOME` - 임대
+        * `DIVIDEND` - 배당
+        * `DEPOSIT` - 입금
+        * `ETC_EXPENSE` - 기타지출
+        * `DAILY_NECESSITY` - 생필품
+        * `GROCERY` - 식료품
+        * `MEMBERSHIP` - 맴버십
+        * `SERVICE` - 서비스
+        * `EAT_OUT` - 외식
+        * `CLOTHING` - 옷
+        * `PRESENT` - 선물
+        * `CAR` - 이동수단
+        * `HOUSING` - 월세
+        * `LEISURE` - 여가
+        * `MEDICAL` - 의료
+        * `PARENTING` - 육아
+        * `INTEREST_EXPENSE` - 이자지출
+        * `WITHDRAW` - 출금
+        * `TRANSFER` - 이체
+        * `UNKNOWN` - 알 수 없음
     User:
       type: object
       properties:
