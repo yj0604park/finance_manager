@@ -21,6 +21,14 @@ class BankSerializer(serializers.ModelSerializer[Bank]):
 
 
 class AccountSerializer(serializers.ModelSerializer[Account]):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    amount = serializers.DecimalField(max_digits=15, decimal_places=2, default=0)
+
+    def create(self, validated_data):
+        validated_data["user"] = self.context["request"].user
+        validated_data["amount"] = 0
+        return super().create(validated_data)
+
     class Meta:
         model = Account
         fields = "__all__"

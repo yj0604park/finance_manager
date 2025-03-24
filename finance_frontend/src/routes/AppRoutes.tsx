@@ -3,7 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from '../pages/Dashboard';
 import Banks from '../pages/Banks';
 import Accounts from '../pages/Accounts';
-import Transactions from '../pages/Transactions';
+import TransactionList from '../pages/transactions/List';
+import TransactionAnalysis from '../pages/transactions/Analysis';
 import Settings from '../pages/Settings';
 import Login from '../pages/Login';
 import { NotFound } from '../pages/NotFound';
@@ -55,7 +56,23 @@ const AppRoutes: React.FC = () => {
         path="/transactions"
         element={
           <ProtectedRoute>
-            <Transactions />
+            <Navigate to="/transactions/list" replace />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/transactions/list"
+        element={
+          <ProtectedRoute>
+            <TransactionList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/transactions/analysis"
+        element={
+          <ProtectedRoute>
+            <TransactionAnalysis />
           </ProtectedRoute>
         }
       />
