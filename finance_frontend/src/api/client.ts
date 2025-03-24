@@ -52,13 +52,13 @@ export function clearAuthToken(): void {
 }
 
 /**
- * Login with username and password using the REST Auth endpoint
+ * Login with email and password using the REST Auth endpoint
  */
-export async function login(username: string, password: string): Promise<string> {
+export async function login(email: string, password: string): Promise<string> {
   try {
     // Try the REST Auth login first
     const loginData: Login = {
-      username,
+      email,
       password,
     };
 
@@ -79,10 +79,10 @@ export async function login(username: string, password: string): Promise<string>
 /**
  * Alternative login method using the auth-token endpoint
  */
-export async function loginWithAuthToken(username: string, password: string): Promise<string> {
+export async function loginWithAuthToken(email: string, password: string): Promise<string> {
   try {
     const authData: AuthToken = {
-      username,
+      email,
       password,
       token: '',
     };

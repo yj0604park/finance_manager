@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type AuthToken = {
-    username: string;
+    email: string;
     password: string;
     readonly token: string;
 };

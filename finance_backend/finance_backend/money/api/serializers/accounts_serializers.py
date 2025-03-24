@@ -7,6 +7,8 @@ from finance_backend.money.models.accounts import Bank
 
 
 class BankSerializer(serializers.ModelSerializer[Bank]):
+    user = serializers.ReadOnlyField(source="user.username")
+
     class Meta:
         model = Bank
         fields = "__all__"

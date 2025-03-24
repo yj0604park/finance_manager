@@ -9,7 +9,7 @@ interface LoginProps {
  * Login component for authenticating users
  */
 export default function Login({ onLoginSuccess }: LoginProps) {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -17,8 +17,8 @@ export default function Login({ onLoginSuccess }: LoginProps) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!username || !password) {
-      setError('Please enter both username and password.');
+    if (!email || !password) {
+      setError('Please enter both email and password.');
       return;
     }
 
@@ -27,10 +27,10 @@ export default function Login({ onLoginSuccess }: LoginProps) {
       setError(null);
 
       // Call the login function from our API client
-      await login(username, password);
+      await login(email, password);
 
       // Clear form and notify parent component
-      setUsername('');
+      setEmail('');
       setPassword('');
       onLoginSuccess();
     } catch (err) {
@@ -49,12 +49,12 @@ export default function Login({ onLoginSuccess }: LoginProps) {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="username">Username</label>
+          <label htmlFor="email">Email</label>
           <input
             type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             disabled={loading}
           />
         </div>
