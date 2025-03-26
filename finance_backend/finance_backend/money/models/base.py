@@ -1,5 +1,4 @@
 from django.db import models
-from django.urls import reverse
 
 from finance_backend.money.choices import CurrencyType
 
@@ -26,14 +25,6 @@ class BaseAmountModel(models.Model):
 
     class Meta:
         abstract = True
-
-
-class BaseURLModel(models.Model):
-    class Meta:
-        abstract = True
-
-    def get_absolute_url(self):
-        return reverse(f"money:{self._meta.model_name}_detail", kwargs={"pk": self.pk})
 
 
 class BaseCurrencyModel(models.Model):

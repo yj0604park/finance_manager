@@ -3,11 +3,10 @@ from django.db import models
 from finance_backend.money.choices import ItemType
 from finance_backend.money.models.base import BaseCurrencyModel
 from finance_backend.money.models.base import BaseTimeStampModel
-from finance_backend.money.models.base import BaseURLModel
 from finance_backend.money.models.base import BaseUserModel
 
 
-class Item(BaseUserModel, BaseURLModel, BaseCurrencyModel):
+class Item(BaseUserModel, BaseCurrencyModel):
     name = models.CharField(max_length=20)
     code = models.CharField(max_length=20, default="")
     item_type = models.CharField(
@@ -26,3 +25,6 @@ class Item(BaseUserModel, BaseURLModel, BaseCurrencyModel):
 class ItemPrice(BaseUserModel, BaseTimeStampModel, BaseCurrencyModel):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=15, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.item.name}: {self.date.strftime('%Y-%m-%d')} - {self.price}"

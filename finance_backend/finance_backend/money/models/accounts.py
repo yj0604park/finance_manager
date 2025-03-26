@@ -25,7 +25,7 @@ class Bank(BaseUserModel, BaseAmountModel):
         ordering = ["name"]
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.country})"
 
 
 class Account(BaseUserModel, BaseAmountModel, BaseCurrencyModel):
@@ -49,10 +49,10 @@ class Account(BaseUserModel, BaseAmountModel, BaseCurrencyModel):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.bank.name})"
 
 
-class AccountSnapshot(BaseUserModel, BaseTimeStampModel):
+class AccountSnapshot(BaseUserModel, BaseTimeStampModel, BaseAmountModel):
     account = models.ForeignKey(
         Account,
         on_delete=models.CASCADE,
@@ -62,5 +62,8 @@ class AccountSnapshot(BaseUserModel, BaseTimeStampModel):
     bank = models.ForeignKey(Bank, on_delete=models.CASCADE, null=True, blank=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True, blank=True)
 
-    def __str__(self) -> str:
-        return f"{self.date}: {self.currency}"
+    def __str__(self):
+        return (
+            f"{self.date.strftime('%Y-%m-%d')} - "
+            f"{self.account.name} ({self.account.bank.name})"
+        )

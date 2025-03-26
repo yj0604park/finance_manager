@@ -52,7 +52,6 @@ class ItemTransactionModelTest(TestCase):
             user=self.user,
             item=self.item,
             transaction=self.transaction,
-            amount=Decimal("100.00"),
             purchase_price=Decimal("50.00"),
             quantity=Decimal("2.0000"),
             tax=Decimal("10.00"),
@@ -64,7 +63,6 @@ class ItemTransactionModelTest(TestCase):
         assert item_transaction.user == self.user
         assert item_transaction.item == self.item
         assert item_transaction.transaction == self.transaction
-        assert item_transaction.amount == Decimal("100.00")
         assert item_transaction.purchase_price == Decimal("50.00")
         assert item_transaction.quantity == Decimal("2.0000")
         assert item_transaction.tax == Decimal("10.00")
@@ -75,7 +73,6 @@ class ItemTransactionModelTest(TestCase):
         item_transaction = ItemTransaction.objects.create(
             user=self.user,
             item=self.item,
-            amount=Decimal("100.00"),
             purchase_price=Decimal("50.00"),
             quantity=Decimal("2.0000"),
             date=timezone.now(),

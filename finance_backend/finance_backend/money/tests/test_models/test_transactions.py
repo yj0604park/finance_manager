@@ -66,7 +66,7 @@ class TransactionModelTest(TestCase):
         )
 
         expected_str = (
-            f"{transaction.pk} {transaction.date.strftime('%Y-%m-%d')} "
+            f"{transaction.date.strftime('%Y-%m-%d')} - "
             f"{self.account.name}: {self.retailer.name}"
         )
         assert str(transaction) == expected_str
@@ -83,7 +83,6 @@ class TransactionModelTest(TestCase):
 
         assert transaction.retailer is None
         expected_str = (
-            f"{transaction.pk} {transaction.date.strftime('%Y-%m-%d')} "
-            f"{self.account.name}: None"
+            f"{transaction.date.strftime('%Y-%m-%d')} - {self.account.name}: None"
         )
         assert str(transaction) == expected_str

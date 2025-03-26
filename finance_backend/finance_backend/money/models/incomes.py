@@ -1,11 +1,8 @@
 from django.db import models
 
-from finance_backend.money.models.base import (
-    BaseCurrencyModel,
-    BaseTimeStampModel,
-    BaseURLModel,
-    BaseUserModel,
-)
+from finance_backend.money.models.base import BaseCurrencyModel
+from finance_backend.money.models.base import BaseTimeStampModel
+from finance_backend.money.models.base import BaseUserModel
 from finance_backend.money.models.transactions import Transaction
 
 
@@ -22,6 +19,10 @@ class Salary(BaseUserModel, BaseTimeStampModel, BaseCurrencyModel):
     deduction_detail = models.JSONField()
 
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "salaries"
+        ordering = ["-date"]
 
     def __str__(self):
         return f"{self.date}"

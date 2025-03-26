@@ -77,7 +77,7 @@ class SalaryAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "transaction":
             kwargs["queryset"] = (
-                Transaction.objects.filter(type=TransactionCategory.INCOME)
+                Transaction.objects.filter(type=TransactionCategory.ETC_INCOME)
                 .prefetch_related("account", "retailer")
                 .order_by("date")
             )

@@ -43,4 +43,4 @@ class Exchange(BaseUserModel, BaseTimeStampModel):
     )
 
     def __str__(self) -> str:
-        return f"{self.date}: {self.ratio_per_krw}"
+        return f"{self.date}: {self.exchange_ratio}"

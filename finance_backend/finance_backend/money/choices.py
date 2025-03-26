@@ -68,7 +68,7 @@ class RetailerType(models.TextChoices):
     SERVICE = "SERVICE", "서비스"
     INCOME = "INCOME", "수입"
     RESTAURANT = "RESTAURANT", "식당"
-    INTERNET = "INTERNET", "인터넷"
+    ONLINE = "ONLINE", "온라인"
 
 
 class DetailItemCategory(models.TextChoices):

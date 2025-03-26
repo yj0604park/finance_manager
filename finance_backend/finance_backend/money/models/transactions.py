@@ -1,17 +1,15 @@
 from django.db import models
-from django.urls import reverse
 
 from finance_backend.money.choices import TransactionCategory
 from finance_backend.money.models.accounts import Account
 from finance_backend.money.models.base import BaseAmountModel
 from finance_backend.money.models.base import BaseTimeStampModel
-from finance_backend.money.models.base import BaseURLModel
 from finance_backend.money.models.base import BaseUserModel
 from finance_backend.money.models.items import Item
 from finance_backend.money.models.shoppings import Retailer
 
 
-class Transaction(BaseUserModel, BaseTimeStampModel, BaseAmountModel, BaseURLModel):
+class Transaction(BaseUserModel, BaseTimeStampModel, BaseAmountModel):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     retailer = models.ForeignKey(
         Retailer,
@@ -39,21 +37,17 @@ class Transaction(BaseUserModel, BaseTimeStampModel, BaseAmountModel, BaseURLMod
     )
     is_reviewed = models.BooleanField(default=False)
 
-    def get_absolute_url(self):
-        return reverse("money:transaction_detail", kwargs={"pk": self.pk})
-
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
     def __str__(self):
         return (
-            f"{self.pk} {self.date.strftime('%Y-%m-%d')} "
-            f"{self.account.name}: "
+            f"{self.date.strftime('%Y-%m-%d')} - {self.account.name}: "
             f"{self.retailer.name if self.retailer else None}"
         )
 
 
-class ItemTransaction(BaseUserModel, BaseTimeStampModel, BaseAmountModel, BaseURLModel):
+class ItemTransaction(BaseUserModel, BaseTimeStampModel):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     transaction = models.ForeignKey(
         Transaction,
@@ -89,6 +83,7 @@ class ItemTransaction(BaseUserModel, BaseTimeStampModel, BaseAmountModel, BaseUR
 
     def __str__(self):
         return (
-            f"{self.date.strftime('%Y-%m-%d')}, "
-            f"Stock {self.stock}, share {self.shares}, price {self.price}"
+            f"{self.date.strftime('%Y-%m-%d')} - "
+            f"{self.item.name} ({self.item.code}) - "
+            f"{self.quantity} units @ {self.purchase_price}"
         )

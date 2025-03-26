@@ -23,10 +23,10 @@ router.register("account-snapshots", AccountSnapshotViewSet)
 router.register("transactions", TransactionViewSet)
 router.register("item-transactions", ItemTransactionViewSet)
 router.register("exchanges", ExchangeViewSet)
-router.register("incomes", SalaryViewSet)
+router.register("salaries", SalaryViewSet)
 router.register("items", ItemViewSet)
 router.register("item-prices", ItemPriceViewSet)
-router.register("reatilers", RetailerViewSet)
+router.register("retailers", RetailerViewSet)
 
 
 app_name = "api"
