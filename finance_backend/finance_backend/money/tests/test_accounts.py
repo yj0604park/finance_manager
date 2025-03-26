@@ -1,8 +1,8 @@
+from datetime import UTC
 from datetime import datetime
 from decimal import Decimal
 
 from django.test import TestCase
-from django.utils import timezone
 
 from finance_backend.money.choices import AccountType
 from finance_backend.money.choices import CurrencyType
@@ -41,7 +41,7 @@ class AccountsTest(TestCase):
             bank=self.bank,
             item=self.item,
             amount=Decimal("1000.00"),
-            date=datetime.now(tz=timezone.utc).date(),
+            date=datetime.now(tz=UTC).date(),
         )
 
     def test_bank_model(self):
@@ -109,7 +109,7 @@ class AccountsTest(TestCase):
         assert self.snapshot.bank == self.bank
         assert self.snapshot.item == self.item
         assert self.snapshot.amount == Decimal("1000.00")
-        assert self.snapshot.date == datetime.now(tz=timezone.utc).date()
+        assert self.snapshot.date == datetime.now(tz=UTC).date()
 
     def test_account_snapshot_str(self):
         expected_str = (
@@ -122,10 +122,10 @@ class AccountsTest(TestCase):
         snapshot = AccountSnapshot.objects.create(
             user=self.user,
             amount=Decimal("1000.00"),
-            date=datetime.now(tz=timezone.utc).date(),
+            date=datetime.now(tz=UTC).date(),
         )
         assert snapshot.account is None
         assert snapshot.bank is None
         assert snapshot.item is None
         assert snapshot.amount == Decimal("1000.00")
-        assert snapshot.date == datetime.now(tz=timezone.utc).date()
+        assert snapshot.date == datetime.now(tz=UTC).date()

@@ -1,9 +1,10 @@
+from datetime import UTC
 from datetime import date
 from datetime import datetime
 from decimal import Decimal
 
 from django.test import TestCase
-from django.utils import timezone
+from django.utils import timezone as django_timezone
 
 from finance_backend.money.choices import CurrencyType
 from finance_backend.money.choices import ExchangeType
@@ -39,14 +40,14 @@ class ExchangesTest(TestCase):
             account=self.account,
             retailer=self.retailer,
             amount=self.AMOUNT_FROM,
-            date=datetime.now(tz=timezone.utc).date(),
+            date=datetime.now(tz=UTC).date(),
         )
         self.transaction_to = Transaction.objects.create(
             user=self.user,
             account=self.account,
             retailer=self.retailer,
             amount=self.AMOUNT_TO,
-            date=datetime.now(tz=timezone.utc).date(),
+            date=datetime.now(tz=UTC).date(),
         )
         self.exchange = Exchange.objects.create(
             user=self.user,
@@ -58,7 +59,7 @@ class ExchangesTest(TestCase):
             currency_to=CurrencyType.KRW,
             exchange_broker=ExchangeType.BANK,
             date=date(2024, 1, 1),
-            time=timezone.now().time(),
+            time=django_timezone.now().time(),
             exchange_ratio=Decimal("0.00075"),
         )
 
@@ -98,7 +99,7 @@ class ExchangesTest(TestCase):
             currency_to=CurrencyType.KRW,
             exchange_broker=ExchangeType.BANK,
             date=date(2024, 1, 1),
-            time=timezone.now().time(),
+            time=django_timezone.now().time(),
         )
         assert exchange.exchange_ratio is None
         assert (
