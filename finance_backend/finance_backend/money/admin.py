@@ -86,7 +86,7 @@ class SalaryAdmin(admin.ModelAdmin):
 
 @admin.register(Exchange)
 class ExchangeAdmin(admin.ModelAdmin):
-    list_display = ["__str__", "id", "date", "exchange_ratio", "exchange_brokder"]
-    list_filter = ["exchange_brokder"]
+    list_display = ["__str__", "id", "date", "exchange_ratio", "exchange_broker"]
+    list_filter = ["exchange_broker"]
     raw_id_fields = ("transaction_from", "transaction_to")
     date_hierarchy = "date"
