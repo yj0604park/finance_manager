@@ -27,11 +27,14 @@ import {
   FilterList as FilterIcon
 } from '@mui/icons-material';
 import { Transaction } from '../../api/models/Transaction';
+import { TransactionTypeEnum } from '../../api/models/TransactionTypeEnum';
 import { TransactionsService } from '../../api/services/TransactionsService';
 import { AccountsService } from '../../api/services/AccountsService';
 import { ItemsService } from '../../api/services/ItemsService';
+import { ReatilersService } from '../../api/services/ReatilersService';
 import { Account } from '../../api/models/Account';
 import { Item } from '../../api/models/Item';
+import { Retailer } from '../../api/models/Retailer';
 import TransactionFormModal from '../../components/transactions/TransactionFormModal';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
@@ -41,6 +44,7 @@ const TransactionList: React.FC = () => {
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [items, setItems] = useState<Item[]>([]);
+  const [retailers, setRetailers] = useState<Retailer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
@@ -90,10 +94,20 @@ const TransactionList: React.FC = () => {
     }
   };
 
+  const fetchRetailers = async () => {
+    try {
+      const response = await ReatilersService.reatilersList();
+      setRetailers(response);
+    } catch (err) {
+      console.error('판매처 목록 조회 실패:', err);
+    }
+  };
+
   useEffect(() => {
     fetchTransactions();
     fetchAccounts();
     fetchItems();
+    fetchRetailers();
 
     // URL 파라미터에서 거래 ID 확인
     const urlParams = new URLSearchParams(window.location.search);
@@ -207,155 +221,158 @@ const TransactionList: React.FC = () => {
     }
   };
 
-  if (loading) {
+  // 거래 내역 목록 렌더링
+  const renderTransactionList = () => {
+    if (loading) {
+      return <Typography>로딩 중...</Typography>;
+    }
+
+    if (error) {
+      return <Alert severity="error">{error}</Alert>;
+    }
+
+    if (filteredTransactions.length === 0) {
+      return <Typography>거래 내역이 없습니다.</Typography>;
+    }
+
     return (
-      <Container>
-        <Typography>로딩 중...</Typography>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container>
-        <Alert severity="error">{error}</Alert>
-      </Container>
-    );
-  }
-
-  return (
-    <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          거래 내역
-        </Typography>
-
-        <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="거래내역 검색..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={handleAdd}
-            >
-              새 거래 추가
-            </Button>
-          </Grid>
-        </Grid>
-
-        <Paper>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>날짜</TableCell>
-                  <TableCell>계좌</TableCell>
-                  <TableCell>내용</TableCell>
-                  <TableCell align="right">금액</TableCell>
-                  <TableCell>유형</TableCell>
-                  <TableCell>잔액</TableCell>
-                  <TableCell align="center">작업</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredTransactions
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((transaction) => (
+      <>
+        <TableContainer component={Paper}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>날짜</TableCell>
+                <TableCell>계좌</TableCell>
+                <TableCell>유형</TableCell>
+                <TableCell>판매처</TableCell>
+                <TableCell>메모</TableCell>
+                <TableCell align="right">금액</TableCell>
+                <TableCell align="center">액션</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredTransactions
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((transaction) => {
+                  const account = accounts.find((a) => a.id === transaction.account);
+                  const retailer = retailers.find((r) => r.id === transaction.retailer);
+                  return (
                     <TableRow key={transaction.id}>
                       <TableCell>
                         {format(new Date(transaction.date), 'yyyy-MM-dd', { locale: ko })}
                       </TableCell>
-                      <TableCell>{transaction.account}</TableCell>
-                      <TableCell>{transaction.note || '-'}</TableCell>
+                      <TableCell>{account?.name || '알 수 없음'}</TableCell>
+                      <TableCell>
+                        {transaction.transaction_type === TransactionTypeEnum.DEPOSIT
+                          ? '수입'
+                          : transaction.transaction_type === TransactionTypeEnum.WITHDRAW
+                            ? '지출'
+                            : transaction.transaction_type}
+                      </TableCell>
+                      <TableCell>{retailer?.name || ''}</TableCell>
+                      <TableCell>{transaction.note}</TableCell>
                       <TableCell align="right">
-                        {Number(transaction.amount).toLocaleString('ko-KR')}원
-                      </TableCell>
-                      <TableCell>
-                        {transaction.transaction_type || '-'}
-                      </TableCell>
-                      <TableCell>
-                        {transaction.balance ? Number(transaction.balance).toLocaleString('ko-KR') + '원' : '-'}
+                        {new Intl.NumberFormat('ko-KR').format(
+                          parseFloat(transaction.amount)
+                        )}
+                        원
                       </TableCell>
                       <TableCell align="center">
                         <IconButton
                           size="small"
+                          color="primary"
                           onClick={() => handleEdit(transaction.id)}
                         >
                           <EditIcon fontSize="small" />
                         </IconButton>
                         <IconButton
                           size="small"
+                          color="error"
                           onClick={() => handleDelete(transaction.id)}
                         >
                           <DeleteIcon fontSize="small" />
                         </IconButton>
                       </TableCell>
                     </TableRow>
-                  ))}
-                {filteredTransactions.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={7} align="center">
-                      거래 내역이 없습니다.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={filteredTransactions.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            labelRowsPerPage="페이지당 행 수:"
-            labelDisplayedRows={({ from, to, count }) =>
-              `${count}개 중 ${from}-${to}`
-            }
-          />
-        </Paper>
-
-        <TransactionFormModal
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          onSubmit={handleSubmit}
-          transaction={selectedTransaction}
-          accounts={accounts}
-          items={items}
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25, 50]}
+          component="div"
+          count={filteredTransactions.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage="페이지당 행"
         />
+      </>
+    );
+  };
 
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-        >
-          <Alert
-            onClose={() => setSnackbar({ ...snackbar, open: false })}
-            severity={snackbar.severity}
-            sx={{ width: '100%' }}
+  return (
+    <Container maxWidth="lg">
+      <Box my={4}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Typography variant="h4" component="h1">
+            거래 내역
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={handleAdd}
           >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
+            거래 추가
+          </Button>
+        </Box>
+
+        <Box mb={3}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                placeholder="검색..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+
+        {renderTransactionList()}
       </Box>
+
+      <TransactionFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleSubmit}
+        transaction={selectedTransaction}
+        accounts={accounts}
+        items={items}
+        retailers={retailers}
+      />
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert severity={snackbar.severity} onClose={() => setSnackbar({ ...snackbar, open: false })}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

@@ -11,11 +11,13 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Autocomplete,
 } from '@mui/material';
 import { Transaction } from '../../api/models/Transaction';
 import { TransactionTypeEnum } from '../../api/models/TransactionTypeEnum';
 import { Account } from '../../api/models/Account';
 import { Item } from '../../api/models/Item';
+import { Retailer } from '../../api/models/Retailer';
 
 /**
  * 거래 추가 및 수정을 위한 모달 컴포넌트
@@ -28,6 +30,7 @@ interface TransactionFormModalProps {
   transaction?: Transaction;
   accounts: Account[];
   items: Item[];
+  retailers: Retailer[];
 }
 
 const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
@@ -37,6 +40,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
   transaction,
   accounts,
   items,
+  retailers,
 }) => {
   const [formData, setFormData] = useState<Partial<Transaction>>({
     date: new Date().toISOString().split('T')[0],
@@ -44,7 +48,9 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
     transaction_type: TransactionTypeEnum.WITHDRAW,
     amount: '0',
     note: '',
+    retailer: null,
   });
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   useEffect(() => {
     if (transaction) {
@@ -54,7 +60,16 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
         transaction_type: transaction.transaction_type,
         amount: transaction.amount,
         note: transaction.note || '',
+        retailer: transaction.retailer || null,
       });
+
+      // 선택된 품목이 있으면 설정
+      if (transaction.retailer) {
+        const selectedRetailer = retailers.find(r => r.id === transaction.retailer);
+        if (selectedRetailer) {
+          // 여기서 품목 관련 설정을 할 수 있음 (현재는 품목과 판매처 간 직접적인 연결이 없음)
+        }
+      }
     } else {
       setFormData({
         date: new Date().toISOString().split('T')[0],
@@ -62,9 +77,11 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
         transaction_type: TransactionTypeEnum.WITHDRAW,
         amount: '0',
         note: '',
+        retailer: null,
       });
+      setSelectedItem(null);
     }
-  }, [transaction, accounts, items]);
+  }, [transaction, accounts, items, retailers]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }> |
@@ -75,6 +92,24 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
       ...prev,
       [name as string]: value,
     }));
+  };
+
+  const handleRetailerChange = (event: React.SyntheticEvent, value: Retailer | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      retailer: value ? value.id : null,
+    }));
+  };
+
+  const handleItemChange = (event: React.SyntheticEvent, value: Item | null) => {
+    setSelectedItem(value);
+    // 품목을 선택했을 때 메모에 품목 이름 추가
+    if (value) {
+      setFormData((prev) => ({
+        ...prev,
+        note: prev.note ? `${prev.note} - ${value.name}` : value.name,
+      }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -125,21 +160,29 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
                 <MenuItem value={TransactionTypeEnum.WITHDRAW}>지출</MenuItem>
               </Select>
             </FormControl>
-            <FormControl fullWidth required>
-              <InputLabel>항목</InputLabel>
-              <Select
-                name="retailer"
-                value={formData.retailer || ''}
-                onChange={handleChange}
-                label="항목"
-              >
-                {items.map((item) => (
-                  <MenuItem key={item.id} value={item.id}>
-                    {item.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+
+            {/* 판매처 선택 */}
+            <Autocomplete
+              options={retailers}
+              getOptionLabel={(option) => option.name}
+              value={retailers.find(r => r.id === formData.retailer) || null}
+              onChange={handleRetailerChange}
+              renderInput={(params) => (
+                <TextField {...params} label="판매처" fullWidth />
+              )}
+            />
+
+            {/* 품목 선택 */}
+            <Autocomplete
+              options={items}
+              getOptionLabel={(option) => option.name}
+              value={selectedItem}
+              onChange={handleItemChange}
+              renderInput={(params) => (
+                <TextField {...params} label="품목" fullWidth />
+              )}
+            />
+
             <TextField
               label="금액"
               name="amount"

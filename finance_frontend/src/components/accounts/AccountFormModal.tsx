@@ -39,7 +39,6 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
     nickname: '',
     amount: '0',
     currency: CurrencyToEnum.KRW,
-    is_active: true,
     bank: banks[0]?.id || 0,
   });
 
@@ -50,7 +49,6 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
         nickname: account.nickname || '',
         amount: account.amount,
         currency: account.currency || CurrencyToEnum.KRW,
-        is_active: account.is_active || true,
         bank: account.bank,
       });
     } else {
@@ -59,7 +57,6 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
         nickname: '',
         amount: '0',
         currency: CurrencyToEnum.KRW,
-        is_active: true,
         bank: banks[0]?.id || 0,
       });
     }
@@ -140,17 +137,6 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
                 </MenuItem>
               ))}
             </TextField>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={formData.is_active}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, is_active: e.target.checked }))
-                  }
-                />
-              }
-              label="활성 계좌"
-            />
           </Box>
         </DialogContent>
         <DialogActions>
