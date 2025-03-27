@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 
 // 테스트를 위한 전역 설정
-// 필요한 경우 global mock 설정 
+// 필요한 경우 global mock 설정
 
 // Material UI 컴포넌트 모킹
 vi.mock('@mui/material', () => {
@@ -62,4 +62,4 @@ vi.mock('@apollo/client', () => {
     useQuery: vi.fn(),
     useMutation: vi.fn().mockReturnValue([vi.fn(), { loading: false }]),
   };
-}); 
+});

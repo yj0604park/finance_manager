@@ -2,9 +2,10 @@
 
 import django.db.models.deletion
 import django_choices_field.fields
-import finance_backend.money.choices
 from django.conf import settings
 from django.db import migrations, models
+
+import finance_backend.money.choices
 
 
 class Migration(migrations.Migration):
@@ -17,189 +18,619 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Bank',
+            name="Bank",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('name', models.CharField(max_length=200)),
-                ('country', django_choices_field.fields.TextChoicesField(choices=[('KOREA', '한국'), ('USA', '미국')], choices_enum=finance_backend.money.choices.Country, default='KOREA', max_length=20)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=15)),
+                ("name", models.CharField(max_length=200)),
+                (
+                    "country",
+                    django_choices_field.fields.TextChoicesField(
+                        choices=[("KOREA", "한국"), ("USA", "미국")],
+                        choices_enum=finance_backend.money.choices.Country,
+                        default="KOREA",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='Account',
+            name="Account",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('currency', django_choices_field.fields.TextChoicesField(choices=[('KRW', '원화'), ('USD', '달러')], choices_enum=finance_backend.money.choices.CurrencyType, default='USD', max_length=3)),
-                ('name', models.CharField(db_collation='C', max_length=100)),
-                ('nickname', models.CharField(blank=True, max_length=100, null=True)),
-                ('last_update', models.DateTimeField(blank=True, null=True)),
-                ('last_transaction', models.DateField(blank=True, null=True)),
-                ('first_transaction', models.DateField(blank=True, null=True)),
-                ('first_added', models.BooleanField(default=False)),
-                ('is_active', models.BooleanField(default=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('bank', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='money.bank')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=15)),
+                (
+                    "currency",
+                    django_choices_field.fields.TextChoicesField(
+                        choices=[("KRW", "원화"), ("USD", "달러")],
+                        choices_enum=finance_backend.money.choices.CurrencyType,
+                        default="USD",
+                        max_length=3,
+                    ),
+                ),
+                ("name", models.CharField(db_collation="C", max_length=100)),
+                ("nickname", models.CharField(blank=True, max_length=100, null=True)),
+                ("last_update", models.DateTimeField(blank=True, null=True)),
+                ("last_transaction", models.DateField(blank=True, null=True)),
+                ("first_transaction", models.DateField(blank=True, null=True)),
+                ("first_added", models.BooleanField(default=False)),
+                ("is_active", models.BooleanField(default=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "bank",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="money.bank"
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Item',
+            name="Item",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('currency', django_choices_field.fields.TextChoicesField(choices=[('KRW', '원화'), ('USD', '달러')], choices_enum=finance_backend.money.choices.CurrencyType, default='USD', max_length=3)),
-                ('name', models.CharField(max_length=20)),
-                ('code', models.CharField(blank=True, max_length=20, null=True)),
-                ('item_type', django_choices_field.fields.TextChoicesField(choices=[('ITEM', '아이템'), ('STOCK', '주식')], choices_enum=finance_backend.money.choices.ItemType, default='ITEM', max_length=20)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "currency",
+                    django_choices_field.fields.TextChoicesField(
+                        choices=[("KRW", "원화"), ("USD", "달러")],
+                        choices_enum=finance_backend.money.choices.CurrencyType,
+                        default="USD",
+                        max_length=3,
+                    ),
+                ),
+                ("name", models.CharField(max_length=20)),
+                ("code", models.CharField(blank=True, max_length=20, null=True)),
+                (
+                    "item_type",
+                    django_choices_field.fields.TextChoicesField(
+                        choices=[("ITEM", "아이템"), ("STOCK", "주식")],
+                        choices_enum=finance_backend.money.choices.ItemType,
+                        default="ITEM",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['code'],
+                "ordering": ["code"],
             },
         ),
         migrations.CreateModel(
-            name='AccountSnapshot',
+            name="AccountSnapshot",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('time', models.TimeField(default='12:00:00')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('currency', django_choices_field.fields.TextChoicesField(blank=True, choices=[('KRW', '원화'), ('USD', '달러')], choices_enum=finance_backend.money.choices.CurrencyType, default='USD', max_length=3, null=True)),
-                ('account', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='money.account')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('bank', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='money.bank')),
-                ('item', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='money.item')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("time", models.TimeField(default="12:00:00")),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "currency",
+                    django_choices_field.fields.TextChoicesField(
+                        blank=True,
+                        choices=[("KRW", "원화"), ("USD", "달러")],
+                        choices_enum=finance_backend.money.choices.CurrencyType,
+                        default="USD",
+                        max_length=3,
+                        null=True,
+                    ),
+                ),
+                (
+                    "account",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="money.account",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "bank",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="money.bank",
+                    ),
+                ),
+                (
+                    "item",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="money.item",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='ItemPrice',
+            name="ItemPrice",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('time', models.TimeField(default='12:00:00')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('price', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='money.item')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("time", models.TimeField(default="12:00:00")),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("price", models.DecimalField(decimal_places=2, max_digits=15)),
+                (
+                    "item",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="money.item"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Retailer',
+            name="Retailer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=30)),
-                ('retailer_type', django_choices_field.fields.TextChoicesField(choices=[('ETC', '기타'), ('STORE', '상점'), ('PERSON', '개인'), ('BANK', '은행'), ('SERVICE', '서비스'), ('INCOME', '수입'), ('RESTAURANT', '식당'), ('INTERNET', '인터넷')], choices_enum=finance_backend.money.choices.RetailerType, default='ETC', max_length=20)),
-                ('category', django_choices_field.fields.TextChoicesField(choices=[('ETC_INCOME', '기타소득'), ('SALARY', '월급'), ('BONUS', '보너스'), ('INTEREST_INCOME', '이자소득'), ('STOCK_INCOME', '주식'), ('RENT_INCOME', '임대'), ('DIVIDEND', '배당'), ('DEPOSIT', '입금'), ('ETC_EXPENSE', '기타지출'), ('DAILY_NECESSITY', '생필품'), ('GROCERY', '식료품'), ('MEMBERSHIP', '맴버십'), ('SERVICE', '서비스'), ('EAT_OUT', '외식'), ('CLOTHING', '옷'), ('PRESENT', '선물'), ('CAR', '이동수단'), ('HOUSING', '월세'), ('LEISURE', '여가'), ('MEDICAL', '의료'), ('PARENTING', '육아'), ('INTEREST_EXPENSE', '이자지출'), ('WITHDRAW', '출금'), ('TRANSFER', '이체'), ('UNKNOWN', '알 수 없음')], choices_enum=finance_backend.money.choices.TransactionCategory, default='UNKNOWN', max_length=30)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=30)),
+                (
+                    "retailer_type",
+                    django_choices_field.fields.TextChoicesField(
+                        choices=[
+                            ("ETC", "기타"),
+                            ("STORE", "상점"),
+                            ("PERSON", "개인"),
+                            ("BANK", "은행"),
+                            ("SERVICE", "서비스"),
+                            ("INCOME", "수입"),
+                            ("RESTAURANT", "식당"),
+                            ("INTERNET", "인터넷"),
+                        ],
+                        choices_enum=finance_backend.money.choices.RetailerType,
+                        default="ETC",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "category",
+                    django_choices_field.fields.TextChoicesField(
+                        choices=[
+                            ("ETC_INCOME", "기타소득"),
+                            ("SALARY", "월급"),
+                            ("BONUS", "보너스"),
+                            ("INTEREST_INCOME", "이자소득"),
+                            ("STOCK_INCOME", "주식"),
+                            ("RENT_INCOME", "임대"),
+                            ("DIVIDEND", "배당"),
+                            ("DEPOSIT", "입금"),
+                            ("ETC_EXPENSE", "기타지출"),
+                            ("DAILY_NECESSITY", "생필품"),
+                            ("GROCERY", "식료품"),
+                            ("MEMBERSHIP", "맴버십"),
+                            ("SERVICE", "서비스"),
+                            ("EAT_OUT", "외식"),
+                            ("CLOTHING", "옷"),
+                            ("PRESENT", "선물"),
+                            ("CAR", "이동수단"),
+                            ("HOUSING", "월세"),
+                            ("LEISURE", "여가"),
+                            ("MEDICAL", "의료"),
+                            ("PARENTING", "육아"),
+                            ("INTEREST_EXPENSE", "이자지출"),
+                            ("WITHDRAW", "출금"),
+                            ("TRANSFER", "이체"),
+                            ("UNKNOWN", "알 수 없음"),
+                        ],
+                        choices_enum=finance_backend.money.choices.TransactionCategory,
+                        default="UNKNOWN",
+                        max_length=30,
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='Transaction',
+            name="Transaction",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('time', models.TimeField(default='12:00:00')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('balance', models.DecimalField(blank=True, decimal_places=2, max_digits=15, null=True)),
-                ('note', models.TextField(blank=True, null=True)),
-                ('transaction_type', django_choices_field.fields.TextChoicesField(choices=[('ETC_INCOME', '기타소득'), ('SALARY', '월급'), ('BONUS', '보너스'), ('INTEREST_INCOME', '이자소득'), ('STOCK_INCOME', '주식'), ('RENT_INCOME', '임대'), ('DIVIDEND', '배당'), ('DEPOSIT', '입금'), ('ETC_EXPENSE', '기타지출'), ('DAILY_NECESSITY', '생필품'), ('GROCERY', '식료품'), ('MEMBERSHIP', '맴버십'), ('SERVICE', '서비스'), ('EAT_OUT', '외식'), ('CLOTHING', '옷'), ('PRESENT', '선물'), ('CAR', '이동수단'), ('HOUSING', '월세'), ('LEISURE', '여가'), ('MEDICAL', '의료'), ('PARENTING', '육아'), ('INTEREST_EXPENSE', '이자지출'), ('WITHDRAW', '출금'), ('TRANSFER', '이체'), ('UNKNOWN', '알 수 없음')], choices_enum=finance_backend.money.choices.TransactionCategory, default='UNKNOWN', max_length=30)),
-                ('is_reviewed', models.BooleanField(default=False)),
-                ('account', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='money.account')),
-                ('linked_transaction', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='money.transaction')),
-                ('retailer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='money.retailer')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("time", models.TimeField(default="12:00:00")),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=15)),
+                (
+                    "balance",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, max_digits=15, null=True
+                    ),
+                ),
+                ("note", models.TextField(blank=True, null=True)),
+                (
+                    "transaction_type",
+                    django_choices_field.fields.TextChoicesField(
+                        choices=[
+                            ("ETC_INCOME", "기타소득"),
+                            ("SALARY", "월급"),
+                            ("BONUS", "보너스"),
+                            ("INTEREST_INCOME", "이자소득"),
+                            ("STOCK_INCOME", "주식"),
+                            ("RENT_INCOME", "임대"),
+                            ("DIVIDEND", "배당"),
+                            ("DEPOSIT", "입금"),
+                            ("ETC_EXPENSE", "기타지출"),
+                            ("DAILY_NECESSITY", "생필품"),
+                            ("GROCERY", "식료품"),
+                            ("MEMBERSHIP", "맴버십"),
+                            ("SERVICE", "서비스"),
+                            ("EAT_OUT", "외식"),
+                            ("CLOTHING", "옷"),
+                            ("PRESENT", "선물"),
+                            ("CAR", "이동수단"),
+                            ("HOUSING", "월세"),
+                            ("LEISURE", "여가"),
+                            ("MEDICAL", "의료"),
+                            ("PARENTING", "육아"),
+                            ("INTEREST_EXPENSE", "이자지출"),
+                            ("WITHDRAW", "출금"),
+                            ("TRANSFER", "이체"),
+                            ("UNKNOWN", "알 수 없음"),
+                        ],
+                        choices_enum=finance_backend.money.choices.TransactionCategory,
+                        default="UNKNOWN",
+                        max_length=30,
+                    ),
+                ),
+                ("is_reviewed", models.BooleanField(default=False)),
+                (
+                    "account",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="money.account"
+                    ),
+                ),
+                (
+                    "linked_transaction",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="money.transaction",
+                    ),
+                ),
+                (
+                    "retailer",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="money.retailer",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Salary',
+            name="Salary",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('time', models.TimeField(default='12:00:00')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('currency', django_choices_field.fields.TextChoicesField(choices=[('KRW', '원화'), ('USD', '달러')], choices_enum=finance_backend.money.choices.CurrencyType, default='USD', max_length=3)),
-                ('gross_pay', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('adjustment', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('tax_withheld', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('deduction', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('net_pay', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('gross_pay_detail', models.JSONField()),
-                ('adjustment_detail', models.JSONField()),
-                ('tax_withheld_detail', models.JSONField()),
-                ('deduction_detail', models.JSONField()),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('transaction', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='money.transaction')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("time", models.TimeField(default="12:00:00")),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "currency",
+                    django_choices_field.fields.TextChoicesField(
+                        choices=[("KRW", "원화"), ("USD", "달러")],
+                        choices_enum=finance_backend.money.choices.CurrencyType,
+                        default="USD",
+                        max_length=3,
+                    ),
+                ),
+                ("gross_pay", models.DecimalField(decimal_places=2, max_digits=15)),
+                ("adjustment", models.DecimalField(decimal_places=2, max_digits=15)),
+                ("tax_withheld", models.DecimalField(decimal_places=2, max_digits=15)),
+                ("deduction", models.DecimalField(decimal_places=2, max_digits=15)),
+                ("net_pay", models.DecimalField(decimal_places=2, max_digits=15)),
+                ("gross_pay_detail", models.JSONField()),
+                ("adjustment_detail", models.JSONField()),
+                ("tax_withheld_detail", models.JSONField()),
+                ("deduction_detail", models.JSONField()),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "transaction",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="money.transaction",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='ItemTransaction',
+            name="ItemTransaction",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('time', models.TimeField(default='12:00:00')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('purchase_price', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('quantity', models.DecimalField(decimal_places=4, max_digits=15)),
-                ('tax', models.DecimalField(blank=True, decimal_places=2, default=0, max_digits=15, null=True)),
-                ('fee', models.DecimalField(blank=True, decimal_places=2, default=0, max_digits=15, null=True)),
-                ('subsidy', models.DecimalField(blank=True, decimal_places=2, default=0, max_digits=15, null=True)),
-                ('note', models.TextField(blank=True, default='', null=True)),
-                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='money.item')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('transaction', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='money.transaction')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("time", models.TimeField(default="12:00:00")),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=15)),
+                (
+                    "purchase_price",
+                    models.DecimalField(decimal_places=2, max_digits=15),
+                ),
+                ("quantity", models.DecimalField(decimal_places=4, max_digits=15)),
+                (
+                    "tax",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        default=0,
+                        max_digits=15,
+                        null=True,
+                    ),
+                ),
+                (
+                    "fee",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        default=0,
+                        max_digits=15,
+                        null=True,
+                    ),
+                ),
+                (
+                    "subsidy",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        default=0,
+                        max_digits=15,
+                        null=True,
+                    ),
+                ),
+                ("note", models.TextField(blank=True, default="", null=True)),
+                (
+                    "item",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="money.item"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "transaction",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="money.transaction",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Exchange',
+            name="Exchange",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('time', models.TimeField(default='12:00:00')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('amount_from', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('amount_to', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('currency_from', django_choices_field.fields.TextChoicesField(choices=[('KRW', '원화'), ('USD', '달러')], choices_enum=finance_backend.money.choices.CurrencyType, max_length=3)),
-                ('currency_to', django_choices_field.fields.TextChoicesField(choices=[('KRW', '원화'), ('USD', '달러')], choices_enum=finance_backend.money.choices.CurrencyType, max_length=3)),
-                ('exchange_ratio', models.DecimalField(blank=True, decimal_places=4, max_digits=10, null=True)),
-                ('exchange_brokder', django_choices_field.fields.TextChoicesField(choices=[('ETC', '기타'), ('BANK', '은행'), ('WIREBARLEY', '와이어바알리'), ('CREDITCARD', '신용카드')], choices_enum=finance_backend.money.choices.ExchangeType, default='ETC', max_length=10)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('transaction_from', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='exchange_from', to='money.transaction')),
-                ('transaction_to', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='exchange_to', to='money.transaction')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("time", models.TimeField(default="12:00:00")),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("amount_from", models.DecimalField(decimal_places=2, max_digits=15)),
+                ("amount_to", models.DecimalField(decimal_places=2, max_digits=15)),
+                (
+                    "currency_from",
+                    django_choices_field.fields.TextChoicesField(
+                        choices=[("KRW", "원화"), ("USD", "달러")],
+                        choices_enum=finance_backend.money.choices.CurrencyType,
+                        max_length=3,
+                    ),
+                ),
+                (
+                    "currency_to",
+                    django_choices_field.fields.TextChoicesField(
+                        choices=[("KRW", "원화"), ("USD", "달러")],
+                        choices_enum=finance_backend.money.choices.CurrencyType,
+                        max_length=3,
+                    ),
+                ),
+                (
+                    "exchange_ratio",
+                    models.DecimalField(
+                        blank=True, decimal_places=4, max_digits=10, null=True
+                    ),
+                ),
+                (
+                    "exchange_brokder",
+                    django_choices_field.fields.TextChoicesField(
+                        choices=[
+                            ("ETC", "기타"),
+                            ("BANK", "은행"),
+                            ("WIREBARLEY", "와이어바알리"),
+                            ("CREDITCARD", "신용카드"),
+                        ],
+                        choices_enum=finance_backend.money.choices.ExchangeType,
+                        default="ETC",
+                        max_length=10,
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "transaction_from",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="exchange_from",
+                        to="money.transaction",
+                    ),
+                ),
+                (
+                    "transaction_to",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="exchange_to",
+                        to="money.transaction",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

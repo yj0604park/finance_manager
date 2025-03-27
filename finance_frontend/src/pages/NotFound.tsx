@@ -32,4 +32,4 @@ export const NotFound = () => {
       </Stack>
     </Box>
   );
-}; 
+};

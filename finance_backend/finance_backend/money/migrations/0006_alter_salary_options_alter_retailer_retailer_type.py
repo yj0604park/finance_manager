@@ -6,17 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('money', '0005_accountsnapshot_amount'),
+        ("money", "0005_accountsnapshot_amount"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='salary',
-            options={'ordering': ['-date'], 'verbose_name_plural': 'salaries'},
+            name="salary",
+            options={"ordering": ["-date"], "verbose_name_plural": "salaries"},
         ),
         migrations.AlterField(
-            model_name='retailer',
-            name='retailer_type',
-            field=models.CharField(choices=[('ETC', '기타'), ('STORE', '상점'), ('PERSON', '개인'), ('BANK', '은행'), ('SERVICE', '서비스'), ('INCOME', '수입'), ('RESTAURANT', '식당'), ('ONLINE', '온라인')], default='ETC', max_length=20),
+            model_name="retailer",
+            name="retailer_type",
+            field=models.CharField(
+                choices=[
+                    ("ETC", "기타"),
+                    ("STORE", "상점"),
+                    ("PERSON", "개인"),
+                    ("BANK", "은행"),
+                    ("SERVICE", "서비스"),
+                    ("INCOME", "수입"),
+                    ("RESTAURANT", "식당"),
+                    ("ONLINE", "온라인"),
+                ],
+                default="ETC",
+                max_length=20,
+            ),
         ),
     ]
