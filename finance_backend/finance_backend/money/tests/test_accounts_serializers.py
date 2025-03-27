@@ -7,20 +7,13 @@ from rest_framework.test import APIRequestFactory
 
 from finance_backend.money.api.serializers.accounts_serializers import (
     AccountCreateSerializer,
-)
-from finance_backend.money.api.serializers.accounts_serializers import (
     AccountDetailSerializer,
-)
-from finance_backend.money.api.serializers.accounts_serializers import AccountSerializer
-from finance_backend.money.api.serializers.accounts_serializers import (
+    AccountSerializer,
     AccountSnapshotSerializer,
+    BankSerializer,
 )
-from finance_backend.money.api.serializers.accounts_serializers import BankSerializer
-from finance_backend.money.choices import AccountType
-from finance_backend.money.choices import CurrencyType
-from finance_backend.money.models.accounts import Account
-from finance_backend.money.models.accounts import AccountSnapshot
-from finance_backend.money.models.accounts import Bank
+from finance_backend.money.choices import AccountType, CurrencyType
+from finance_backend.money.models.accounts import Account, AccountSnapshot, Bank
 from finance_backend.money.models.items import Item
 from finance_backend.users.tests.factories import UserFactory
 

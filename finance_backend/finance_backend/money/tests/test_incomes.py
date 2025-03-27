@@ -4,8 +4,7 @@ from decimal import Decimal
 from django.test import TestCase
 from django.utils import timezone
 
-from finance_backend.money.models.accounts import Account
-from finance_backend.money.models.accounts import Bank
+from finance_backend.money.models.accounts import Account, Bank
 from finance_backend.money.models.incomes import Salary
 from finance_backend.money.models.shoppings import Retailer
 from finance_backend.money.models.transactions import Transaction

@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from finance_backend.money.models.items import Item
-from finance_backend.money.models.items import ItemPrice
+from finance_backend.money.models.items import Item, ItemPrice
 
 
 class ItemSerializer(serializers.ModelSerializer[Item]):

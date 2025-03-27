@@ -1,7 +1,6 @@
 from django.db import models
 
-from finance_backend.money.choices import RetailerType
-from finance_backend.money.choices import TransactionCategory
+from finance_backend.money.choices import RetailerType, TransactionCategory
 from finance_backend.money.models.base import BaseUserModel
 
 

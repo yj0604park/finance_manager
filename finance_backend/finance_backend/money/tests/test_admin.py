@@ -5,26 +5,24 @@ from django.contrib.admin import AdminSite
 from django.test import TestCase
 from django.utils import timezone
 
-from finance_backend.money.admin import AccountAdmin
-from finance_backend.money.admin import AccountSnapshotAdmin
-from finance_backend.money.admin import BankAdmin
-from finance_backend.money.admin import ExchangeAdmin
-from finance_backend.money.admin import ItemAdmin
-from finance_backend.money.admin import ItemPriceAdmin
-from finance_backend.money.admin import ItemTransactionAdmin
-from finance_backend.money.admin import RetailerAdmin
-from finance_backend.money.admin import TransactionAdmin
+from finance_backend.money.admin import (
+    AccountAdmin,
+    AccountSnapshotAdmin,
+    BankAdmin,
+    ExchangeAdmin,
+    ItemAdmin,
+    ItemPriceAdmin,
+    ItemTransactionAdmin,
+    RetailerAdmin,
+    TransactionAdmin,
+)
 from finance_backend.money.choices import CurrencyType
-from finance_backend.money.models.accounts import Account
-from finance_backend.money.models.accounts import AccountSnapshot
-from finance_backend.money.models.accounts import Bank
+from finance_backend.money.models.accounts import Account, AccountSnapshot, Bank
 from finance_backend.money.models.exchanges import Exchange
 from finance_backend.money.models.incomes import Salary
-from finance_backend.money.models.items import Item
-from finance_backend.money.models.items import ItemPrice
+from finance_backend.money.models.items import Item, ItemPrice
 from finance_backend.money.models.shoppings import Retailer
-from finance_backend.money.models.transactions import ItemTransaction
-from finance_backend.money.models.transactions import Transaction
+from finance_backend.money.models.transactions import ItemTransaction, Transaction
 from finance_backend.users.tests.factories import UserFactory
 
 

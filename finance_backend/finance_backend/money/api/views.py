@@ -1,36 +1,32 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from finance_backend.money.api.serializers.accounts_serializers import AccountSerializer
 from finance_backend.money.api.serializers.accounts_serializers import (
+    AccountSerializer,
     AccountSnapshotSerializer,
+    BankSerializer,
 )
-from finance_backend.money.api.serializers.accounts_serializers import BankSerializer
 from finance_backend.money.api.serializers.exchanges_serializers import (
     ExchangeSerializer,
 )
 from finance_backend.money.api.serializers.incomes_serializers import SalarySerializer
-from finance_backend.money.api.serializers.items_serializers import ItemPriceSerializer
-from finance_backend.money.api.serializers.items_serializers import ItemSerializer
+from finance_backend.money.api.serializers.items_serializers import (
+    ItemPriceSerializer,
+    ItemSerializer,
+)
 from finance_backend.money.api.serializers.shopping_serializers import (
     RetailerSerializer,
 )
 from finance_backend.money.api.serializers.transactions_serializers import (
     ItemTransactionSerializer,
-)
-from finance_backend.money.api.serializers.transactions_serializers import (
     TransactionSerializer,
 )
-from finance_backend.money.models.accounts import Account
-from finance_backend.money.models.accounts import AccountSnapshot
-from finance_backend.money.models.accounts import Bank
+from finance_backend.money.models.accounts import Account, AccountSnapshot, Bank
 from finance_backend.money.models.exchanges import Exchange
 from finance_backend.money.models.incomes import Salary
-from finance_backend.money.models.items import Item
-from finance_backend.money.models.items import ItemPrice
+from finance_backend.money.models.items import Item, ItemPrice
 from finance_backend.money.models.shoppings import Retailer
-from finance_backend.money.models.transactions import ItemTransaction
-from finance_backend.money.models.transactions import Transaction
+from finance_backend.money.models.transactions import ItemTransaction, Transaction
 
 
 class BaseUserViewSet(viewsets.ModelViewSet):

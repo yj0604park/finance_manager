@@ -1,14 +1,10 @@
-from datetime import UTC
-from datetime import datetime
+from datetime import UTC, datetime
 from decimal import Decimal
 
 from django.test import TestCase
 
-from finance_backend.money.choices import AccountType
-from finance_backend.money.choices import CurrencyType
-from finance_backend.money.models.accounts import Account
-from finance_backend.money.models.accounts import AccountSnapshot
-from finance_backend.money.models.accounts import Bank
+from finance_backend.money.choices import AccountType, CurrencyType
+from finance_backend.money.models.accounts import Account, AccountSnapshot, Bank
 from finance_backend.money.models.items import Item
 from finance_backend.users.tests.factories import UserFactory
 

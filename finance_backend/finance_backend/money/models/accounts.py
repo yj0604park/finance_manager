@@ -1,11 +1,12 @@
 from django.db import models
 
-from finance_backend.money.choices import AccountType
-from finance_backend.money.choices import Country
-from finance_backend.money.models.base import BaseAmountModel
-from finance_backend.money.models.base import BaseCurrencyModel
-from finance_backend.money.models.base import BaseTimeStampModel
-from finance_backend.money.models.base import BaseUserModel
+from finance_backend.money.choices import AccountType, Country
+from finance_backend.money.models.base import (
+    BaseAmountModel,
+    BaseCurrencyModel,
+    BaseTimeStampModel,
+    BaseUserModel,
+)
 from finance_backend.money.models.items import Item
 
 

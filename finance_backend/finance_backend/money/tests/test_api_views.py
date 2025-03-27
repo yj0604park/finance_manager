@@ -3,20 +3,15 @@ from decimal import Decimal
 
 from django.utils import timezone
 from rest_framework import status
-from rest_framework.test import APIClient
-from rest_framework.test import APITestCase
+from rest_framework.test import APIClient, APITestCase
 
 from finance_backend.money.choices import CurrencyType
-from finance_backend.money.models.accounts import Account
-from finance_backend.money.models.accounts import AccountSnapshot
-from finance_backend.money.models.accounts import Bank
+from finance_backend.money.models.accounts import Account, AccountSnapshot, Bank
 from finance_backend.money.models.exchanges import Exchange
 from finance_backend.money.models.incomes import Salary
-from finance_backend.money.models.items import Item
-from finance_backend.money.models.items import ItemPrice
+from finance_backend.money.models.items import Item, ItemPrice
 from finance_backend.money.models.shoppings import Retailer
-from finance_backend.money.models.transactions import ItemTransaction
-from finance_backend.money.models.transactions import Transaction
+from finance_backend.money.models.transactions import ItemTransaction, Transaction
 from finance_backend.users.tests.factories import UserFactory
 
 

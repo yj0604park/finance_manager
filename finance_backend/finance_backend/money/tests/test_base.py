@@ -3,8 +3,7 @@ from decimal import Decimal
 from django.test import TestCase
 from django.utils import timezone
 
-from finance_backend.money.models.accounts import Account
-from finance_backend.money.models.accounts import Bank
+from finance_backend.money.models.accounts import Account, Bank
 from finance_backend.money.models.transactions import Transaction
 from finance_backend.users.tests.factories import UserFactory
 

@@ -1,7 +1,6 @@
 from django.test import TestCase
 
-from finance_backend.money.choices import RetailerType
-from finance_backend.money.choices import TransactionCategory
+from finance_backend.money.choices import RetailerType, TransactionCategory
 from finance_backend.money.models.shoppings import Retailer
 from finance_backend.users.tests.factories import UserFactory
 

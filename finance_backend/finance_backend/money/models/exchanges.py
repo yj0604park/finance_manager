@@ -1,9 +1,7 @@
 from django.db import models
 
-from finance_backend.money.choices import CurrencyType
-from finance_backend.money.choices import ExchangeType
-from finance_backend.money.models.base import BaseTimeStampModel
-from finance_backend.money.models.base import BaseUserModel
+from finance_backend.money.choices import CurrencyType, ExchangeType
+from finance_backend.money.models.base import BaseTimeStampModel, BaseUserModel
 from finance_backend.money.models.transactions import Transaction
 
 

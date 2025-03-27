@@ -1,1 +1,7 @@
+# Auto detect text files and perform LF normalization
 * text=auto
+
+# Requirements files
+*.txt text eol=lf
+requirements/*.txt text eol=lf
+finance_backend/requirements/*.txt text eol=lf

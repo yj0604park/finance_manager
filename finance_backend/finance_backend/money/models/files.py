@@ -7,7 +7,10 @@ from finance_backend.money.models.base import BaseTimeStampModel, BaseUserModel
 class TransactionFile(BaseUserModel, BaseTimeStampModel):
     file = models.FileField(upload_to="transaction_files/")
     account = models.ForeignKey(
-        Account, on_delete=models.SET_NULL, null=True, blank=True
+        Account,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
     )
     note = models.TextField(null=True, blank=True)
     is_processed = models.BooleanField(default=False)

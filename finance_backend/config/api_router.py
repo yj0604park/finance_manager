@@ -1,17 +1,18 @@
 from django.conf import settings
-from rest_framework.routers import DefaultRouter
-from rest_framework.routers import SimpleRouter
+from rest_framework.routers import DefaultRouter, SimpleRouter
 
-from finance_backend.money.api.views import AccountSnapshotViewSet
-from finance_backend.money.api.views import AccountViewSet
-from finance_backend.money.api.views import BankViewSet
-from finance_backend.money.api.views import ExchangeViewSet
-from finance_backend.money.api.views import ItemPriceViewSet
-from finance_backend.money.api.views import ItemTransactionViewSet
-from finance_backend.money.api.views import ItemViewSet
-from finance_backend.money.api.views import RetailerViewSet
-from finance_backend.money.api.views import SalaryViewSet
-from finance_backend.money.api.views import TransactionViewSet
+from finance_backend.money.api.views import (
+    AccountSnapshotViewSet,
+    AccountViewSet,
+    BankViewSet,
+    ExchangeViewSet,
+    ItemPriceViewSet,
+    ItemTransactionViewSet,
+    ItemViewSet,
+    RetailerViewSet,
+    SalaryViewSet,
+    TransactionViewSet,
+)
 from finance_backend.users.api.views import UserViewSet
 
 router = DefaultRouter() if settings.DEBUG else SimpleRouter()

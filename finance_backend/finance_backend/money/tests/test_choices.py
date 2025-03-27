@@ -1,13 +1,15 @@
 from django.test import TestCase
 
-from finance_backend.money.choices import AccountType
-from finance_backend.money.choices import Country
-from finance_backend.money.choices import CurrencyType
-from finance_backend.money.choices import DetailItemCategory
-from finance_backend.money.choices import ExchangeType
-from finance_backend.money.choices import ItemType
-from finance_backend.money.choices import RetailerType
-from finance_backend.money.choices import TransactionCategory
+from finance_backend.money.choices import (
+    AccountType,
+    Country,
+    CurrencyType,
+    DetailItemCategory,
+    ExchangeType,
+    ItemType,
+    RetailerType,
+    TransactionCategory,
+)
 
 
 class ChoicesTest(TestCase):

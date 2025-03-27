@@ -1,9 +1,7 @@
 from rest_framework import serializers
 
 # This is a test comment to check pre-commit formatting
-from finance_backend.money.models.accounts import Account
-from finance_backend.money.models.accounts import AccountSnapshot
-from finance_backend.money.models.accounts import Bank
+from finance_backend.money.models.accounts import Account, AccountSnapshot, Bank
 
 
 class BankSerializer(serializers.ModelSerializer[Bank]):

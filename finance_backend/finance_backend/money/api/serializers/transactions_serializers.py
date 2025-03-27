@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from finance_backend.money.models.transactions import ItemTransaction
-from finance_backend.money.models.transactions import Transaction
+from finance_backend.money.models.transactions import ItemTransaction, Transaction
 
 
 class TransactionSerializer(serializers.ModelSerializer[Transaction]):

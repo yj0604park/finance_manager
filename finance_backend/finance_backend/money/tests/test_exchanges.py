@@ -1,15 +1,11 @@
-from datetime import UTC
-from datetime import date
-from datetime import datetime
+from datetime import UTC, date, datetime
 from decimal import Decimal
 
 from django.test import TestCase
 from django.utils import timezone as django_timezone
 
-from finance_backend.money.choices import CurrencyType
-from finance_backend.money.choices import ExchangeType
-from finance_backend.money.models.accounts import Account
-from finance_backend.money.models.accounts import Bank
+from finance_backend.money.choices import CurrencyType, ExchangeType
+from finance_backend.money.models.accounts import Account, Bank
 from finance_backend.money.models.exchanges import Exchange
 from finance_backend.money.models.shoppings import Retailer
 from finance_backend.money.models.transactions import Transaction

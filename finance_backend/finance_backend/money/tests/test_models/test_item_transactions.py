@@ -5,12 +5,10 @@ from django.test import TestCase
 from django.utils import timezone
 
 from finance_backend.money.choices import TransactionCategory
-from finance_backend.money.models.accounts import Account
-from finance_backend.money.models.accounts import Bank
+from finance_backend.money.models.accounts import Account, Bank
 from finance_backend.money.models.items import Item
 from finance_backend.money.models.shoppings import Retailer
-from finance_backend.money.models.transactions import ItemTransaction
-from finance_backend.money.models.transactions import Transaction
+from finance_backend.money.models.transactions import ItemTransaction, Transaction
 
 User = get_user_model()
 

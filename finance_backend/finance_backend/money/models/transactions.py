@@ -2,9 +2,11 @@ from django.db import models
 
 from finance_backend.money.choices import TransactionCategory
 from finance_backend.money.models.accounts import Account
-from finance_backend.money.models.base import BaseAmountModel
-from finance_backend.money.models.base import BaseTimeStampModel
-from finance_backend.money.models.base import BaseUserModel
+from finance_backend.money.models.base import (
+    BaseAmountModel,
+    BaseTimeStampModel,
+    BaseUserModel,
+)
 from finance_backend.money.models.items import Item
 from finance_backend.money.models.shoppings import Retailer
 
