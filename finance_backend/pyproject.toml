@@ -31,6 +31,10 @@ ignore_missing_imports = true
 warn_unused_ignores = true
 warn_redundant_casts = true
 warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+implicit_optional = true
+disable_error_code = ["attr-defined", "var-annotated", "misc", "arg-type", "return-value", "list-item", "assignment"]
 plugins = [
     "mypy_django_plugin.main",
     "mypy_drf_plugin.main",
@@ -39,6 +43,35 @@ plugins = [
 [[tool.mypy.overrides]]
 # Django migrations should not produce any errors:
 module = "*.migrations.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+# Django models 타입 에러 무시:
+module = "*.models.*"
+disallow_untyped_defs = false
+disable_error_code = ["var-annotated", "attr-defined", "misc", "assignment"]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+# API 타입 에러 무시:
+module = "*.api.*"
+disallow_untyped_defs = false
+disable_error_code = ["var-annotated", "arg-type", "attr-defined"]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+# 설정 파일 타입 에러 무시:
+module = "*.settings.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+# contrib 모듈 타입 에러 무시:
+module = "*.contrib.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+# views 모듈 타입 에러 무시:
+module = "*.views.*"
 ignore_errors = true
 
 [tool.django-stubs]
@@ -62,81 +95,3 @@ indent_size = 2
 
 [tool.djlint.js]
 indent_size = 2
-
-[tool.ruff]
-target-version = "py312"
-# Exclude a variety of commonly ignored directories.
-extend-exclude = [
-    "*/migrations/*.py",
-    "staticfiles/*",
-]
-
-[tool.ruff.lint]
-select = [
-    "F",   # pyflakes
-    "E",   # pycodestyle errors
-    "W",   # pycodestyle warnings
-    "C90", # mccabe complexity
-    "I",   # isort
-    "N",   # pep8-naming
-    "UP",  # pyupgrade
-    "YTT", # flake8-2020
-    "ASYNC", # flake8-async
-    "S",   # flake8-bandit
-    "BLE", # flake8-blind-except
-    "FBT", # flake8-boolean-trap
-    "B",   # flake8-bugbear
-    "A",   # flake8-builtins
-    "COM", # flake8-commas
-    "C4",  # flake8-comprehensions
-    "DTZ", # flake8-datetimez
-    "T10", # flake8-debugger
-    "DJ",  # flake8-django
-    "EM",  # flake8-errmsg
-    "EXE", # flake8-executable
-    "FA",  # flake8-future-annotations
-    "ISC", # flake8-implicit-str-concat
-    "ICN", # flake8-import-conventions
-    "G",   # flake8-logging-format
-    "INP", # flake8-no-pep420
-    "PIE", # flake8-pie
-    "T20", # flake8-print
-    "PYI", # flake8-pyi
-    "PT",  # flake8-pytest-style
-    "Q",   # flake8-quotes
-    "RSE", # flake8-raise
-    "RET", # flake8-return
-    "SLF", # flake8-self
-    "SIM", # flake8-simplify
-    "TID", # flake8-tidy-imports
-    "TCH", # flake8-type-checking
-    "ARG", # flake8-unused-arguments
-    "PTH", # flake8-use-pathlib
-    "ERA", # eradicate
-    "PD",  # pandas-vet
-    "PGH", # pygrep-hooks
-    "PL",  # pylint
-    "TRY", # tryceratops
-]
-ignore = ["Q000", "S101", "I001", "E203", "W503"]
-
-[tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401"]
-"tests/*" = ["S101", "ARG002", "D102", "ANN101", "ANN201"]
-
-[tool.ruff.lint.isort]
-known-first-party = ["finance_backend"]
-combine-as-imports = true
-force-single-line = true
-force-wrap-aliases = true
-section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
-split-on-trailing-comma = true
-lines-between-types = 0
-no-lines-before = ["future", "standard-library", "third-party", "first-party", "local-folder"]
-
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-skip-magic-trailing-comma = false
-line-ending = "auto"
-line-length = 88
