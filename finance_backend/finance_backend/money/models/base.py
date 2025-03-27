@@ -1,4 +1,14 @@
+from typing import Any
+
 from django.db import models
+from django.db.models import (
+    CharField,
+    DateField,
+    DateTimeField,
+    DecimalField,
+    ForeignKey,
+    TimeField,
+)
 
 from finance_backend.money.choices import CurrencyType
 

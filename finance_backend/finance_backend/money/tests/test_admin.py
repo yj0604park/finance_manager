@@ -112,7 +112,7 @@ class AdminTest(TestCase):
 
     def test_bank_admin(self):
         admin = BankAdmin(Bank, self.site)
-        assert admin.list_display == ["name", "id", "user"]
+        assert admin.list_display == ["user", "name", "id"]
         assert admin.list_filter == ["user"]
         assert str(self.bank) == "Test Bank (KOREA)"
         assert self.bank.amount == Decimal("0.00")
@@ -120,6 +120,7 @@ class AdminTest(TestCase):
     def test_account_admin(self):
         admin = AccountAdmin(Account, self.site)
         assert admin.list_display == [
+            "user",
             "name",
             "id",
             "bank",
@@ -127,14 +128,14 @@ class AdminTest(TestCase):
             "is_active",
             "first_added",
         ]
-        assert admin.list_filter == ["is_active", "bank", "first_added"]
+        assert admin.list_filter == ["user", "is_active", "bank", "first_added"]
         assert str(self.account) == "Test Account (Test Bank)"
         assert self.account.amount == Decimal("0.00")
 
     def test_retailer_admin(self):
         admin = RetailerAdmin(Retailer, self.site)
-        assert admin.list_display == ["id", "name", "retailer_type", "category"]
-        assert admin.list_filter == ["retailer_type", "category"]
+        assert admin.list_display == ["user", "id", "name", "retailer_type", "category"]
+        assert admin.list_filter == ["user", "retailer_type", "category"]
         assert str(self.retailer) == "store: Test Retailer"
 
     def test_transaction_admin(self):

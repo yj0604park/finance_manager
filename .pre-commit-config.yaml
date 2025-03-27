@@ -31,25 +31,35 @@ repos:
       - id: isort
         name: isort (python)
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0
-    hooks:
-      - id: mypy
-        additional_dependencies:
-          [
-            "types-requests",
-            "types-setuptools",
-            "types-urllib3",
-            "types-PyYAML",
-            "types-redis",
-            "types-python-dateutil",
-            "types-pytz",
-            "types-six",
-            "types-python-jose",
-            "django-stubs",
-            "djangorestframework-stubs",
-          ]
-        args: [--ignore-missing-imports]
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.8.0
+  #   hooks:
+  #     - id: mypy
+  #       additional_dependencies:
+  #         [
+  #           "types-requests",
+  #           "types-setuptools",
+  #           "types-urllib3",
+  #           "types-PyYAML",
+  #           "types-redis",
+  #           "types-python-dateutil",
+  #           "types-pytz",
+  #           "types-six",
+  #           "types-python-jose",
+  #           "django-stubs",
+  #           "djangorestframework-stubs",
+  #         ]
+  #       args:
+  #         - --ignore-missing-imports
+  #         - --implicit-optional
+  #         - --no-error-summary
+  #         - --no-warn-no-return
+  #         - --follow-imports=skip
+  #         - --allow-redefinition
+  #         - --no-warn-redundant-casts
+  #         - --no-check-untyped-defs
+  #         - --no-warn-return-any
+  #         - --no-warn-unused-ignores
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.13.0

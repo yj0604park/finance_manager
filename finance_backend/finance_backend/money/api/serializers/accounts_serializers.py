@@ -21,12 +21,16 @@ class BankSerializer(serializers.ModelSerializer[Bank]):
 class AccountSerializer(serializers.ModelSerializer[Account]):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     amount = serializers.DecimalField(max_digits=15, decimal_places=2, default=0)
-    nickname = serializers.CharField(max_length=100, default="", allow_blank=True)
+    nickname = serializers.CharField(
+        max_length=100, default="", allow_blank=True, allow_null=True
+    )
     is_active = serializers.BooleanField(default=True)
 
     def create(self, validated_data):
         validated_data["user"] = self.context["request"].user
         validated_data["amount"] = 0
+        if validated_data.get("nickname") is None:
+            validated_data["nickname"] = ""
         return super().create(validated_data)
 
     class Meta:
