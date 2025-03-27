@@ -2,19 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { Container, Typography, Alert, Snackbar } from '@mui/material';
 import BankList from '../components/banks/BankList';
 import BankFormModal from '../components/banks/BankFormModal';
+import AccountFormModal from '../components/banks/AccountFormModal';
 import { BanksService } from '../api/services/BanksService';
+import { AccountsService } from '../api/services/AccountsService';
 import { Bank } from '../api/models/Bank';
+import { Account } from '../api/models/Account';
+import { CurrencyToEnum } from '../api/models/CurrencyToEnum';
 
 const Banks: React.FC = () => {
   const [banks, setBanks] = useState<Bank[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBank, setSelectedBank] = useState<Bank | undefined>();
+  const [accountModalOpen, setAccountModalOpen] = useState(false);
+  const [selectedBankForAccount, setSelectedBankForAccount] = useState<Bank | undefined>();
   const [notification, setNotification] = useState<{
     open: boolean;
     message: string;
-    severity: 'success' | 'error';
+    severity: 'success' | 'error' | 'info';
   }>({
     open: false,
     message: '',
@@ -34,8 +41,18 @@ const Banks: React.FC = () => {
     }
   };
 
+  const fetchAccounts = async () => {
+    try {
+      const response = await AccountsService.accountsList();
+      setAccounts(response);
+    } catch (err) {
+      console.error('Error fetching accounts:', err);
+    }
+  };
+
   useEffect(() => {
     fetchBanks();
+    fetchAccounts();
   }, []);
 
   const handleAdd = () => {
@@ -66,6 +83,37 @@ const Banks: React.FC = () => {
         });
         console.error('Error deleting bank:', err);
       }
+    }
+  };
+
+  const handleAddAccount = (bank: Bank) => {
+    setSelectedBankForAccount(bank);
+    setAccountModalOpen(true);
+  };
+
+  const handleAccountSubmit = async (accountData: {
+    name: string;
+    amount: string;
+    currency?: CurrencyToEnum;
+    nickname?: string;
+    bank: number;
+  }) => {
+    try {
+      const newAccount = await AccountsService.accountsCreate(accountData as Account);
+      setAccounts([...accounts, newAccount]);
+      setNotification({
+        open: true,
+        message: '계좌가 추가되었습니다.',
+        severity: 'success',
+      });
+      setAccountModalOpen(false);
+    } catch (err) {
+      setNotification({
+        open: true,
+        message: '계좌 추가에 실패했습니다.',
+        severity: 'error',
+      });
+      console.error('Error adding account:', err);
     }
   };
 
@@ -125,9 +173,11 @@ const Banks: React.FC = () => {
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <BankList
         banks={banks}
+        accounts={accounts}
         onAdd={handleAdd}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onAddAccount={handleAddAccount}
       />
       <BankFormModal
         open={modalOpen}
@@ -135,6 +185,14 @@ const Banks: React.FC = () => {
         onSubmit={handleSubmit}
         bank={selectedBank}
       />
+      {selectedBankForAccount && (
+        <AccountFormModal
+          open={accountModalOpen}
+          onClose={() => setAccountModalOpen(false)}
+          onSubmit={handleAccountSubmit}
+          bank={selectedBankForAccount}
+        />
+      )}
       <Snackbar
         open={notification.open}
         autoHideDuration={6000}

@@ -116,3 +116,54 @@ class AccountsSerializersTest(TestCase):
         assert data["account"] == self.account.id
         assert data["bank"] == self.bank.id
         assert data["item"] == self.item.id
+
+    def test_account_serializer_with_empty_nickname(self):
+        request = Request(self.factory.get("/"))
+        request.user = self.user
+        data = {
+            "user": self.user.id,
+            "bank": self.bank.id,
+            "name": "Test Account",
+            "currency": CurrencyType.USD,
+            "amount": "0.00",
+            "account_type": "CHECKING_ACCOUNT",
+            "nickname": "",  # 빈 문자열
+        }
+        serializer = AccountSerializer(data=data, context={"request": request})
+        assert serializer.is_valid(), serializer.errors
+        account = serializer.save()
+        assert account.nickname == ""
+
+    def test_account_serializer_with_null_nickname(self):
+        request = Request(self.factory.get("/"))
+        request.user = self.user
+        data = {
+            "user": self.user.id,
+            "bank": self.bank.id,
+            "name": "Test Account",
+            "currency": CurrencyType.USD,
+            "amount": "0.00",
+            "account_type": "CHECKING_ACCOUNT",
+            "nickname": None,  # null 값
+        }
+        serializer = AccountSerializer(data=data, context={"request": request})
+        assert serializer.is_valid(), serializer.errors
+        account = serializer.save()
+        assert account.nickname == ""
+
+    def test_account_serializer_without_nickname(self):
+        request = Request(self.factory.get("/"))
+        request.user = self.user
+        data = {
+            "user": self.user.id,
+            "bank": self.bank.id,
+            "name": "Test Account",
+            "currency": CurrencyType.USD,
+            "amount": "0.00",
+            "account_type": "CHECKING_ACCOUNT",
+            # nickname 필드 없음
+        }
+        serializer = AccountSerializer(data=data, context={"request": request})
+        assert serializer.is_valid(), serializer.errors
+        account = serializer.save()
+        assert account.nickname == ""

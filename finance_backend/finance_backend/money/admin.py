@@ -15,20 +15,28 @@ from finance_backend.money.models.transactions import Transaction
 
 @admin.register(Bank)
 class BankAdmin(admin.ModelAdmin):
-    list_display = ["name", "id", "user"]
+    list_display = ["user", "name", "id"]
     list_filter = ["user"]
 
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ["name", "id", "bank", "currency", "is_active", "first_added"]
-    list_filter = ["is_active", "bank", "first_added"]
+    list_display = [
+        "user",
+        "name",
+        "id",
+        "bank",
+        "currency",
+        "is_active",
+        "first_added",
+    ]
+    list_filter = ["user", "is_active", "bank", "first_added"]
 
 
 @admin.register(Retailer)
 class RetailerAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "retailer_type", "category"]
-    list_filter = ["retailer_type", "category"]
+    list_display = ["user", "id", "name", "retailer_type", "category"]
+    list_filter = ["user", "retailer_type", "category"]
 
 
 @admin.register(Transaction)

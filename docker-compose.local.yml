@@ -12,7 +12,7 @@ services:
     depends_on:
       - postgres
     volumes:
-      - ./finance_backend:/app:z
+      - ./finance_backend:/app
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
@@ -39,7 +39,7 @@ services:
     image: finance_frontend_local_vite
     container_name: finance_frontend_local_vite
     volumes:
-      - ./finance_frontend/src:/work/src:z
+      - ./finance_frontend/src:/work/src
     env_file:
       - ./.envs/.local/.vite
     ports:

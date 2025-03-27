@@ -23,6 +23,7 @@ class BankSerializer(serializers.ModelSerializer[Bank]):
 class AccountSerializer(serializers.ModelSerializer[Account]):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     amount = serializers.DecimalField(max_digits=15, decimal_places=2, default=0)
+    nickname = serializers.CharField(max_length=100, default="", allow_blank=True)
     is_active = serializers.BooleanField(default=True)
 
     def create(self, validated_data):

@@ -31,7 +31,6 @@ const BankFormModal: React.FC<BankFormModalProps> = ({
 }) => {
   const [formData, setFormData] = useState<Partial<Bank>>({
     name: '',
-    amount: '0',
     country: CountryEnum.KOREA,
   });
 
@@ -39,13 +38,11 @@ const BankFormModal: React.FC<BankFormModalProps> = ({
     if (bank) {
       setFormData({
         name: bank.name,
-        amount: bank.amount,
         country: bank.country,
       });
     } else {
       setFormData({
         name: '',
-        amount: '0',
         country: CountryEnum.KOREA,
       });
     }
@@ -74,15 +71,6 @@ const BankFormModal: React.FC<BankFormModalProps> = ({
               label="은행명"
               name="name"
               value={formData.name}
-              onChange={handleChange}
-              required
-              fullWidth
-            />
-            <TextField
-              label="잔액"
-              name="amount"
-              type="number"
-              value={formData.amount}
               onChange={handleChange}
               required
               fullWidth

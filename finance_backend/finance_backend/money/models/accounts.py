@@ -35,7 +35,7 @@ class Account(BaseUserModel, BaseAmountModel, BaseCurrencyModel):
 
     bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, db_collation="C")
-    nickname = models.CharField(max_length=100, default="")
+    nickname = models.CharField(max_length=100, blank=True, default="")
     account_type = models.CharField(
         max_length=20,
         choices=AccountType.choices,
