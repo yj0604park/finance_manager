@@ -13,7 +13,7 @@ import {
 import { CreditCard as CardIcon, Add as AddIcon } from '@mui/icons-material';
 
 const Cards: React.FC = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   // 샘플 카드 데이터 (API 연동 전까지 사용)
   const cards = [

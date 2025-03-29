@@ -95,14 +95,14 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
     }));
   };
 
-  const handleRetailerChange = (event: React.SyntheticEvent, value: Retailer | null) => {
+  const handleRetailerChange = (_: React.SyntheticEvent, value: Retailer | null) => {
     setFormData((prev) => ({
       ...prev,
-      retailer: value ? value.id : null,
+      retailer: value?.id || null,
     }));
   };
 
-  const handleItemChange = (event: React.SyntheticEvent, value: Item | null) => {
+  const handleItemChange = (_: React.SyntheticEvent, value: Item | null) => {
     setSelectedItem(value);
     // 품목을 선택했을 때 메모에 품목 이름 추가
     if (value) {

@@ -7,9 +7,7 @@ import {
   TextField,
   Button,
   MenuItem,
-  Box,
-  FormControlLabel,
-  Switch,
+  Box
 } from '@mui/material';
 import { Account } from '../../api/models/Account';
 import { CurrencyToEnum } from '../../api/models/CurrencyToEnum';

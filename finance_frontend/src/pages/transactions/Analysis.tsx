@@ -10,14 +10,11 @@ import {
   MenuItem,
   Button,
   CircularProgress,
-  Divider,
   Card,
   CardContent,
-  CardHeader,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { format, startOfMonth, endOfMonth, startOfYear, endOfYear, sub } from 'date-fns';
-import { ko } from 'date-fns/locale';
+import { startOfMonth, endOfMonth, startOfYear, endOfYear, sub } from 'date-fns';
 import { TransactionsService } from '../../api/services/TransactionsService';
 import { Transaction } from '../../api/models/Transaction';
 import { TransactionTypeEnum } from '../../api/models/TransactionTypeEnum';
@@ -33,8 +30,6 @@ import {
   Pie,
   Cell,
   ResponsiveContainer,
-  LineChart,
-  Line,
 } from 'recharts';
 
 // 차트 색상 정의
@@ -69,6 +64,38 @@ const EXPENSE_TYPES = [
   TransactionTypeEnum.INTEREST_EXPENSE,
   TransactionTypeEnum.ETC_EXPENSE,
 ];
+
+// 거래 유형 이름을 반환하는 함수
+const getTransactionTypeName = (type: TransactionTypeEnum): string => {
+  const typeNames: Record<string, string> = {
+    [TransactionTypeEnum.ETC_INCOME]: '기타소득',
+    [TransactionTypeEnum.SALARY]: '월급',
+    [TransactionTypeEnum.BONUS]: '보너스',
+    [TransactionTypeEnum.INTEREST_INCOME]: '이자소득',
+    [TransactionTypeEnum.STOCK_INCOME]: '주식',
+    [TransactionTypeEnum.RENT_INCOME]: '임대',
+    [TransactionTypeEnum.DIVIDEND]: '배당',
+    [TransactionTypeEnum.DEPOSIT]: '입금',
+    [TransactionTypeEnum.ETC_EXPENSE]: '기타지출',
+    [TransactionTypeEnum.DAILY_NECESSITY]: '생필품',
+    [TransactionTypeEnum.GROCERY]: '식료품',
+    [TransactionTypeEnum.MEMBERSHIP]: '맴버십',
+    [TransactionTypeEnum.SERVICE]: '서비스',
+    [TransactionTypeEnum.EAT_OUT]: '외식',
+    [TransactionTypeEnum.CLOTHING]: '옷',
+    [TransactionTypeEnum.PRESENT]: '선물',
+    [TransactionTypeEnum.CAR]: '이동수단',
+    [TransactionTypeEnum.HOUSING]: '월세',
+    [TransactionTypeEnum.LEISURE]: '여가',
+    [TransactionTypeEnum.MEDICAL]: '의료',
+    [TransactionTypeEnum.PARENTING]: '육아',
+    [TransactionTypeEnum.INTEREST_EXPENSE]: '이자지출',
+    [TransactionTypeEnum.WITHDRAW]: '출금',
+    [TransactionTypeEnum.TRANSFER]: '이체',
+    [TransactionTypeEnum.UNKNOWN]: '알 수 없음',
+  };
+  return typeNames[type] || '기타';
+};
 
 const TransactionAnalysis: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -187,12 +214,16 @@ const TransactionAnalysis: React.FC = () => {
 
   // 8. 거래 유형별 비율 데이터 준비
   const prepareTypeData = () => {
-    const typeData: { name: string; value: number }[] = [
-      { name: '수입', value: calculateTotalIncome() },
-      { name: '지출', value: calculateTotalExpense() },
-    ];
+    const typeCounts: Record<string, number> = {};
+    transactions.forEach((transaction) => {
+      const type = transaction.transaction_type || 'UNKNOWN';
+      typeCounts[type] = (typeCounts[type] || 0) + parseFloat(transaction.amount);
+    });
 
-    return typeData;
+    return Object.entries(typeCounts).map(([type, amount]) => ({
+      name: getTransactionTypeName(type as TransactionTypeEnum),
+      value: amount,
+    }));
   };
 
   // 로딩 중 표시
@@ -354,7 +385,7 @@ const TransactionAnalysis: React.FC = () => {
                       nameKey="name"
                       label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                     >
-                      {prepareTypeData().map((entry, index) => (
+                      {prepareTypeData().map((_, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>

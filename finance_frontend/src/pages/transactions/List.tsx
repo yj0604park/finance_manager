@@ -29,7 +29,6 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Search as SearchIcon,
-  FilterList as FilterIcon,
   ClearAll as ClearAllIcon,
 } from '@mui/icons-material';
 import { Transaction } from '../../api/models/Transaction';
@@ -71,7 +70,6 @@ const TransactionList: React.FC = () => {
   // 필터링 상태 추가
   const [selectedBankId, setSelectedBankId] = useState<string>('all');
   const [selectedAccountId, setSelectedAccountId] = useState<string>('all');
-  const [filterMenuOpen, setFilterMenuOpen] = useState(false);
 
   const [snackbar, setSnackbar] = useState<{
     open: boolean;

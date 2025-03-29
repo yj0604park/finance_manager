@@ -51,7 +51,7 @@ const a11yProps = (index: number) => {
 };
 
 const Assets: React.FC = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [tabValue, setTabValue] = useState(0);
 
   // 샘플 자산 데이터 (API 연동 전까지 사용)
@@ -93,7 +93,7 @@ const Assets: React.FC = () => {
     { name: '실물 자산', value: 250000000, color: '#ed6c02' },
   ];
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 

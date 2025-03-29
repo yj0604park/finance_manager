@@ -108,10 +108,12 @@ const Retailers: React.FC = () => {
       }
 
       await RetailersService.retailersCreate({
+        id: 0, // 서버에서 할당될 ID
         name: retailerInput.name,
         retailer_type: retailerInput.retailer_type,
         category: retailerInput.category,
-      });
+        user: 0, // 서버에서 현재 사용자로 자동 할당됨
+      } as Retailer);
 
       handleCloseDialog();
       fetchRetailers();

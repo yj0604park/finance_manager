@@ -93,20 +93,27 @@ const Banks: React.FC = () => {
 
   const handleAccountSubmit = async (accountData: {
     name: string;
-    amount: string;
     currency?: CurrencyToEnum;
     nickname?: string;
     bank: number;
   }) => {
     try {
-      const newAccount = await AccountsService.accountsCreate(accountData as Account);
-      setAccounts([...accounts, newAccount]);
+      await AccountsService.accountsCreate({
+        id: 0,
+        name: accountData.name,
+        amount: '0',
+        currency: accountData.currency,
+        nickname: accountData.nickname,
+        bank: accountData.bank,
+        user: 0,
+      } as Account);
+      await fetchAccounts();
+      setAccountModalOpen(false);
       setNotification({
         open: true,
         message: '계좌가 추가되었습니다.',
         severity: 'success',
       });
-      setAccountModalOpen(false);
     } catch (err) {
       setNotification({
         open: true,
