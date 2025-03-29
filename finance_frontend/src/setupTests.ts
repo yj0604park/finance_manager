@@ -42,11 +42,6 @@ vi.mock('@mui/material', () => {
   };
 });
 
-// Grid2 모킹
-vi.mock('@mui/material/Unstable_Grid2', () => ({
-  default: vi.fn(),
-}));
-
 // Material UI 아이콘 모킹
 vi.mock('@mui/icons-material/ArrowBack', () => ({
   default: vi.fn(),

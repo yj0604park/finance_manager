@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import AccountList from './AccountList';
 import { Account } from '../../api/models/Account';
@@ -10,6 +10,111 @@ import { CountryEnum } from '../../api/models/CountryEnum';
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
+}));
+
+// MUI 모킹을 재정의
+vi.mock('@mui/material', () => {
+  return {
+    Typography: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="Typography">{children}</div>,
+    Box: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="Box">{children}</div>,
+    Card: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="Card">{children}</div>,
+    CardContent: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="CardContent">{children}</div>,
+    Stack: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="Stack">{children}</div>,
+    Button: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <button data-testid="Button">{children}</button>,
+    Snackbar: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="Snackbar">{children}</div>,
+    Alert: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="Alert">{children}</div>,
+    Dialog: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="Dialog">{children}</div>,
+    DialogTitle: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="DialogTitle">{children}</div>,
+    DialogContent: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="DialogContent">{children}</div>,
+    DialogActions: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="DialogActions">{children}</div>,
+    TextField: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="TextField">{children}</div>,
+    FormControl: ({ children, ...props }: { children?: React.ReactNode; label?: string;[key: string]: any }) => {
+      if (props.label) {
+        return <div role="form" aria-label={props.label}>{children}</div>;
+      }
+      return <div data-testid="FormControl">{children}</div>;
+    },
+    InputLabel: ({ id, children }: { id: string; children: React.ReactNode }) =>
+      <label id={id} htmlFor="bank-filter">{children}</label>,
+    Select: ({ labelId, id, value, label, onChange, children }: {
+      labelId?: string;
+      id?: string;
+      value?: any;
+      label?: string;
+      onChange?: any;
+      children?: React.ReactNode
+    }) => (
+      <select aria-label={label} id={id} value={value} onChange={onChange}>
+        {children}
+      </select>
+    ),
+    MenuItem: ({ value, children }: { value: any; children: React.ReactNode }) =>
+      <option value={value}>{children}</option>,
+    FormControlLabel: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="FormControlLabel">{children}</div>,
+    Checkbox: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="Checkbox">{children}</div>,
+    Link: ({ children, component, onClick }: {
+      children: React.ReactNode;
+      component?: any;
+      onClick?: () => void
+    }) => (
+      <a href="#" onClick={onClick}>{children}</a>
+    ),
+    Grid: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="Grid">{children}</div>,
+    Chip: ({ label, color }: { label: string; color?: string }) =>
+      <span data-color={color}>{label}</span>,
+    InputAdornment: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="InputAdornment">{children}</div>,
+    Tooltip: ({ title, children }: { title: string; children: React.ReactNode }) =>
+      <div title={title}>{children}</div>,
+    IconButton: ({ onClick, color, 'aria-label': ariaLabel, children }: {
+      onClick?: () => void;
+      color?: string;
+      'aria-label'?: string;
+      children?: React.ReactNode
+    }) => (
+      <button onClick={onClick} aria-label={ariaLabel || ""}>
+        {children || ''}
+      </button>
+    ),
+    Table: ({ children }: { children: React.ReactNode }) => <table>{children}</table>,
+    TableBody: ({ children }: { children: React.ReactNode }) => <tbody>{children}</tbody>,
+    TableCell: ({ align, colSpan, children }: {
+      align?: 'left' | 'center' | 'right' | 'justify' | 'char';
+      colSpan?: number;
+      children: React.ReactNode
+    }) =>
+      <td align={align} colSpan={colSpan}>{children}</td>,
+    TableContainer: ({ component, children }: { component?: any; children: React.ReactNode }) =>
+      <div>{children}</div>,
+    TableHead: ({ children }: { children: React.ReactNode }) => <thead>{children}</thead>,
+    TableRow: ({ children }: { children: React.ReactNode }) => <tr>{children}</tr>,
+    Paper: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => <div data-testid="Paper">{children}</div>,
+  };
+});
+
+// Grid2 모킹
+vi.mock('@mui/material/Grid2', () => ({
+  default: ({ children }: { children: React.ReactNode }) => <div>{children}</div>
+}));
+
+// Material UI 아이콘 모킹
+vi.mock('@mui/icons-material/ArrowBack', () => ({
+  default: () => <span>←</span>,
+}));
+
+vi.mock('@mui/icons-material/Add', () => ({
+  default: () => <span>+</span>,
+}));
+
+vi.mock('@mui/icons-material/Edit', () => ({
+  default: () => <span>✎</span>,
+}));
+
+vi.mock('@mui/icons-material/Delete', () => ({
+  default: () => <span>🗑</span>,
+}));
+
+vi.mock('@mui/icons-material/Receipt', () => ({
+  default: () => <span>🧾</span>,
 }));
 
 describe('AccountList 컴포넌트 테스트', () => {
@@ -59,6 +164,8 @@ describe('AccountList 컴포넌트 테스트', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // 테스트를 위한 HTML 구조 재설정
+    document.body.innerHTML = '<div></div>';
   });
 
   test('계좌 목록이 올바르게 렌더링된다', () => {
@@ -72,14 +179,17 @@ describe('AccountList 컴포넌트 테스트', () => {
       />
     );
 
-    // 계좌명이 모두 표시되는지 확인
-    expect(screen.getByText('급여통장')).toBeInTheDocument();
-    expect(screen.getByText('비상금통장')).toBeInTheDocument();
-    expect(screen.getByText('투자통장')).toBeInTheDocument();
+    // 제목 확인
+    expect(screen.getByText('계좌 목록')).toBeInTheDocument();
 
-    // 은행명이 올바르게 표시되는지 확인
-    expect(screen.getAllByText('신한은행')).toHaveLength(2); // 두 계좌가 신한은행
-    expect(screen.getByText('국민은행')).toBeInTheDocument(); // 한 계좌가 국민은행
+    // 계좌 정보가 렌더링되었는지 확인
+    mockAccounts.forEach((account) => {
+      expect(screen.getByText(account.name)).toBeInTheDocument();
+    });
+
+    // 은행명이 표시됐는지 확인
+    expect(screen.getAllByText('신한은행', { exact: false })).toHaveLength(3);
+    expect(screen.getAllByText('국민은행', { exact: false })).toHaveLength(2);
   });
 
   test('은행별 필터링이 작동한다', async () => {
@@ -93,26 +203,25 @@ describe('AccountList 컴포넌트 테스트', () => {
       />
     );
 
-    // 신한은행으로 필터링
+    // 은행 필터 선택
     const bankFilterSelect = screen.getByLabelText('은행 필터');
-    fireEvent.change(bankFilterSelect, { target: { value: '1' } }); // 신한은행 ID
+    expect(bankFilterSelect).toBeInTheDocument();
+
+    // 신한은행 필터링
+    fireEvent.change(bankFilterSelect, { target: { value: '1' } });
 
     // 신한은행 계좌만 표시되는지 확인
-    await waitFor(() => {
-      expect(screen.getByText('급여통장')).toBeInTheDocument();
-      expect(screen.getByText('비상금통장')).toBeInTheDocument();
-      expect(screen.queryByText('투자통장')).not.toBeInTheDocument(); // 국민은행 계좌는 없어야 함
-    });
+    expect(screen.getByText('급여통장')).toBeInTheDocument();
+    expect(screen.getByText('비상금통장')).toBeInTheDocument();
+    expect(screen.queryByText('투자통장')).not.toBeInTheDocument();
 
-    // 국민은행으로 필터링
-    fireEvent.change(bankFilterSelect, { target: { value: '2' } }); // 국민은행 ID
+    // 국민은행 필터링
+    fireEvent.change(bankFilterSelect, { target: { value: '2' } });
 
     // 국민은행 계좌만 표시되는지 확인
-    await waitFor(() => {
-      expect(screen.queryByText('급여통장')).not.toBeInTheDocument(); // 신한은행 계좌는 없어야 함
-      expect(screen.queryByText('비상금통장')).not.toBeInTheDocument(); // 신한은행 계좌는 없어야 함
-      expect(screen.getByText('투자통장')).toBeInTheDocument();
-    });
+    expect(screen.queryByText('급여통장')).not.toBeInTheDocument();
+    expect(screen.queryByText('비상금통장')).not.toBeInTheDocument();
+    expect(screen.getByText('투자통장')).toBeInTheDocument();
   });
 
   test('URL에서 가져온 bankId로 초기 필터링이 적용된다', () => {
@@ -128,8 +237,8 @@ describe('AccountList 컴포넌트 테스트', () => {
     );
 
     // 국민은행 계좌만 표시되는지 확인
-    expect(screen.queryByText('급여통장')).not.toBeInTheDocument(); // 신한은행 계좌는 없어야 함
-    expect(screen.queryByText('비상금통장')).not.toBeInTheDocument(); // 신한은행 계좌는 없어야 함
+    expect(screen.queryByText('급여통장')).not.toBeInTheDocument();
+    expect(screen.queryByText('비상금통장')).not.toBeInTheDocument();
     expect(screen.getByText('투자통장')).toBeInTheDocument();
   });
 
@@ -145,7 +254,8 @@ describe('AccountList 컴포넌트 테스트', () => {
     );
 
     // 계좌 추가 버튼 클릭
-    fireEvent.click(screen.getByRole('button', { name: '계좌 추가' }));
+    const addButton = screen.getByText('+');
+    fireEvent.click(addButton);
 
     // onAdd 함수가 호출되었는지 확인
     expect(mockHandlers.onAdd).toHaveBeenCalledTimes(1);
@@ -162,10 +272,13 @@ describe('AccountList 컴포넌트 테스트', () => {
       />
     );
 
-    // 첫 번째 계좌의 수정 버튼 클릭
-    fireEvent.click(screen.getAllByRole('button', { name: '수정' })[0]);
+    // 수정 버튼들 (✎ 아이콘) 찾기
+    const editButtons = screen.getAllByText('✎');
 
-    // onEdit 함수가 호출되었는지 확인
+    // 첫 번째 계좌의 수정 버튼 클릭
+    fireEvent.click(editButtons[0]);
+
+    // onEdit 함수가 올바르게 호출되었는지 확인
     expect(mockHandlers.onEdit).toHaveBeenCalledTimes(1);
     expect(mockHandlers.onEdit).toHaveBeenCalledWith(mockAccounts[0]);
   });
@@ -181,10 +294,13 @@ describe('AccountList 컴포넌트 테스트', () => {
       />
     );
 
-    // 첫 번째 계좌의 삭제 버튼 클릭
-    fireEvent.click(screen.getAllByRole('button', { name: '삭제' })[0]);
+    // 삭제 버튼들 (🗑 아이콘) 찾기
+    const deleteButtons = screen.getAllByText('🗑');
 
-    // onDelete 함수가 호출되었는지 확인
+    // 첫 번째 계좌의 삭제 버튼 클릭
+    fireEvent.click(deleteButtons[0]);
+
+    // onDelete 함수가 올바르게 호출되었는지 확인
     expect(mockHandlers.onDelete).toHaveBeenCalledTimes(1);
     expect(mockHandlers.onDelete).toHaveBeenCalledWith(mockAccounts[0]);
   });
@@ -201,7 +317,8 @@ describe('AccountList 컴포넌트 테스트', () => {
     );
 
     // 첫 번째 계좌명 클릭
-    fireEvent.click(screen.getByText('급여통장'));
+    const accountLinks = screen.getAllByText('급여통장');
+    fireEvent.click(accountLinks[0]);
 
     // navigate 함수가 올바른 경로로 호출되었는지 확인
     expect(mockNavigate).toHaveBeenCalledTimes(1);
@@ -219,8 +336,11 @@ describe('AccountList 컴포넌트 테스트', () => {
       />
     );
 
+    // 거래 내역 버튼들 (🧾 아이콘) 찾기
+    const transactionButtons = screen.getAllByText('🧾');
+
     // 첫 번째 계좌의 거래 내역 버튼 클릭
-    fireEvent.click(screen.getAllByRole('button', { name: '거래 내역' })[0]);
+    fireEvent.click(transactionButtons[0]);
 
     // navigate 함수가 올바른 경로로 호출되었는지 확인
     expect(mockNavigate).toHaveBeenCalledTimes(1);

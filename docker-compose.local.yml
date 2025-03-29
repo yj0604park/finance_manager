@@ -1,6 +1,7 @@
 volumes:
   finance_backend_local_postgres_data: {}
   finance_backend_local_postgres_data_backups: {}
+  node_modules: {}
 
 services:
   django:
@@ -44,3 +45,14 @@ services:
       - ./.envs/.local/.vite
     ports:
       - 8080:8080
+
+  vite-test:
+    build:
+      context: .
+      dockerfile: ./compose/local/vite/Dockerfile
+    image: finance_frontend_local_vite_test
+    container_name: finance_frontend_local_test
+    volumes:
+      - ./finance_frontend:/work
+      - node_modules:/work/node_modules
+    command: yarn test

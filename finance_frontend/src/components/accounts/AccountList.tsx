@@ -17,9 +17,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Grid2,
   Link,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';;
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -81,8 +81,8 @@ const AccountList: React.FC<AccountListProps> = ({
         </Tooltip>
       </Box>
 
-      <Grid2 container spacing={2} sx={{ mb: 2 }}>
-        <Grid2 size={{ xs: 12, md: 4 }}>
+      <Grid container spacing={2} sx={{ mb: 2 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <FormControl fullWidth>
             <InputLabel id="bank-filter-label">은행 필터</InputLabel>
             <Select
@@ -100,8 +100,8 @@ const AccountList: React.FC<AccountListProps> = ({
               ))}
             </Select>
           </FormControl>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
 
       <TableContainer component={Paper}>
         <Table>
