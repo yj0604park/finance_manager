@@ -2,66 +2,66 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PatchedRetailer } from '../models/PatchedRetailer';
-import type { Retailer } from '../models/Retailer';
+import type { PatchedSalary } from '../models/PatchedSalary';
+import type { Salary } from '../models/Salary';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class RetailersService {
+export class SalariesService {
     /**
-     * @returns Retailer
+     * @returns Salary
      * @throws ApiError
      */
-    public static retailersList(): CancelablePromise<Array<Retailer>> {
+    public static salariesList(): CancelablePromise<Array<Salary>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/retailers/',
+            url: '/api/salaries/',
         });
     }
     /**
      * @param requestBody
-     * @returns Retailer
+     * @returns Salary
      * @throws ApiError
      */
-    public static retailersCreate(
-        requestBody: Retailer,
-    ): CancelablePromise<Retailer> {
+    public static salariesCreate(
+        requestBody: Salary,
+    ): CancelablePromise<Salary> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/retailers/',
+            url: '/api/salaries/',
             body: requestBody,
             mediaType: 'application/json',
         });
     }
     /**
-     * @param id A unique integer value identifying this retailer.
-     * @returns Retailer
+     * @param id A unique integer value identifying this salary.
+     * @returns Salary
      * @throws ApiError
      */
-    public static retailersRetrieve(
+    public static salariesRetrieve(
         id: number,
-    ): CancelablePromise<Retailer> {
+    ): CancelablePromise<Salary> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/retailers/{id}/',
+            url: '/api/salaries/{id}/',
             path: {
                 'id': id,
             },
         });
     }
     /**
-     * @param id A unique integer value identifying this retailer.
+     * @param id A unique integer value identifying this salary.
      * @param requestBody
-     * @returns Retailer
+     * @returns Salary
      * @throws ApiError
      */
-    public static retailersUpdate(
+    public static salariesUpdate(
         id: number,
-        requestBody: Retailer,
-    ): CancelablePromise<Retailer> {
+        requestBody: Salary,
+    ): CancelablePromise<Salary> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/api/retailers/{id}/',
+            url: '/api/salaries/{id}/',
             path: {
                 'id': id,
             },
@@ -70,18 +70,18 @@ export class RetailersService {
         });
     }
     /**
-     * @param id A unique integer value identifying this retailer.
+     * @param id A unique integer value identifying this salary.
      * @param requestBody
-     * @returns Retailer
+     * @returns Salary
      * @throws ApiError
      */
-    public static retailersPartialUpdate(
+    public static salariesPartialUpdate(
         id: number,
-        requestBody?: PatchedRetailer,
-    ): CancelablePromise<Retailer> {
+        requestBody?: PatchedSalary,
+    ): CancelablePromise<Salary> {
         return __request(OpenAPI, {
             method: 'PATCH',
-            url: '/api/retailers/{id}/',
+            url: '/api/salaries/{id}/',
             path: {
                 'id': id,
             },
@@ -90,16 +90,16 @@ export class RetailersService {
         });
     }
     /**
-     * @param id A unique integer value identifying this retailer.
+     * @param id A unique integer value identifying this salary.
      * @returns void
      * @throws ApiError
      */
-    public static retailersDestroy(
+    public static salariesDestroy(
         id: number,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/retailers/{id}/',
+            url: '/api/salaries/{id}/',
             path: {
                 'id': id,
             },

@@ -11,7 +11,7 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "generate-api": "openapi --input ./src/resource/finance_backend_API.yaml --output ./src/api",
+    "generate-api": "openapi --input \"./src/resource/finance_backend API.yaml\" --output ./src/api",
     "prepare": "husky"
   },
   "dependencies": {

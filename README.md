@@ -186,3 +186,46 @@
   - 다른 통화일 경우, 환율 테이블에 해당 내역이 존재해야 함.
 - **환율 검증:** 환율 테이블에는 변환된 통화와 원본 통화가 달라야 하며, 환율은 1보다 큰 값으로 기록.
 - **거래 내역 타입 검증:** UNKNOWN 타입, INCOME인데 음수, EXPENSE인데 양수 인 경우 찾아서 수정
+
+## OpenAPI 클라이언트 관리
+
+백엔드와 프론트엔드 간의 API 연동을 위해 OpenAPI 스펙을 사용합니다.
+
+### 자동 생성된 API 클라이언트 구조
+
+프론트엔드는 백엔드의 OpenAPI 스펙을 기반으로 API 클라이언트 코드를 자동 생성합니다:
+
+```
+finance_frontend/src/api/
+├── core/            # 자동 생성된 OpenAPI 코어 기능
+├── models/          # 자동 생성된 모델 타입
+├── services/        # 자동 생성된 API 서비스
+├── wrappers/        # 커스텀 확장 래퍼 클래스 (수동 작성)
+└── index.ts         # 자동 생성된 API 내보내기
+```
+
+### 백엔드 API 변경 시 프론트엔드 업데이트
+
+백엔드 API가 변경되면 다음 명령어로 프론트엔드 API 클라이언트를 업데이트합니다:
+
+```powershell
+pwsh ./sync-openapi-spec.ps1
+```
+
+### 주의사항
+
+1. **자동 생성된 코드는 절대 직접 수정하지 마세요!**
+   - 대신 `src/api/wrappers` 디렉토리의 래퍼 클래스를 사용하세요.
+
+2. **래퍼 클래스 사용 방법**:
+   ```typescript
+   // ❌ 잘못된 방법: 자동 생성된 서비스 직접 사용
+   import { TransactionsService } from '../api';
+   const transactions = await TransactionsService.transactionsList();
+
+   // ✅ 올바른 방법: 래퍼 클래스 사용
+   import { TransactionsWrapper } from '../api/wrappers';
+   const transactions = await TransactionsWrapper.getAll();
+   ```
+
+자세한 내용은 [API 래퍼 패턴 사용 가이드](finance_frontend/src/api/wrappers/README.md)를 참조하세요.

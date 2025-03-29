@@ -1,0 +1,74 @@
+name: Sync OpenAPI Spec and Update Frontend API Client
+
+on:
+  workflow_dispatch:  # 수동 트리거
+  schedule:
+    - cron: '0 0 * * 1'  # 매주 월요일 자정에 실행
+
+jobs:
+  sync-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Start Backend Services
+        run: docker compose -f docker-compose.local.yml up -d finance_backend
+
+      - name: Wait for Backend to Start
+        run: sleep 30
+
+      - name: Get OpenAPI Spec from Backend
+        run: |
+          docker compose -f docker-compose.local.yml exec -T finance_backend python -c "from finance_backend.utils.schemas import get_schema; print(get_schema())" > temp_schema.yaml
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'yarn'
+          cache-dependency-path: 'finance_frontend/yarn.lock'
+
+      - name: Install Dependencies
+        run: |
+          cd finance_frontend
+          yarn install
+
+      - name: Update OpenAPI Spec
+        run: |
+          mkdir -p finance_frontend/src/resource
+          mv temp_schema.yaml finance_frontend/src/resource/finance_backend_API.yaml
+
+      - name: Generate API Client
+        run: |
+          cd finance_frontend
+          yarn generate-api
+
+      - name: Check for Changes
+        id: check_changes
+        run: |
+          git diff --quiet finance_frontend/src/api || echo "::set-output name=has_changes::true"
+
+      - name: Create Pull Request
+        if: steps.check_changes.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update OpenAPI client based on latest backend API spec"
+          title: "OpenAPI Client Update"
+          body: |
+            백엔드 API 스펙이 변경되어 프론트엔드 API 클라이언트가 자동으로 업데이트되었습니다.
+
+            ⚠️ 주의:
+            - 자동 생성된 API 클라이언트 코드를 직접 수정하지 마세요.
+            - 대신 `src/api/wrappers` 디렉토리의 래퍼 클래스를 사용하세요.
+
+            **확인 사항:**
+            - [ ] 기존 기능이 정상 작동하는지 테스트
+            - [ ] 필요한 경우 래퍼 클래스 업데이트
+          branch: api-client-update
+          base: main
+          labels: api, automated-pr

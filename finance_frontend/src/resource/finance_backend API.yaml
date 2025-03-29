@@ -619,153 +619,6 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/incomes/:
-    get:
-      operationId: incomes_list
-      tags:
-        - incomes
-      security:
-        - cookieAuth: []
-        - tokenAuth: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Salary"
-          description: ""
-    post:
-      operationId: incomes_create
-      tags:
-        - incomes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Salary"
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/Salary"
-          multipart/form-data:
-            schema:
-              $ref: "#/components/schemas/Salary"
-        required: true
-      security:
-        - cookieAuth: []
-        - tokenAuth: []
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Salary"
-          description: ""
-  /api/incomes/{id}/:
-    get:
-      operationId: incomes_retrieve
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          description: A unique integer value identifying this salary.
-          required: true
-      tags:
-        - incomes
-      security:
-        - cookieAuth: []
-        - tokenAuth: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Salary"
-          description: ""
-    put:
-      operationId: incomes_update
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          description: A unique integer value identifying this salary.
-          required: true
-      tags:
-        - incomes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Salary"
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/Salary"
-          multipart/form-data:
-            schema:
-              $ref: "#/components/schemas/Salary"
-        required: true
-      security:
-        - cookieAuth: []
-        - tokenAuth: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Salary"
-          description: ""
-    patch:
-      operationId: incomes_partial_update
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          description: A unique integer value identifying this salary.
-          required: true
-      tags:
-        - incomes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PatchedSalary"
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/PatchedSalary"
-          multipart/form-data:
-            schema:
-              $ref: "#/components/schemas/PatchedSalary"
-      security:
-        - cookieAuth: []
-        - tokenAuth: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Salary"
-          description: ""
-    delete:
-      operationId: incomes_destroy
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          description: A unique integer value identifying this salary.
-          required: true
-      tags:
-        - incomes
-      security:
-        - cookieAuth: []
-        - tokenAuth: []
-      responses:
-        "204":
-          description: No response body
   /api/item-prices/:
     get:
       operationId: item_prices_list
@@ -1348,6 +1201,153 @@ paths:
           required: true
       tags:
         - retailers
+      security:
+        - cookieAuth: []
+        - tokenAuth: []
+      responses:
+        "204":
+          description: No response body
+  /api/salaries/:
+    get:
+      operationId: salaries_list
+      tags:
+        - salaries
+      security:
+        - cookieAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Salary"
+          description: ""
+    post:
+      operationId: salaries_create
+      tags:
+        - salaries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Salary"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Salary"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Salary"
+        required: true
+      security:
+        - cookieAuth: []
+        - tokenAuth: []
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Salary"
+          description: ""
+  /api/salaries/{id}/:
+    get:
+      operationId: salaries_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this salary.
+          required: true
+      tags:
+        - salaries
+      security:
+        - cookieAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Salary"
+          description: ""
+    put:
+      operationId: salaries_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this salary.
+          required: true
+      tags:
+        - salaries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Salary"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Salary"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Salary"
+        required: true
+      security:
+        - cookieAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Salary"
+          description: ""
+    patch:
+      operationId: salaries_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this salary.
+          required: true
+      tags:
+        - salaries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchedSalary"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PatchedSalary"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PatchedSalary"
+      security:
+        - cookieAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Salary"
+          description: ""
+    delete:
+      operationId: salaries_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this salary.
+          required: true
+      tags:
+        - salaries
       security:
         - cookieAuth: []
         - tokenAuth: []
@@ -2121,15 +2121,22 @@ components:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          default: "0.00"
+        nickname:
+          type: string
+          nullable: true
+          default: ""
+          maxLength: 100
+        is_active:
+          type: boolean
+          default: true
         currency:
           $ref: "#/components/schemas/CurrencyToEnum"
         name:
           type: string
           maxLength: 100
-        nickname:
-          type: string
-          nullable: true
-          maxLength: 100
+        account_type:
+          $ref: "#/components/schemas/AccountTypeEnum"
         last_update:
           type: string
           format: date-time
@@ -2144,18 +2151,12 @@ components:
           nullable: true
         first_added:
           type: boolean
-        is_active:
-          type: boolean
-        user:
-          type: integer
         bank:
           type: integer
       required:
-        - amount
         - bank
         - id
         - name
-        - user
     AccountSnapshot:
       type: object
       properties:
@@ -2176,14 +2177,10 @@ components:
           type: string
           format: date-time
           readOnly: true
-        currency:
-          nullable: true
-          oneOf:
-            - $ref: "#/components/schemas/CurrencyToEnum"
-            - $ref: "#/components/schemas/BlankEnum"
-            - $ref: "#/components/schemas/NullEnum"
-        user:
-          type: integer
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
         account:
           type: integer
           nullable: true
@@ -2194,11 +2191,29 @@ components:
           type: integer
           nullable: true
       required:
+        - amount
         - created_at
         - date
         - id
         - updated_at
-        - user
+    AccountTypeEnum:
+      enum:
+        - CHECKING_ACCOUNT
+        - SAVINGS_ACCOUNT
+        - INSTALLMENT_SAVING
+        - TIME_DEPOSIT
+        - CREDIT_CARD
+        - STOCK
+        - LOAN
+      type: string
+      description: |-
+        * `CHECKING_ACCOUNT` - 입출금
+        * `SAVINGS_ACCOUNT` - 저금
+        * `INSTALLMENT_SAVING` - 적금
+        * `TIME_DEPOSIT` - 예금
+        * `CREDIT_CARD` - 신용카드
+        * `STOCK` - 주식
+        * `LOAN` - 대출
     AuthToken:
       type: object
       properties:
@@ -2228,21 +2243,15 @@ components:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          default: "0.00"
         name:
           type: string
           maxLength: 200
         country:
           $ref: "#/components/schemas/CountryEnum"
-        user:
-          type: integer
       required:
-        - amount
         - id
         - name
-        - user
-    BlankEnum:
-      enum:
-        - ""
     CategoryEnum:
       enum:
         - ETC_INCOME
@@ -2350,10 +2359,8 @@ components:
           format: decimal
           pattern: ^-?\d{0,6}(?:\.\d{0,4})?$
           nullable: true
-        exchange_brokder:
-          $ref: "#/components/schemas/ExchangeBrokderEnum"
-        user:
-          type: integer
+        exchange_broker:
+          $ref: "#/components/schemas/ExchangeBrokerEnum"
         transaction_from:
           type: integer
         transaction_to:
@@ -2362,15 +2369,12 @@ components:
         - amount_from
         - amount_to
         - created_at
-        - currency_from
-        - currency_to
         - date
         - id
         - transaction_from
         - transaction_to
         - updated_at
-        - user
-    ExchangeBrokderEnum:
+    ExchangeBrokerEnum:
       enum:
         - ETC
         - BANK
@@ -2388,23 +2392,17 @@ components:
         id:
           type: integer
           readOnly: true
-        currency:
-          $ref: "#/components/schemas/CurrencyToEnum"
         name:
           type: string
           maxLength: 20
         code:
           type: string
-          nullable: true
           maxLength: 20
         item_type:
           $ref: "#/components/schemas/ItemTypeEnum"
-        user:
-          type: integer
       required:
         - id
         - name
-        - user
     ItemPrice:
       type: object
       properties:
@@ -2431,8 +2429,11 @@ components:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        user:
-          type: integer
+        source:
+          type: string
+          maxLength: 20
+        note:
+          type: string
         item:
           type: integer
       required:
@@ -2442,7 +2443,6 @@ components:
         - item
         - price
         - updated_at
-        - user
     ItemTransaction:
       type: object
       properties:
@@ -2463,10 +2463,6 @@ components:
           type: string
           format: date-time
           readOnly: true
-        amount:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
         purchase_price:
           type: string
           format: decimal
@@ -2492,16 +2488,12 @@ components:
           nullable: true
         note:
           type: string
-          nullable: true
-        user:
-          type: integer
         item:
           type: integer
         transaction:
           type: integer
           nullable: true
       required:
-        - amount
         - created_at
         - date
         - id
@@ -2509,7 +2501,6 @@ components:
         - purchase_price
         - quantity
         - updated_at
-        - user
     ItemTypeEnum:
       enum:
         - ITEM
@@ -2530,9 +2521,6 @@ components:
           type: string
       required:
         - password
-    NullEnum:
-      enum:
-        - null
     PasswordChange:
       type: object
       properties:
@@ -2583,15 +2571,22 @@ components:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          default: "0.00"
+        nickname:
+          type: string
+          nullable: true
+          default: ""
+          maxLength: 100
+        is_active:
+          type: boolean
+          default: true
         currency:
           $ref: "#/components/schemas/CurrencyToEnum"
         name:
           type: string
           maxLength: 100
-        nickname:
-          type: string
-          nullable: true
-          maxLength: 100
+        account_type:
+          $ref: "#/components/schemas/AccountTypeEnum"
         last_update:
           type: string
           format: date-time
@@ -2606,10 +2601,6 @@ components:
           nullable: true
         first_added:
           type: boolean
-        is_active:
-          type: boolean
-        user:
-          type: integer
         bank:
           type: integer
     PatchedAccountSnapshot:
@@ -2632,14 +2623,10 @@ components:
           type: string
           format: date-time
           readOnly: true
-        currency:
-          nullable: true
-          oneOf:
-            - $ref: "#/components/schemas/CurrencyToEnum"
-            - $ref: "#/components/schemas/BlankEnum"
-            - $ref: "#/components/schemas/NullEnum"
-        user:
-          type: integer
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
         account:
           type: integer
           nullable: true
@@ -2659,13 +2646,12 @@ components:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          default: "0.00"
         name:
           type: string
           maxLength: 200
         country:
           $ref: "#/components/schemas/CountryEnum"
-        user:
-          type: integer
     PatchedExchange:
       type: object
       properties:
@@ -2703,10 +2689,8 @@ components:
           format: decimal
           pattern: ^-?\d{0,6}(?:\.\d{0,4})?$
           nullable: true
-        exchange_brokder:
-          $ref: "#/components/schemas/ExchangeBrokderEnum"
-        user:
-          type: integer
+        exchange_broker:
+          $ref: "#/components/schemas/ExchangeBrokerEnum"
         transaction_from:
           type: integer
         transaction_to:
@@ -2717,19 +2701,14 @@ components:
         id:
           type: integer
           readOnly: true
-        currency:
-          $ref: "#/components/schemas/CurrencyToEnum"
         name:
           type: string
           maxLength: 20
         code:
           type: string
-          nullable: true
           maxLength: 20
         item_type:
           $ref: "#/components/schemas/ItemTypeEnum"
-        user:
-          type: integer
     PatchedItemPrice:
       type: object
       properties:
@@ -2756,8 +2735,11 @@ components:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        user:
-          type: integer
+        source:
+          type: string
+          maxLength: 20
+        note:
+          type: string
         item:
           type: integer
     PatchedItemTransaction:
@@ -2780,10 +2762,6 @@ components:
           type: string
           format: date-time
           readOnly: true
-        amount:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
         purchase_price:
           type: string
           format: decimal
@@ -2809,9 +2787,6 @@ components:
           nullable: true
         note:
           type: string
-          nullable: true
-        user:
-          type: integer
         item:
           type: integer
         transaction:
@@ -2830,8 +2805,6 @@ components:
           $ref: "#/components/schemas/RetailerTypeEnum"
         category:
           $ref: "#/components/schemas/CategoryEnum"
-        user:
-          type: integer
     PatchedSalary:
       type: object
       properties:
@@ -2878,8 +2851,6 @@ components:
         adjustment_detail: {}
         tax_withheld_detail: {}
         deduction_detail: {}
-        user:
-          type: integer
         transaction:
           type: integer
     PatchedTransaction:
@@ -2910,16 +2881,12 @@ components:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-          nullable: true
         note:
           type: string
-          nullable: true
         transaction_type:
           $ref: "#/components/schemas/TransactionTypeEnum"
         is_reviewed:
           type: boolean
-        user:
-          type: integer
         account:
           type: integer
         retailer:
@@ -3007,12 +2974,9 @@ components:
           $ref: "#/components/schemas/RetailerTypeEnum"
         category:
           $ref: "#/components/schemas/CategoryEnum"
-        user:
-          type: integer
       required:
         - id
         - name
-        - user
     RetailerTypeEnum:
       enum:
         - ETC
@@ -3022,7 +2986,7 @@ components:
         - SERVICE
         - INCOME
         - RESTAURANT
-        - INTERNET
+        - ONLINE
       type: string
       description: |-
         * `ETC` - 기타
@@ -3032,7 +2996,7 @@ components:
         * `SERVICE` - 서비스
         * `INCOME` - 수입
         * `RESTAURANT` - 식당
-        * `INTERNET` - 인터넷
+        * `ONLINE` - 온라인
     Salary:
       type: object
       properties:
@@ -3079,8 +3043,6 @@ components:
         adjustment_detail: {}
         tax_withheld_detail: {}
         deduction_detail: {}
-        user:
-          type: integer
         transaction:
           type: integer
       required:
@@ -3098,7 +3060,6 @@ components:
         - tax_withheld_detail
         - transaction
         - updated_at
-        - user
     Token:
       type: object
       description: Serializer for Token model.
@@ -3137,16 +3098,12 @@ components:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-          nullable: true
         note:
           type: string
-          nullable: true
         transaction_type:
           $ref: "#/components/schemas/TransactionTypeEnum"
         is_reviewed:
           type: boolean
-        user:
-          type: integer
         account:
           type: integer
         retailer:
@@ -3162,7 +3119,6 @@ components:
         - date
         - id
         - updated_at
-        - user
     TransactionTypeEnum:
       enum:
         - ETC_INCOME

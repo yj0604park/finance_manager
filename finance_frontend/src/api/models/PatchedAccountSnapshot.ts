@@ -1,19 +1,15 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
-import type { BlankEnum } from './BlankEnum';
-import type { CurrencyToEnum } from './CurrencyToEnum';
-import type { NullEnum } from './NullEnum';
+/* eslint-disable */
 export type PatchedAccountSnapshot = {
-  readonly id?: number;
-  date?: string;
-  time?: string;
-  readonly created_at?: string;
-  readonly updated_at?: string;
-  currency?: (CurrencyToEnum | BlankEnum | NullEnum) | null;
-  user?: number;
-  account?: number | null;
-  bank?: number | null;
-  item?: number | null;
+    readonly id?: number;
+    date?: string;
+    time?: string;
+    readonly created_at?: string;
+    readonly updated_at?: string;
+    amount?: string;
+    account?: number | null;
+    bank?: number | null;
+    item?: number | null;
 };

@@ -1,9 +1,9 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 export type AuthToken = {
-  email: string;
-  password: string;
-  readonly token: string;
+    username: string;
+    password: string;
+    readonly token: string;
 };
