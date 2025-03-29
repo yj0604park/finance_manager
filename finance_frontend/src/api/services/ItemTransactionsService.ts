@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { ItemTransaction } from '../models/ItemTransaction';
 import type { PatchedItemTransaction } from '../models/PatchedItemTransaction';
 import type { CancelablePromise } from '../core/CancelablePromise';

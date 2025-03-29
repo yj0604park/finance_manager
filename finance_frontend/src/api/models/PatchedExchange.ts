@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { CurrencyToEnum } from './CurrencyToEnum';
 import type { ExchangeBrokderEnum } from './ExchangeBrokderEnum';
 export type PatchedExchange = {

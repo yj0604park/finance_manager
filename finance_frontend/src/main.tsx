@@ -6,6 +6,7 @@ import { theme } from './styles/theme';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ko } from 'date-fns/locale';
+import { QueryClientProvider } from './lib/react-query/QueryClientProvider';
 
 // 앱 렌더링
 async function startApp() {
@@ -15,12 +16,14 @@ async function startApp() {
     const root = createRoot(container);
     root.render(
       <React.StrictMode>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ko}>
-            <App />
-          </LocalizationProvider>
-        </ThemeProvider>
+        <QueryClientProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ko}>
+              <App />
+            </LocalizationProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
       </React.StrictMode>
     );
   }

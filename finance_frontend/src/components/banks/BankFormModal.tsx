@@ -8,9 +8,11 @@ import {
   Button,
   MenuItem,
   Box,
+  FormHelperText,
 } from '@mui/material';
 import { Bank } from '../../api/models/Bank';
 import { CountryEnum } from '../../api/models/CountryEnum';
+import { validateBankForm, getFormHelperText, hasFieldError, ValidationResult } from '../../utils/validations';
 
 /**
  * 은행 추가 및 수정을 위한 모달 컴포넌트
@@ -29,6 +31,15 @@ const BankFormModal: React.FC<BankFormModalProps> = ({ open, onClose, onSubmit, 
     country: CountryEnum.KOREA,
   });
 
+  // 검증 결과 상태
+  const [validationResult, setValidationResult] = useState<ValidationResult>({
+    isValid: true,
+    errors: []
+  });
+
+  // 폼 제출 시도 여부 상태
+  const [submitted, setSubmitted] = useState(false);
+
   useEffect(() => {
     if (bank) {
       setFormData({
@@ -41,7 +52,19 @@ const BankFormModal: React.FC<BankFormModalProps> = ({ open, onClose, onSubmit, 
         country: CountryEnum.KOREA,
       });
     }
-  }, [bank]);
+
+    // 모달이 새로 열릴 때 검증 상태 초기화
+    setValidationResult({ isValid: true, errors: [] });
+    setSubmitted(false);
+  }, [bank, open]);
+
+  // 폼 데이터 변경 시 유효성 검사
+  useEffect(() => {
+    if (submitted) {
+      const result = validateBankForm(formData);
+      setValidationResult(result);
+    }
+  }, [formData, submitted]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -53,7 +76,14 @@ const BankFormModal: React.FC<BankFormModalProps> = ({ open, onClose, onSubmit, 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    setSubmitted(true);
+
+    const result = validateBankForm(formData);
+    setValidationResult(result);
+
+    if (result.isValid) {
+      onSubmit(formData);
+    }
   };
 
   return (
@@ -69,6 +99,8 @@ const BankFormModal: React.FC<BankFormModalProps> = ({ open, onClose, onSubmit, 
               onChange={handleChange}
               required
               fullWidth
+              error={hasFieldError(validationResult, '은행명')}
+              helperText={getFormHelperText(validationResult, '은행명')}
             />
             <TextField
               select
@@ -78,6 +110,8 @@ const BankFormModal: React.FC<BankFormModalProps> = ({ open, onClose, onSubmit, 
               onChange={handleChange}
               required
               fullWidth
+              error={hasFieldError(validationResult, '국가')}
+              helperText={getFormHelperText(validationResult, '국가')}
             >
               {Object.values(CountryEnum).map((country) => (
                 <MenuItem key={country} value={country}>
@@ -85,6 +119,13 @@ const BankFormModal: React.FC<BankFormModalProps> = ({ open, onClose, onSubmit, 
                 </MenuItem>
               ))}
             </TextField>
+
+            {/* 폼 수준의 에러 표시 */}
+            {submitted && !validationResult.isValid && validationResult.errors.length > 0 && (
+              <FormHelperText error>
+                입력 양식에 오류가 있습니다. 수정 후 다시 시도해주세요.
+              </FormHelperText>
+            )}
           </Box>
         </DialogContent>
         <DialogActions>

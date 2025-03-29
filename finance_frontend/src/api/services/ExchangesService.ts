@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { Exchange } from '../models/Exchange';
 import type { PatchedExchange } from '../models/PatchedExchange';
 import type { CancelablePromise } from '../core/CancelablePromise';

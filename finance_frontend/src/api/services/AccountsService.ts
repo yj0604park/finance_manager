@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { Account } from '../models/Account';
 import type { PatchedAccount } from '../models/PatchedAccount';
 import type { CancelablePromise } from '../core/CancelablePromise';

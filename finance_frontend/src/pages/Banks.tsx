@@ -1,212 +1,167 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, Alert, Snackbar } from '@mui/material';
-import BankList from '../components/banks/BankList';
-import BankFormModal from '../components/banks/BankFormModal';
-import AccountFormModal from '../components/banks/AccountFormModal';
-import { BanksService } from '../api/services/BanksService';
-import { AccountsService } from '../api/services/AccountsService';
-import { Bank } from '../api/models/Bank';
-import { Account } from '../api/models/Account';
-import { CurrencyToEnum } from '../api/models/CurrencyToEnum';
+import React from 'react';
+import { Container } from '@mui/material';
+import { Bank } from '../types/models';
+import { Account } from '../types/models';
+import ConfirmDialog from '../components/common/ConfirmDialog';
+import NotificationSnackbar from '../components/common/NotificationSnackbar';
+import LoadingState from '../components/common/LoadingState';
+import ErrorState from '../components/common/ErrorState';
+import { useModal } from '../hooks/useModal';
+import { useNotification } from '../hooks/useNotification';
+import {
+  useBanksQuery,
+  useCreateBankMutation,
+  useUpdateBankMutation,
+  useDeleteBankMutation
+} from '../hooks/query/useBanksQuery';
+import { useAccountsQuery, useCreateAccountMutation } from '../hooks/query/useAccountsQuery';
+import BankListAdapter from '../components/adapters/BankListAdapter';
+import BankFormModalAdapter from '../components/adapters/BankFormModalAdapter';
+import AccountFormModalAdapter from '../components/adapters/AccountFormModalAdapter';
+import { convertBankToApi } from '../utils/typeConverters';
 
 const Banks: React.FC = () => {
-  const [banks, setBanks] = useState<Bank[]>([]);
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedBank, setSelectedBank] = useState<Bank | undefined>();
-  const [accountModalOpen, setAccountModalOpen] = useState(false);
-  const [selectedBankForAccount, setSelectedBankForAccount] = useState<Bank | undefined>();
-  const [notification, setNotification] = useState<{
-    open: boolean;
-    message: string;
-    severity: 'success' | 'error' | 'info';
-  }>({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
+  // React Query 훅 사용
+  const { data: apiBanks, isLoading, isError, error } = useBanksQuery();
+  const { data: accounts = [] } = useAccountsQuery();
+  const createBankMutation = useCreateBankMutation();
+  const updateBankMutation = useUpdateBankMutation();
+  const deleteBankMutation = useDeleteBankMutation();
+  const createAccountMutation = useCreateAccountMutation();
 
-  const fetchBanks = async () => {
+  const { notification, showNotification, hideNotification } = useNotification();
+
+  // 모달 상태 관리 훅 사용
+  const bankModal = useModal<Bank | undefined>();
+  const accountModal = useModal<Bank | undefined>();
+  const confirmModal = useModal<{ bank: Bank; type: 'delete' }>();
+
+  // API 응답을 내부 모델로 변환
+  const banks = apiBanks ? apiBanks.map(bank => {
+    const modelBank = convertBankToApi(bank);
+    return {
+      id: modelBank.id!,
+      name: modelBank.name!,
+      country: modelBank.country!
+    };
+  }) : [];
+
+  // 은행 추가/수정 처리
+  const handleBankSubmit = async (bankData: Partial<Bank>) => {
     try {
-      setLoading(true);
-      const response = await BanksService.banksList();
-      setBanks(response);
-    } catch (err) {
-      setError('은행 목록을 불러오는데 실패했습니다.');
-      console.error('Error fetching banks:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchAccounts = async () => {
-    try {
-      const response = await AccountsService.accountsList();
-      setAccounts(response);
-    } catch (err) {
-      console.error('Error fetching accounts:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchBanks();
-    fetchAccounts();
-  }, []);
-
-  const handleAdd = () => {
-    setSelectedBank(undefined);
-    setModalOpen(true);
-  };
-
-  const handleEdit = (bank: Bank) => {
-    setSelectedBank(bank);
-    setModalOpen(true);
-  };
-
-  const handleDelete = async (bank: Bank) => {
-    if (window.confirm('정말로 이 은행을 삭제하시겠습니까?')) {
-      try {
-        await BanksService.banksDestroy(bank.id);
-        setBanks(banks.filter((b) => b.id !== bank.id));
-        setNotification({
-          open: true,
-          message: '은행이 삭제되었습니다.',
-          severity: 'success',
+      if (bankModal.data) {
+        // 수정
+        await updateBankMutation.mutateAsync({
+          id: bankModal.data.id!,
+          data: bankData
         });
-      } catch (err) {
-        setNotification({
-          open: true,
-          message: '은행 삭제에 실패했습니다.',
-          severity: 'error',
-        });
-        console.error('Error deleting bank:', err);
-      }
-    }
-  };
-
-  const handleAddAccount = (bank: Bank) => {
-    setSelectedBankForAccount(bank);
-    setAccountModalOpen(true);
-  };
-
-  const handleAccountSubmit = async (accountData: {
-    name: string;
-    currency?: CurrencyToEnum;
-    nickname?: string;
-    bank: number;
-  }) => {
-    try {
-      await AccountsService.accountsCreate({
-        id: 0,
-        name: accountData.name,
-        amount: '0',
-        currency: accountData.currency,
-        nickname: accountData.nickname,
-        bank: accountData.bank,
-        user: 0,
-      } as Account);
-      await fetchAccounts();
-      setAccountModalOpen(false);
-      setNotification({
-        open: true,
-        message: '계좌가 추가되었습니다.',
-        severity: 'success',
-      });
-    } catch (err) {
-      setNotification({
-        open: true,
-        message: '계좌 추가에 실패했습니다.',
-        severity: 'error',
-      });
-      console.error('Error adding account:', err);
-    }
-  };
-
-  const handleSubmit = async (bankData: Partial<Bank>) => {
-    try {
-      if (selectedBank) {
-        await BanksService.banksUpdate(selectedBank.id, bankData as Bank);
-        setBanks(banks.map((b) => (b.id === selectedBank.id ? { ...b, ...bankData } : b)));
-        setNotification({
-          open: true,
-          message: '은행이 수정되었습니다.',
-          severity: 'success',
-        });
+        showNotification('은행이 수정되었습니다.', 'success');
       } else {
-        const newBank = await BanksService.banksCreate(bankData as Bank);
-        setBanks([...banks, newBank]);
-        setNotification({
-          open: true,
-          message: '은행이 추가되었습니다.',
-          severity: 'success',
-        });
+        // 추가
+        const createData = {
+          ...bankData,
+          name: bankData.name || '',
+          country: bankData.country
+        };
+        await createBankMutation.mutateAsync(createData as any);
+        showNotification('은행이 추가되었습니다.', 'success');
       }
-      setModalOpen(false);
+      bankModal.closeModal();
     } catch (err) {
-      setNotification({
-        open: true,
-        message: selectedBank ? '은행 수정에 실패했습니다.' : '은행 추가에 실패했습니다.',
-        severity: 'error',
-      });
+      showNotification(
+        bankModal.data ? '은행 수정에 실패했습니다.' : '은행 추가에 실패했습니다.',
+        'error'
+      );
       console.error('Error submitting bank:', err);
     }
   };
 
-  if (loading) {
-    return (
-      <Container>
-        <Typography>로딩 중...</Typography>
-      </Container>
-    );
+  // 계좌 추가 처리
+  const handleAccountSubmit = async (accountData: Partial<Account>) => {
+    try {
+      const createData = {
+        ...accountData,
+        user: 1 // user 필드가 필요한 경우 기본값 설정
+      } as any; // 타입 오류 우회
+      await createAccountMutation.mutateAsync(createData);
+      showNotification('계좌가 추가되었습니다.', 'success');
+      accountModal.closeModal();
+    } catch (err) {
+      showNotification('계좌 추가에 실패했습니다.', 'error');
+      console.error('Error adding account:', err);
+    }
+  };
+
+  // 은행 삭제 확인
+  const handleConfirmDelete = async () => {
+    if (!confirmModal.data) return;
+
+    try {
+      await deleteBankMutation.mutateAsync(confirmModal.data.bank.id!);
+      showNotification('은행이 삭제되었습니다.', 'success');
+    } catch (err) {
+      showNotification('은행 삭제에 실패했습니다.', 'error');
+      console.error('Error deleting bank:', err);
+    } finally {
+      confirmModal.closeModal();
+    }
+  };
+
+  if (isLoading) {
+    return <LoadingState />;
   }
 
-  if (error) {
-    return (
-      <Container>
-        <Alert severity="error">{error}</Alert>
-      </Container>
-    );
+  if (isError) {
+    return <ErrorState message={error?.message || '은행 목록을 불러오는데 실패했습니다.'} />;
   }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <BankList
+      {/* 어댑터 컴포넌트를 통해 데이터 변환 처리 */}
+      <BankListAdapter
         banks={banks}
         accounts={accounts}
-        onAdd={handleAdd}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onAddAccount={handleAddAccount}
+        onAdd={() => bankModal.openModal(undefined)}
+        onEdit={(bank) => bankModal.openModal(bank)}
+        onDelete={(bank) => confirmModal.openModal({ bank, type: 'delete' })}
+        onAddAccount={(bank) => accountModal.openModal(bank)}
       />
-      <BankFormModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSubmit={handleSubmit}
-        bank={selectedBank}
+
+      {/* 은행 추가/수정 모달 */}
+      <BankFormModalAdapter
+        open={bankModal.isOpen}
+        onClose={bankModal.closeModal}
+        onSubmit={handleBankSubmit}
+        bank={bankModal.data !== null ? bankModal.data : undefined}
       />
-      {selectedBankForAccount && (
-        <AccountFormModal
-          open={accountModalOpen}
-          onClose={() => setAccountModalOpen(false)}
+
+      {/* 계좌 추가 모달 */}
+      {accountModal.data && (
+        <AccountFormModalAdapter
+          open={accountModal.isOpen}
+          onClose={accountModal.closeModal}
           onSubmit={handleAccountSubmit}
-          bank={selectedBankForAccount}
+          bank={accountModal.data}
+          banks={banks}
         />
       )}
-      <Snackbar
-        open={notification.open}
-        autoHideDuration={6000}
-        onClose={() => setNotification({ ...notification, open: false })}
-      >
-        <Alert
-          onClose={() => setNotification({ ...notification, open: false })}
-          severity={notification.severity}
-          sx={{ width: '100%' }}
-        >
-          {notification.message}
-        </Alert>
-      </Snackbar>
+
+      {/* 삭제 확인 대화상자 */}
+      <ConfirmDialog
+        open={confirmModal.isOpen && !!confirmModal.data}
+        title="은행 삭제"
+        message="정말로 이 은행을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+        confirmText="삭제"
+        onConfirm={handleConfirmDelete}
+        onCancel={confirmModal.closeModal}
+        severity="error"
+      />
+
+      {/* 알림 */}
+      <NotificationSnackbar
+        notification={notification}
+        onClose={hideNotification}
+      />
     </Container>
   );
 };

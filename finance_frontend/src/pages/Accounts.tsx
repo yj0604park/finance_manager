@@ -1,169 +1,140 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Alert, Snackbar } from '@mui/material';
-import { useLocation } from 'react-router-dom';
-import AccountList from '../components/accounts/AccountList';
-import AccountFormModal from '../components/accounts/AccountFormModal';
-import { Account } from '../api/models/Account';
-import { Bank } from '../api/models/Bank';
-import { AccountsService } from '../api/services/AccountsService';
-import { BanksService } from '../api/services/BanksService';
+import React from 'react';
+import { Container } from '@mui/material';
+import { Account } from '../types/models';
+import ConfirmDialog from '../components/common/ConfirmDialog';
+import NotificationSnackbar from '../components/common/NotificationSnackbar';
+import LoadingState from '../components/common/LoadingState';
+import ErrorState from '../components/common/ErrorState';
+import { useModal } from '../hooks/useModal';
+import { useNotification } from '../hooks/useNotification';
+import { useBanksQuery } from '../hooks/query/useBanksQuery';
+import {
+  useAccountsQuery,
+  useCreateAccountMutation,
+  useUpdateAccountMutation,
+  useDeleteAccountMutation
+} from '../hooks/query/useAccountsQuery';
+import AccountListAdapter from '../components/adapters/AccountListAdapter';
+import AccountFormModalAdapter from '../components/adapters/AccountFormModalAdapter';
+import { apiAccountsToModels } from '../utils/modelAdapters';
+import { convertBankToApi } from '../utils/typeConverters';
 
 const Accounts: React.FC = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const bankIdFromUrl = queryParams.get('bankId');
+  // React Query 훅 사용
+  const { data: apiAccounts, isLoading, isError, error } = useAccountsQuery();
+  const { data: apiBanks = [] } = useBanksQuery();
+  const createAccountMutation = useCreateAccountMutation();
+  const updateAccountMutation = useUpdateAccountMutation();
+  const deleteAccountMutation = useDeleteAccountMutation();
 
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [banks, setBanks] = useState<Bank[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState<Account | undefined>();
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: 'success' | 'error';
-  }>({
-    open: false,
-    message: '',
-    severity: 'success',
+  const { notification, showNotification, hideNotification } = useNotification();
+
+  // 모달 상태 관리 훅 사용
+  const accountModal = useModal<Account | null>();
+  const confirmModal = useModal<{ account: Account; type: 'delete' }>();
+
+  // API 응답을 내부 모델로 변환
+  const accounts = apiAccounts ? apiAccountsToModels(apiAccounts) : [];
+  const banks = apiBanks.map(bank => {
+    const modelBank = convertBankToApi(bank);
+    return {
+      id: modelBank.id!,
+      name: modelBank.name!,
+      country: modelBank.country!
+    };
   });
 
-  const fetchAccounts = async () => {
+  // 계좌 추가/수정 처리
+  const handleAccountSubmit = async (accountData: Partial<Account>) => {
     try {
-      setLoading(true);
-      const response = await AccountsService.accountsList();
-      setAccounts(response);
-    } catch (err) {
-      setError('계좌 목록을 불러오는데 실패했습니다.');
-      console.error('계좌 목록 조회 실패:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchBanks = async () => {
-    try {
-      const response = await BanksService.banksList();
-      setBanks(response);
-    } catch (err) {
-      console.error('은행 목록 조회 실패:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchAccounts();
-    fetchBanks();
-  }, []);
-
-  const handleAdd = () => {
-    setSelectedAccount(undefined);
-    setModalOpen(true);
-  };
-
-  const handleEdit = (account: Account) => {
-    setSelectedAccount(account);
-    setModalOpen(true);
-  };
-
-  const handleDelete = async (account: Account) => {
-    if (window.confirm('정말로 이 계좌를 삭제하시겠습니까?')) {
-      try {
-        await AccountsService.accountsDestroy(account.id);
-        setSnackbar({
-          open: true,
-          message: '계좌가 삭제되었습니다.',
-          severity: 'success',
+      if (accountModal.data) {
+        // 수정
+        await updateAccountMutation.mutateAsync({
+          id: accountModal.data.id!,
+          data: accountData
         });
-        fetchAccounts();
-      } catch (err) {
-        setSnackbar({
-          open: true,
-          message: '계좌 삭제에 실패했습니다.',
-          severity: 'error',
-        });
-        console.error('계좌 삭제 실패:', err);
-      }
-    }
-  };
-
-  const handleSubmit = async (accountData: Partial<Account>) => {
-    try {
-      if (selectedAccount) {
-        await AccountsService.accountsUpdate(selectedAccount.id, accountData as Account);
-        setSnackbar({
-          open: true,
-          message: '계좌가 수정되었습니다.',
-          severity: 'success',
-        });
+        showNotification('계좌가 수정되었습니다.', 'success');
       } else {
-        await AccountsService.accountsCreate(accountData as Account);
-        setSnackbar({
-          open: true,
-          message: '계좌가 추가되었습니다.',
-          severity: 'success',
-        });
+        // 추가
+        const createData = {
+          ...accountData,
+          user: 1 // user 필드가 필요한 경우 기본값 설정
+        } as any; // 타입 오류 우회
+        await createAccountMutation.mutateAsync(createData);
+        showNotification('계좌가 추가되었습니다.', 'success');
       }
-      setModalOpen(false);
-      fetchAccounts();
+      accountModal.closeModal();
     } catch (err) {
-      setSnackbar({
-        open: true,
-        message: selectedAccount ? '계좌 수정에 실패했습니다.' : '계좌 추가에 실패했습니다.',
-        severity: 'error',
-      });
-      console.error('계좌 저장 실패:', err);
+      showNotification(
+        accountModal.data ? '계좌 수정에 실패했습니다.' : '계좌 추가에 실패했습니다.',
+        'error'
+      );
+      console.error('Error submitting account:', err);
     }
   };
 
-  if (loading) {
-    return (
-      <Container>
-        <Typography>로딩 중...</Typography>
-      </Container>
-    );
+  // 계좌 삭제 확인
+  const handleConfirmDelete = async () => {
+    if (!confirmModal.data) return;
+
+    try {
+      await deleteAccountMutation.mutateAsync({
+        id: confirmModal.data.account.id!,
+        bankId: confirmModal.data.account.bank
+      });
+      showNotification('계좌가 삭제되었습니다.', 'success');
+    } catch (err) {
+      showNotification('계좌 삭제에 실패했습니다.', 'error');
+      console.error('Error deleting account:', err);
+    } finally {
+      confirmModal.closeModal();
+    }
+  };
+
+  if (isLoading) {
+    return <LoadingState />;
   }
 
-  if (error) {
-    return (
-      <Container>
-        <Alert severity="error">{error}</Alert>
-      </Container>
-    );
+  if (isError) {
+    return <ErrorState message={error?.message || '계좌 목록을 불러오는데 실패했습니다.'} />;
   }
 
   return (
-    <Container>
-      <Box sx={{ my: 4 }}>
-        <AccountList
-          accounts={accounts}
-          banks={banks}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onAdd={handleAdd}
-          defaultBankId={bankIdFromUrl}
-        />
-        <AccountFormModal
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          onSubmit={handleSubmit}
-          account={selectedAccount}
-          banks={banks}
-        />
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-        >
-          <Alert
-            onClose={() => setSnackbar({ ...snackbar, open: false })}
-            severity={snackbar.severity}
-            sx={{ width: '100%' }}
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
-      </Box>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      {/* 어댑터 컴포넌트를 통해 데이터 변환 처리 */}
+      <AccountListAdapter
+        accounts={accounts}
+        banks={banks}
+        onAdd={() => accountModal.openModal(null)}
+        onEdit={(account) => accountModal.openModal(account)}
+        onDelete={(account) => confirmModal.openModal({ account, type: 'delete' })}
+      />
+
+      {/* 계좌 폼 모달 */}
+      <AccountFormModalAdapter
+        open={accountModal.isOpen}
+        onClose={accountModal.closeModal}
+        onSubmit={handleAccountSubmit}
+        account={accountModal.data || undefined}
+        banks={banks}
+      />
+
+      {/* 삭제 확인 대화상자 */}
+      <ConfirmDialog
+        open={confirmModal.isOpen && !!confirmModal.data}
+        title="계좌 삭제"
+        message="정말로 이 계좌를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+        confirmText="삭제"
+        onConfirm={handleConfirmDelete}
+        onCancel={confirmModal.closeModal}
+        severity="error"
+      />
+
+      {/* 알림 */}
+      <NotificationSnackbar
+        notification={notification}
+        onClose={hideNotification}
+      />
     </Container>
   );
 };

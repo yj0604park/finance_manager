@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { Bank } from '../models/Bank';
 import type { PatchedBank } from '../models/PatchedBank';
 import type { CancelablePromise } from '../core/CancelablePromise';

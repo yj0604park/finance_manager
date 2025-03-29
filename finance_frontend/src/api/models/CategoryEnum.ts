@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 /**
  * * `ETC_INCOME` - 기타소득
  * * `SALARY` - 월급
