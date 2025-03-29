@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import {
   getAuthToken,
   setAuthToken as saveAuthToken,
@@ -9,21 +9,7 @@ import {
   setAuthToken as setApiAuthToken,
   clearAuthToken as clearApiAuthToken,
 } from '../api/client';
-
-interface User {
-  email: string;
-  id?: string;
-}
-
-interface AuthContextType {
-  isAuthenticated: boolean;
-  token: string | null;
-  user: User | null;
-  login: (token: string, email: string) => void;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import { AuthContext, User } from './auth-context-types';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(getAuthToken());
@@ -73,12 +59,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };

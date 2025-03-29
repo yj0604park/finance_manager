@@ -266,13 +266,16 @@ vi.mock('./api/services/RetailersService', () => ({
 }));
 
 // 인증 모킹
-vi.mock('./contexts/AuthContext', () => ({
+vi.mock('./contexts/useAuth', () => ({
   useAuth: vi.fn().mockReturnValue({
     isAuthenticated: true,
     user: { id: 1, username: 'testuser' },
     login: vi.fn(),
     logout: vi.fn(),
   }),
+}));
+
+vi.mock('./contexts/AuthContext', () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
