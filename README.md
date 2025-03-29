@@ -1,8 +1,8 @@
 # 금융 관리 시스템
 
-[![CI](https://github.com/yourusername/finance/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/finance/actions/workflows/ci.yml)
-[![Test](https://github.com/yourusername/finance/actions/workflows/test.yml/badge.svg)](https://github.com/yourusername/finance/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/yourusername/finance/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/finance)
+[![CI](https://github.com/yj0604park/finance_manager/actions/workflows/ci.yml/badge.svg)](https://github.com/yj0604park/finance_manager/actions/workflows/ci.yml)
+[![Test](https://github.com/yj0604park/finance_manager/actions/workflows/test.yml/badge.svg)](https://github.com/yj0604park/finance_manager/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/yj0604park/finance_manager/branch/main/graph/badge.svg)](https://codecov.io/gh/yj0604park/finance_manager)
 
 현대적인 금융 관리 시스템을 위한 웹 애플리케이션입니다.
 
