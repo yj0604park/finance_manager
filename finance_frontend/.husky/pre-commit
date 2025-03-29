@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# TypeScript 타입 검사
+yarn tsc --noEmit || exit 1
+
+# 스테이징된 파일에 대해 lint-staged 실행
+yarn lint-staged

@@ -1,10 +1,14 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
+      - id: check-toml
+      - id: check-xml
       - id: check-yaml
+      - id: debug-statements
+      - id: check-builtin-literals
       - id: check-added-large-files
       - id: check-ast
       - id: check-merge-conflict
@@ -14,52 +18,26 @@ repos:
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
 
+  - repo: https://github.com/adamchainz/django-upgrade
+    rev: "1.22.2"
+    hooks:
+      - id: django-upgrade
+        args: ["--target-version", "5.0"]
+
   - repo: https://gitlab.com/bmares/check-json5
     rev: v1.0.0
     hooks:
       - id: check-json5
 
-  - repo: https://github.com/psf/black
-    rev: 24.2.0
+  # Run the Ruff linter.
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.0
     hooks:
-      - id: black
-        language_version: python3
-
-  - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        name: isort (python)
-
-  # - repo: https://github.com/pre-commit/mirrors-mypy
-  #   rev: v1.8.0
-  #   hooks:
-  #     - id: mypy
-  #       additional_dependencies:
-  #         [
-  #           "types-requests",
-  #           "types-setuptools",
-  #           "types-urllib3",
-  #           "types-PyYAML",
-  #           "types-redis",
-  #           "types-python-dateutil",
-  #           "types-pytz",
-  #           "types-six",
-  #           "types-python-jose",
-  #           "django-stubs",
-  #           "djangorestframework-stubs",
-  #         ]
-  #       args:
-  #         - --ignore-missing-imports
-  #         - --implicit-optional
-  #         - --no-error-summary
-  #         - --no-warn-no-return
-  #         - --follow-imports=skip
-  #         - --allow-redefinition
-  #         - --no-warn-redundant-casts
-  #         - --no-check-untyped-defs
-  #         - --no-warn-return-any
-  #         - --no-warn-unused-ignores
+      # Linter
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      # Formatter
+      - id: ruff-format
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.13.0

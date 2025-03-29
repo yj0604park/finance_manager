@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("money", "0004_remove_accountsnapshot_currency_and_more"),
     ]

@@ -7,7 +7,6 @@ import finance_backend.money.choices
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("money", "0001_initial"),
     ]

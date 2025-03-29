@@ -11,7 +11,9 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "generate-api": "openapi --input ./src/resource/finance_backend_API.yaml --output ./src/api"
+    "generate-api": "openapi --input ./src/resource/finance_backend_API.yaml --output ./src/api",
+    "prepare": "husky",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -49,9 +51,16 @@
     "jsdom": "^24.0.0",
     "lint-staged": "^15.5.0",
     "openapi-typescript-codegen": "^0.29.0",
+    "prettier": "^3.5.3",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
     "vitest": "^1.3.1"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
