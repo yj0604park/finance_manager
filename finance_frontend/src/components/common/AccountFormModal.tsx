@@ -81,7 +81,7 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
     // 모달이 새로 열릴 때 검증 상태 초기화
     setValidationResult({ isValid: true, errors: [] });
     setSubmitted(false);
-  }, [open, account, bank]);
+  }, [open, account, bank, banks]);
 
   // banks 배열이 처음 로드될 때만 실행되는 별도의 useEffect
   useEffect(() => {
@@ -94,7 +94,7 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
         bank: banks[0]?.id || 0
       }));
     }
-  }, [banks, open]);
+  }, [banks, open, account, bank, formData.bank]);
 
   // 폼 데이터 변경 시 유효성 검사
   useEffect(() => {

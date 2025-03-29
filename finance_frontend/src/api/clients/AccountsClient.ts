@@ -1,8 +1,5 @@
 import { AccountsService } from '../services/AccountsService';
 import {
-  AccountFilterParams
-} from '../../types/api';
-import {
   Account,
   CreateAccountDto,
   UpdateAccountDto
@@ -12,6 +9,7 @@ import {
   convertApiAccountsToInternalList,
   convertAccountToApi
 } from '../../utils/typeConverters';
+import { Account as ApiAccount } from '../models/Account';
 
 /**
  * 계좌 API 클라이언트
@@ -20,9 +18,8 @@ import {
 export class AccountsClient {
   /**
    * 계좌 목록 조회
-   * @param _params 필터링 파라미터 (현재 사용되지 않음)
    */
-  public static async getAll(_params?: AccountFilterParams): Promise<Account[]> {
+  public static async getAll(): Promise<Account[]> {
     try {
       // 현재는 필터링 파라미터를 지원하지 않지만 향후 확장성을 위해 준비
       const response = await AccountsService.accountsList();
@@ -54,7 +51,7 @@ export class AccountsClient {
   public static async create(data: CreateAccountDto): Promise<Account> {
     try {
       const apiData = convertAccountToApi(data);
-      const response = await AccountsService.accountsCreate(apiData as any);
+      const response = await AccountsService.accountsCreate(apiData as ApiAccount);
       return convertApiToAccount(response);
     } catch (error) {
       console.error('Failed to create account', error);
@@ -70,7 +67,7 @@ export class AccountsClient {
   public static async update(id: number, data: UpdateAccountDto): Promise<Account> {
     try {
       const apiData = convertAccountToApi({ ...data, id });
-      const response = await AccountsService.accountsUpdate(id, apiData as any);
+      const response = await AccountsService.accountsUpdate(id, apiData as ApiAccount);
       return convertApiToAccount(response);
     } catch (error) {
       console.error(`Failed to update account with id ${id}`, error);

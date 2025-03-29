@@ -24,10 +24,17 @@ const StyledCard = styled(Card)(() => ({
   },
 }));
 
+// 차트 데이터 인터페이스 정의
+interface ChartDataItem {
+  name: string;
+  value: number;
+  [key: string]: string | number; // 추가 프로퍼티를 위한 인덱스 시그니처
+}
+
 interface ChartCardProps {
   title: string;
   type: 'line' | 'pie';
-  data: any[];
+  data: ChartDataItem[];
   height?: number;
   colors?: string[];
 }

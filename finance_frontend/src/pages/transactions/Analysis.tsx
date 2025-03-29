@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Container,
   Typography,
@@ -14,7 +14,7 @@ import {
   CardContent,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { startOfMonth, endOfMonth, startOfYear, endOfYear, sub } from 'date-fns';
+import { startOfMonth, endOfMonth, startOfYear, endOfYear, sub, format } from 'date-fns';
 import { TransactionsService } from '../../api/services/TransactionsService';
 import { Transaction } from '../../api/models/Transaction';
 import { TransactionTypeEnum } from '../../api/models/TransactionTypeEnum';
@@ -105,32 +105,50 @@ const TransactionAnalysis: React.FC = () => {
   const [endDate, setEndDate] = useState<Date>(endOfMonth(new Date()));
   const [period, setPeriod] = useState<string>('month');
 
-  // 1. 거래 목록 조회
-  const fetchTransactions = async () => {
+  // 1. 데이터 불러오기
+  const fetchTransactions = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    const formatDateParam = (date: Date | null) => {
+      if (!date) return '';
+      return format(date, 'yyyy-MM-dd');
+    };
+
     try {
-      setLoading(true);
-      // 여기서는 API에서 필터링 기능을 제공한다고 가정
+      const params = {
+        startDate: formatDateParam(startDate),
+        endDate: formatDateParam(endDate),
+      };
+
       const response = await TransactionsService.transactionsList();
 
-      // 클라이언트에서 날짜 필터링 (서버에서 필터링하는 것이 더 효율적)
-      const filteredData = response.filter((transaction) => {
-        const transactionDate = new Date(transaction.date);
-        return transactionDate >= startDate && transactionDate <= endDate;
-      });
+      // API 응답에서 받은 거래내역을 필터링
+      let filtered = response;
+      if (params.startDate) {
+        filtered = filtered.filter(
+          (tx) => tx.date >= params.startDate
+        );
+      }
+      if (params.endDate) {
+        filtered = filtered.filter(
+          (tx) => tx.date <= params.endDate
+        );
+      }
 
-      setTransactions(filteredData);
-    } catch (err) {
-      setError('거래 내역을 불러오는데 실패했습니다.');
-      console.error('거래 내역 조회 실패:', err);
+      setTransactions(filtered);
+    } catch (error) {
+      console.error('Failed to fetch transactions:', error);
+      setError('거래내역을 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [startDate, endDate]);
 
   // 2. 기간 변경 시 데이터 새로 불러오기
   useEffect(() => {
     fetchTransactions();
-  }, [startDate, endDate]);
+  }, [fetchTransactions]);
 
   // 3. 기간 선택 핸들러
   const handlePeriodChange = (event: React.ChangeEvent<HTMLInputElement>) => {

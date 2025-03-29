@@ -4,7 +4,7 @@ import { Account, Bank, Transaction } from './models';
 /**
  * 은행 관련 API 응답 타입
  */
-export interface BankResponse extends Bank { }
+export type BankResponse = Bank;
 export type BanksListResponse = Bank[];
 export type BankDetailResponse = ApiResponse<Bank>;
 export type BankCreateResponse = ApiResponse<Bank>;
@@ -14,7 +14,7 @@ export type BankDeleteResponse = ApiResponse<{ success: boolean }>;
 /**
  * 계좌 관련 API 응답 타입
  */
-export interface AccountResponse extends Account { }
+export type AccountResponse = Account;
 export type AccountsListResponse = Account[];
 export type AccountDetailResponse = ApiResponse<Account>;
 export type AccountCreateResponse = ApiResponse<Account>;
@@ -24,7 +24,7 @@ export type AccountDeleteResponse = ApiResponse<{ success: boolean }>;
 /**
  * 거래내역 관련 API 응답 타입
  */
-export interface TransactionResponse extends Transaction { }
+export type TransactionResponse = Transaction;
 export type TransactionsListResponse = Transaction[];
 export type TransactionDetailResponse = ApiResponse<Transaction>;
 export type TransactionCreateResponse = ApiResponse<Transaction>;

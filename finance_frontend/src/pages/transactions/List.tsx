@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Container,
   Typography,
@@ -52,6 +52,7 @@ const TransactionList: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
   const bankIdFromUrl = queryParams.get('bankId');
   const accountIdFromUrl = queryParams.get('accountId');
+  const transactionIdFromUrl = queryParams.get('transactionId');
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
@@ -131,22 +132,34 @@ const TransactionList: React.FC = () => {
     }
   };
 
+  // handleEdit 함수를 useCallback으로 선언하여 의존성 문제 해결
+  const handleEdit = useCallback(async (id: number) => {
+    try {
+      const transaction = transactions.find((t) => t.id === id);
+      if (transaction) {
+        setSelectedTransaction(transaction);
+        setModalOpen(true);
+      } else {
+        const response = await TransactionsService.transactionsRetrieve(id);
+        setSelectedTransaction(response);
+        setModalOpen(true);
+      }
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        message: '거래 내역을 불러오는데 실패했습니다.',
+        severity: 'error',
+      });
+      console.error('거래 내역 불러오기 실패:', err);
+    }
+  }, [transactions, setSelectedTransaction, setModalOpen, setSnackbar]);
+
   useEffect(() => {
     fetchTransactions();
     fetchAccounts();
     fetchBanks();
     fetchItems();
     fetchRetailers();
-
-    // URL 파라미터에서 거래 ID 확인
-    const urlParams = new URLSearchParams(window.location.search);
-    const editId = urlParams.get('edit');
-    if (editId) {
-      const id = Number(editId);
-      if (!isNaN(id)) {
-        handleEdit(id);
-      }
-    }
 
     // URL에서 bankId와 accountId를 가져와서 필터 설정
     if (bankIdFromUrl) {
@@ -155,7 +168,12 @@ const TransactionList: React.FC = () => {
     if (accountIdFromUrl) {
       setSelectedAccountId(accountIdFromUrl);
     }
-  }, [bankIdFromUrl, accountIdFromUrl]);
+
+    // ID가 URL에 있으면 해당 거래내역 편집
+    if (transactionIdFromUrl) {
+      handleEdit(Number(transactionIdFromUrl));
+    }
+  }, [bankIdFromUrl, accountIdFromUrl, transactionIdFromUrl, handleEdit]);
 
   useEffect(() => {
     // 검색어, 은행, 계좌 기준으로 필터링
@@ -249,27 +267,6 @@ const TransactionList: React.FC = () => {
   const handleAdd = () => {
     setSelectedTransaction(undefined);
     setModalOpen(true);
-  };
-
-  const handleEdit = async (id: number) => {
-    try {
-      const transaction = transactions.find((t) => t.id === id);
-      if (transaction) {
-        setSelectedTransaction(transaction);
-        setModalOpen(true);
-      } else {
-        const response = await TransactionsService.transactionsRetrieve(id);
-        setSelectedTransaction(response);
-        setModalOpen(true);
-      }
-    } catch (err) {
-      setSnackbar({
-        open: true,
-        message: '거래 내역을 불러오는데 실패했습니다.',
-        severity: 'error',
-      });
-      console.error('거래 내역 불러오기 실패:', err);
-    }
   };
 
   const handleSubmit = async (transactionData: Partial<Transaction>) => {

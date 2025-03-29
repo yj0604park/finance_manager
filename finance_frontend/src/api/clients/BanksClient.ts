@@ -1,8 +1,5 @@
 import { BanksService } from '../services/BanksService';
 import {
-  BankFilterParams
-} from '../../types/api';
-import {
   Bank,
   CreateBankDto,
   UpdateBankDto
@@ -12,6 +9,7 @@ import {
   convertApiBanksToInternalList,
   convertBankToApi
 } from '../../utils/typeConverters';
+import { Bank as ApiBank } from '../models/Bank';
 
 /**
  * 은행 API 클라이언트
@@ -20,9 +18,8 @@ import {
 export class BanksClient {
   /**
    * 은행 목록 조회
-   * @param _params 필터링 파라미터 (현재 사용되지 않음)
    */
-  public static async getAll(_params?: BankFilterParams): Promise<Bank[]> {
+  public static async getAll(): Promise<Bank[]> {
     try {
       // 현재는 필터링 파라미터를 지원하지 않지만 향후 확장성을 위해 준비
       const response = await BanksService.banksList();
@@ -54,7 +51,7 @@ export class BanksClient {
   public static async create(data: CreateBankDto): Promise<Bank> {
     try {
       const apiData = convertBankToApi(data);
-      const response = await BanksService.banksCreate(apiData as any);
+      const response = await BanksService.banksCreate(apiData as ApiBank);
       return convertApiToBank(response);
     } catch (error) {
       console.error('Failed to create bank', error);
@@ -70,7 +67,7 @@ export class BanksClient {
   public static async update(id: number, data: UpdateBankDto): Promise<Bank> {
     try {
       const apiData = convertBankToApi({ ...data, id });
-      const response = await BanksService.banksUpdate(id, apiData as any);
+      const response = await BanksService.banksUpdate(id, apiData as ApiBank);
       return convertApiToBank(response);
     } catch (error) {
       console.error(`Failed to update bank with id ${id}`, error);
