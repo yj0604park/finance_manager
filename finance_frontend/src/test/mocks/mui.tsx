@@ -83,13 +83,17 @@ export const setupMaterialUIMocks = () => {
         <button onClick={onClick}>{children}</button>,
       Table: ({ children }: { children: React.ReactNode }) => <table>{children}</table>,
       TableBody: ({ children }: { children: React.ReactNode }) => <tbody>{children}</tbody>,
-      TableCell: ({ align, children }: {
+      TableCell: ({ align, children, ...props }: {
         align?: 'left' | 'center' | 'right' | 'justify' | 'char';
-        children: React.ReactNode
-      }) => <td align={align}>{children}</td>,
+        children: React.ReactNode;
+        [key: string]: any;
+      }) => <td align={align} {...props}>{children}</td>,
       TableContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
       TableHead: ({ children }: { children: React.ReactNode }) => <thead>{children}</thead>,
-      TableRow: ({ children }: { children: React.ReactNode }) => <tr>{children}</tr>,
+      TableRow: ({ children, ...props }: {
+        children: React.ReactNode;
+        [key: string]: any;
+      }) => <tr {...props}>{children}</tr>,
       Paper: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
       Container: ({ children, maxWidth }: { children: React.ReactNode; maxWidth?: string }) =>
         <div data-max-width={maxWidth}>{children}</div>,
@@ -125,6 +129,13 @@ export const setupMaterialUIMocks = () => {
         <span data-color={color}>{label}</span>,
       Tooltip: ({ title, children }: { title: string; children: React.ReactNode }) =>
         <div title={title}>{children}</div>,
+      Link: ({ component, to, onClick, children, ...props }: {
+        component?: string;
+        to?: string;
+        onClick?: () => void;
+        children: React.ReactNode;
+        [key: string]: any;
+      }) => <a href={to || '#'} onClick={onClick} {...props}>{children}</a>,
     };
   });
 

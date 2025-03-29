@@ -1,14 +1,15 @@
 import { vi } from 'vitest';
 import React from 'react';
 
+// 모듈 레벨 변수로 mockNavigate 선언
+export const mockNavigate = vi.fn();
+
 /**
  * 라우터 모킹
  *
  * react-router-dom의 훅과 컴포넌트를 모킹합니다.
  */
 export const setupRouterMocks = () => {
-  const mockNavigate = vi.fn();
-
   vi.mock('react-router-dom', async () => {
     const actual = await import('react-router-dom');
     return {
@@ -22,7 +23,7 @@ export const setupRouterMocks = () => {
     };
   });
 
-  return mockNavigate;
+  return { mockNavigate };
 };
 
 /**

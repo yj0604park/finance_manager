@@ -1,17 +1,12 @@
 import { vi } from 'vitest';
 import { setupMaterialUIMocks, setupMuiIconsMocks } from './mui';
-import { setupRouterMocks, setupTransactionModalMock, setupAccountModalMock } from './components';
 import { mockApiData as _mockApiData, setupApiMocks as _setupApiMocks } from './api';
-import { Transaction } from '../../api/models/Transaction';
-import { Account } from '../../api/models/Account';
-import { Bank } from '../../api/models/Bank';
-import { Retailer } from '../../api/models/Retailer';
 
 // Material UI 모킹
 export { setupMaterialUIMocks, setupMuiIconsMocks } from './mui';
 
 // 컴포넌트 모킹
-export { setupRouterMocks, setupTransactionModalMock, setupAccountModalMock } from './components';
+export { setupRouterMocks, setupTransactionModalMock, setupAccountModalMock, mockNavigate } from './components';
 
 // API 모킹
 export const mockApiData = _mockApiData;
