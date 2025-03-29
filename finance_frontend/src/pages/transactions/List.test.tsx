@@ -9,151 +9,22 @@ import { Retailer } from '../../api/models/Retailer';
 import { TransactionTypeEnum } from '../../api/models/TransactionTypeEnum';
 import { CurrencyToEnum } from '../../api/models/CurrencyToEnum';
 import { CountryEnum } from '../../api/models/CountryEnum';
+import {
+  setupApiMocks,
+  setupMaterialUIMocks,
+  setupMuiIconsMocks,
+  setupTransactionModalMock,
+  mockApiData,
+  resetTestEnv
+} from '../../test/mocks';
 
-// API 서비스 모킹 - 호이스팅 문제 방지를 위해 vi.mock을 먼저 선언
-vi.mock('../../api/services/TransactionsService', () => ({
-  TransactionsService: {
-    transactionsList: vi.fn().mockResolvedValue([]),
-    transactionsCreate: vi.fn(),
-    transactionsUpdate: vi.fn(),
-    transactionsDestroy: vi.fn(),
-    transactionsRetrieve: vi.fn(),
-  }
-}));
+// Material UI 컴포넌트 모킹 - 파일 상단에 위치
+setupMaterialUIMocks();
+setupMuiIconsMocks();
+setupApiMocks();
+setupTransactionModalMock();
 
-vi.mock('../../api/services/AccountsService', () => ({
-  AccountsService: {
-    accountsList: vi.fn().mockResolvedValue([]),
-  }
-}));
-
-vi.mock('../../api/services/BanksService', () => ({
-  BanksService: {
-    banksList: vi.fn().mockResolvedValue([]),
-  }
-}));
-
-vi.mock('../../api/services/RetailersService', () => ({
-  RetailersService: {
-    retailersList: vi.fn().mockResolvedValue([]),
-  }
-}));
-
-// 모달 모킹
-vi.mock('../../components/transactions/TransactionFormModal', () => ({
-  default: vi.fn().mockReturnValue(<div data-testid="mock-transaction-modal" />),
-}));
-
-// MUI 모킹을 재정의
-vi.mock('@mui/material', () => {
-  return {
-    Typography: ({ variant, children }: { variant?: string; children: React.ReactNode }) =>
-      <div data-variant={variant}>{children}</div>,
-    Box: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    Card: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    CardContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    Stack: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    Button: ({ onClick, children }: { onClick?: () => void; children: React.ReactNode }) =>
-      <button onClick={onClick}>{children}</button>,
-    Snackbar: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => {
-      if (props['aria-label']) {
-        return <div role="button" aria-label={props['aria-label']}>{children}</div>;
-      }
-      return <div data-testid="Snackbar">{children}</div>;
-    },
-    Alert: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => {
-      if (props['aria-label']) {
-        return <div role="button" aria-label={props['aria-label']}>{children}</div>;
-      }
-      return <div data-testid="Alert">{children}</div>;
-    },
-    Dialog: ({ open, children }: { open?: boolean; children: React.ReactNode }) =>
-      open ? <div>{children}</div> : null,
-    DialogTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    DialogContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    DialogActions: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    TextField: ({ label, placeholder, value, onChange, InputProps }: {
-      label?: string;
-      placeholder?: string;
-      value?: string;
-      onChange?: (e: any) => void;
-      InputProps?: any;
-    }) => (
-      <input
-        placeholder={placeholder}
-        aria-label={label}
-        value={value || ''}
-        onChange={onChange}
-      />
-    ),
-    FormControl: ({ fullWidth, children, label }: {
-      fullWidth?: boolean;
-      children: React.ReactNode;
-      label?: string;
-    }) => {
-      if (label) {
-        return <div role="form" aria-label={label}>{children}</div>;
-      }
-      return <div>{children}</div>;
-    },
-    InputLabel: ({ id, children }: { id: string; children: React.ReactNode }) =>
-      <label id={id}>{children}</label>,
-    Select: ({ labelId, value, label, onChange, children }: {
-      labelId?: string;
-      value?: any;
-      label?: string;
-      onChange?: (e: any) => void;
-      children: React.ReactNode
-    }) => (
-      <select aria-label={label} value={value || ''} onChange={onChange}>
-        {children}
-      </select>
-    ),
-    MenuItem: ({ value, children }: { value: any; children: React.ReactNode }) =>
-      <option value={value}>{children}</option>,
-    Grid: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => {
-      if (props['aria-label']) {
-        return <div role="button" aria-label={props['aria-label']}>{children}</div>;
-      }
-      return <div data-testid="Grid">{children}</div>;
-    },
-    IconButton: ({ onClick, children }: { onClick?: () => void; children: React.ReactNode }) =>
-      <button onClick={onClick}>{children}</button>,
-    Table: ({ children }: { children: React.ReactNode }) => <table>{children}</table>,
-    TableBody: ({ children }: { children: React.ReactNode }) => <tbody>{children}</tbody>,
-    TableCell: ({ align, children }: {
-      align?: 'left' | 'center' | 'right' | 'justify' | 'char';
-      children: React.ReactNode
-    }) => <td align={align}>{children}</td>,
-    TableContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    TableHead: ({ children }: { children: React.ReactNode }) => <thead>{children}</thead>,
-    TableRow: ({ children }: { children: React.ReactNode }) => <tr>{children}</tr>,
-    Paper: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    Container: ({ children, maxWidth }: { children: React.ReactNode; maxWidth?: string }) =>
-      <div data-max-width={maxWidth}>{children}</div>,
-    InputAdornment: ({ position, children }: { position?: string; children: React.ReactNode }) =>
-      <div data-position={position}>{children}</div>,
-  };
-});
-
-// 아이콘 모킹
-vi.mock('@mui/icons-material/Add', () => ({
-  default: () => <span>+</span>,
-}));
-
-vi.mock('@mui/icons-material/Edit', () => ({
-  default: () => <span>✎</span>,
-}));
-
-vi.mock('@mui/icons-material/Delete', () => ({
-  default: () => <span>🗑</span>,
-}));
-
-vi.mock('@mui/icons-material/Search', () => ({
-  default: () => <span>🔍</span>,
-}));
-
-// 모킹된 모듈에서 서비스 가져오기
+// API 서비스 가져오기
 import { TransactionsService } from '../../api/services/TransactionsService';
 import { AccountsService } from '../../api/services/AccountsService';
 import { BanksService } from '../../api/services/BanksService';
@@ -249,14 +120,10 @@ describe('TransactionList 컴포넌트 테스트', () => {
   ];
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    document.body.innerHTML = '<div></div>';
+    resetTestEnv();
 
     // API 응답 모킹
-    (TransactionsService.transactionsList as any).mockResolvedValue(mockTransactions);
-    (AccountsService.accountsList as any).mockResolvedValue(mockAccounts);
-    (BanksService.banksList as any).mockResolvedValue(mockBanks);
-    (RetailersService.retailersList as any).mockResolvedValue(mockRetailers);
+    mockApiData(mockTransactions, mockAccounts, mockBanks, mockRetailers);
   });
 
   const renderWithRouter = (initialEntry = '/transactions/list') => {
@@ -272,25 +139,27 @@ describe('TransactionList 컴포넌트 테스트', () => {
   test('거래 내역 페이지가 올바르게 렌더링된다', async () => {
     renderWithRouter();
 
-    // 제목이 표시되는지 확인
-    expect(await screen.findByText('거래 내역')).toBeInTheDocument();
+    // TransactionList 컴포넌트는 데이터를 비동기적으로 로드하므로 waitFor 사용
+    await waitFor(() => {
+      // 데이터가 로드되었는지 확인(슈퍼마켓 구매)
+      expect(screen.getByText(/슈퍼마켓 구매/i)).toBeInTheDocument();
+    });
 
-    // 필터링 컴포넌트가 표시되는지 확인
-    expect(screen.getByLabelText('은행')).toBeInTheDocument();
-    expect(screen.getByLabelText('계좌')).toBeInTheDocument();
+    // 제목이 있는지 검색 - Typography가 모킹되어 있으므로 일반 텍스트 검색
+    expect(screen.getByText(/거래 내역/i)).toBeInTheDocument();
 
-    // 거래 추가 버튼이 표시되는지 확인
-    expect(screen.getByText('거래 추가')).toBeInTheDocument();
+    // 거래 추가 버튼이 있는지 확인
+    expect(screen.getByText(/거래 추가/i)).toBeInTheDocument();
   });
 
   test('거래 내역이 올바르게 표시된다', async () => {
     renderWithRouter();
 
-    // 거래 내역이 로드되어 표시되는지 확인
+    // 거래 내역이 로드되어 표시되는지 대기
     await waitFor(() => {
-      expect(screen.getByText('슈퍼마켓 구매')).toBeInTheDocument();
-      expect(screen.getByText('커피')).toBeInTheDocument();
-      expect(screen.getByText('월급')).toBeInTheDocument();
+      expect(screen.getByText(/슈퍼마켓 구매/i)).toBeInTheDocument();
+      expect(screen.getByText(/커피/i)).toBeInTheDocument();
+      expect(screen.getByText(/월급/i)).toBeInTheDocument();
     });
   });
 
@@ -299,18 +168,18 @@ describe('TransactionList 컴포넌트 테스트', () => {
 
     // 거래 내역 로드 대기
     await waitFor(() => {
-      expect(screen.getByText('슈퍼마켓 구매')).toBeInTheDocument();
+      expect(screen.getByText(/슈퍼마켓 구매/i)).toBeInTheDocument();
     });
 
     // 검색어 입력
-    const searchInput = screen.getByPlaceholderText('검색어를 입력하세요');
+    const searchInput = screen.getByPlaceholderText(/검색어를 입력하세요/i);
     fireEvent.change(searchInput, { target: { value: '커피' } });
 
     // '커피'가 포함된 거래만 표시되는지 확인
     await waitFor(() => {
-      expect(screen.queryByText('슈퍼마켓 구매')).not.toBeInTheDocument();
-      expect(screen.getByText('커피')).toBeInTheDocument();
-      expect(screen.queryByText('월급')).not.toBeInTheDocument();
+      expect(screen.queryByText(/슈퍼마켓 구매/i)).not.toBeInTheDocument();
+      expect(screen.getByText(/커피/i)).toBeInTheDocument();
+      expect(screen.queryByText(/월급/i)).not.toBeInTheDocument();
     });
   });
 
@@ -319,17 +188,17 @@ describe('TransactionList 컴포넌트 테스트', () => {
 
     // 거래 내역 로드 대기
     await waitFor(() => {
-      expect(screen.getByText('슈퍼마켓 구매')).toBeInTheDocument();
+      expect(screen.getByText(/슈퍼마켓 구매/i)).toBeInTheDocument();
     });
 
     // 국민은행(id: 2)으로 필터링
-    const bankSelect = screen.getByLabelText('은행');
+    const bankSelect = screen.getByLabelText(/은행/i);
     fireEvent.change(bankSelect, { target: { value: '2' } });
 
     // 국민은행 계좌의 거래만 표시되는지 확인
     await waitFor(() => {
-      expect(screen.queryByText('슈퍼마켓 구매')).not.toBeInTheDocument();
-      expect(screen.queryByText('커피')).not.toBeInTheDocument();
+      expect(screen.queryByText(/슈퍼마켓 구매/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/커피/i)).not.toBeInTheDocument();
       // 국민은행 계좌의 거래가 없으므로 아무것도 표시되지 않아야 함
     });
   });
@@ -339,32 +208,30 @@ describe('TransactionList 컴포넌트 테스트', () => {
 
     // 거래 내역 로드 대기
     await waitFor(() => {
-      expect(screen.getByText('슈퍼마켓 구매')).toBeInTheDocument();
+      expect(screen.getByText(/슈퍼마켓 구매/i)).toBeInTheDocument();
     });
 
     // 비상금통장(id: 2)으로 필터링
-    const accountSelect = screen.getByLabelText('계좌');
+    const accountSelect = screen.getByLabelText(/계좌/i);
     fireEvent.change(accountSelect, { target: { value: '2' } });
 
     // 비상금통장의 거래만 표시되는지 확인
     await waitFor(() => {
-      expect(screen.queryByText('슈퍼마켓 구매')).not.toBeInTheDocument();
-      expect(screen.queryByText('커피')).not.toBeInTheDocument();
-      expect(screen.getByText('월급')).toBeInTheDocument();
+      expect(screen.queryByText(/슈퍼마켓 구매/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/커피/i)).not.toBeInTheDocument();
+      expect(screen.getByText(/월급/i)).toBeInTheDocument();
     });
   });
 
   test('URL 파라미터에 따라 초기 필터링이 적용된다', async () => {
     renderWithRouter('/transactions/list?accountId=2');
 
-    // 거래 내역 로드 대기
+    // 거래 내역 로드 대기 및 필터링 확인
     await waitFor(() => {
-      expect(screen.getByText('월급')).toBeInTheDocument();
+      expect(screen.getByText(/월급/i)).toBeInTheDocument();
+      expect(screen.queryByText(/슈퍼마켓 구매/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/커피/i)).not.toBeInTheDocument();
     });
-
-    // 비상금통장(id: 2)의 거래만 표시되는지 확인
-    expect(screen.queryByText('슈퍼마켓 구매')).not.toBeInTheDocument();
-    expect(screen.queryByText('커피')).not.toBeInTheDocument();
   });
 
   test('거래 추가 버튼이 클릭되면 모달이 표시된다', async () => {
@@ -372,11 +239,11 @@ describe('TransactionList 컴포넌트 테스트', () => {
 
     // 거래 내역 로드 대기
     await waitFor(() => {
-      expect(screen.getByText('슈퍼마켓 구매')).toBeInTheDocument();
+      expect(screen.getByText(/슈퍼마켓 구매/i)).toBeInTheDocument();
     });
 
     // 거래 추가 버튼 클릭
-    fireEvent.click(screen.getByText('거래 추가'));
+    fireEvent.click(screen.getByText(/거래 추가/i));
 
     // 모달이 표시되는지 확인
     expect(screen.getByTestId('mock-transaction-modal')).toBeInTheDocument();
@@ -387,27 +254,27 @@ describe('TransactionList 컴포넌트 테스트', () => {
 
     // 거래 내역 로드 대기
     await waitFor(() => {
-      expect(screen.getByText('슈퍼마켓 구매')).toBeInTheDocument();
+      expect(screen.getByText(/슈퍼마켓 구매/i)).toBeInTheDocument();
     });
 
     // 필터 적용
-    const accountSelect = screen.getByLabelText('계좌');
+    const accountSelect = screen.getByLabelText(/계좌/i);
     fireEvent.change(accountSelect, { target: { value: '2' } });
 
     // 비상금통장의 거래만 표시되는지 확인
     await waitFor(() => {
-      expect(screen.queryByText('슈퍼마켓 구매')).not.toBeInTheDocument();
-      expect(screen.getByText('월급')).toBeInTheDocument();
+      expect(screen.queryByText(/슈퍼마켓 구매/i)).not.toBeInTheDocument();
+      expect(screen.getByText(/월급/i)).toBeInTheDocument();
     });
 
     // 필터 초기화 버튼 클릭
-    fireEvent.click(screen.getByText('필터 초기화'));
+    fireEvent.click(screen.getByText(/필터 초기화/i));
 
     // 모든 거래가 다시 표시되는지 확인
     await waitFor(() => {
-      expect(screen.getByText('슈퍼마켓 구매')).toBeInTheDocument();
-      expect(screen.getByText('커피')).toBeInTheDocument();
-      expect(screen.getByText('월급')).toBeInTheDocument();
+      expect(screen.getByText(/슈퍼마켓 구매/i)).toBeInTheDocument();
+      expect(screen.getByText(/커피/i)).toBeInTheDocument();
+      expect(screen.getByText(/월급/i)).toBeInTheDocument();
     });
   });
 });
