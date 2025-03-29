@@ -18,3 +18,4 @@ export type Transaction = {
     retailer?: number | null;
     linked_transaction?: number | null;
 };
+

@@ -18,3 +18,4 @@ export type Account = {
     first_added?: boolean;
     bank: number;
 };
+

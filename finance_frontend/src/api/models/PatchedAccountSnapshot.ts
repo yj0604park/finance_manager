@@ -13,3 +13,4 @@ export type PatchedAccountSnapshot = {
     bank?: number | null;
     item?: number | null;
 };
+

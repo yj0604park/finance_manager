@@ -8,3 +8,4 @@ export type Register = {
     password1: string;
     password2: string;
 };
+

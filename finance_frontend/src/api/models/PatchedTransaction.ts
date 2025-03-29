@@ -18,3 +18,4 @@ export type PatchedTransaction = {
     retailer?: number | null;
     linked_transaction?: number | null;
 };
+

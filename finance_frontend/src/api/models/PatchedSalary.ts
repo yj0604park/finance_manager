@@ -21,3 +21,4 @@ export type PatchedSalary = {
     deduction_detail?: any;
     transaction?: number;
 };
+

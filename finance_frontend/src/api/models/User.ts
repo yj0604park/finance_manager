@@ -6,3 +6,4 @@ export type User = {
     name?: string;
     readonly url: string;
 };
+

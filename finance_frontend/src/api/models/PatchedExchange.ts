@@ -19,3 +19,4 @@ export type PatchedExchange = {
     transaction_from?: number;
     transaction_to?: number;
 };
+

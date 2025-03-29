@@ -10,3 +10,4 @@ export type PatchedRetailer = {
     retailer_type?: RetailerTypeEnum;
     category?: CategoryEnum;
 };
+

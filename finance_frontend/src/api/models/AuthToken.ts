@@ -7,3 +7,4 @@ export type AuthToken = {
     password: string;
     readonly token: string;
 };
+

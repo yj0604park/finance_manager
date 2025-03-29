@@ -9,3 +9,4 @@ export type PatchedBank = {
     name?: string;
     country?: CountryEnum;
 };
+

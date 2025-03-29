@@ -10,3 +10,4 @@ export type Retailer = {
     retailer_type?: RetailerTypeEnum;
     category?: CategoryEnum;
 };
+

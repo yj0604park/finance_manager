@@ -19,3 +19,4 @@ export type Exchange = {
     transaction_from: number;
     transaction_to: number;
 };
+

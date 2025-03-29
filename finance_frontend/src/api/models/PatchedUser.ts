@@ -6,3 +6,4 @@ export type PatchedUser = {
     name?: string;
     readonly url?: string;
 };
+

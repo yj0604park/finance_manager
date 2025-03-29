@@ -11,3 +11,4 @@ export type PatchedUserDetails = {
     readonly first_name?: string;
     readonly last_name?: string;
 };
+

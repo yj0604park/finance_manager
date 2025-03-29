@@ -18,3 +18,4 @@ export type PatchedAccount = {
     first_added?: boolean;
     bank?: number;
 };
+

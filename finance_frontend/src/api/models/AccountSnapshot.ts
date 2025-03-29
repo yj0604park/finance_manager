@@ -13,3 +13,4 @@ export type AccountSnapshot = {
     bank?: number | null;
     item?: number | null;
 };
+

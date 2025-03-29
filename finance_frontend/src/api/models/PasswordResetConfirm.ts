@@ -11,3 +11,4 @@ export type PasswordResetConfirm = {
     uid: string;
     token: string;
 };
+

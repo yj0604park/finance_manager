@@ -9,3 +9,4 @@ export type Bank = {
     name: string;
     country?: CountryEnum;
 };
+

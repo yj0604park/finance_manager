@@ -21,3 +21,4 @@ export type Salary = {
     deduction_detail: any;
     transaction: number;
 };
+
