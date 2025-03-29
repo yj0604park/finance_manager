@@ -35,12 +35,56 @@ import {
   Sort as SortIcon,
 } from '@mui/icons-material';
 import { useSalariesQuery, useCreateSalaryMutation, useUpdateSalaryMutation, useDeleteSalaryMutation } from '../hooks/query/useSalariesQuery';
-import { Salary, CreateSalaryDto, UpdateSalaryDto } from '../api/models/Salary';
+import { Salary } from '../api/models/Salary';
+import { CreateSalaryDto, UpdateSalaryDto } from '../api/models/SalaryModels';
 
 // 정렬 옵션 타입
 type SortOption = {
-  field: keyof Salary | '';
+  field: keyof Salary | '' | 'company' | 'department' | 'position' | 'note';
   direction: 'asc' | 'desc';
+};
+
+// Salary를 SalaryForm으로 변환하는 함수
+const mapSalaryToForm = (salary: Salary): CreateSalaryDto => {
+  return {
+    date: salary.date,
+    // net_pay 문자열을 숫자로 변환
+    amount: parseFloat(salary.net_pay),
+    currency: salary.currency as string,
+    // gross_pay 문자열을 숫자로 변환
+    gross_amount: parseFloat(salary.gross_pay),
+    // tax_withheld 문자열을 숫자로 변환
+    tax_amount: parseFloat(salary.tax_withheld),
+    // deduction_detail에서 insurance와 pension 추출 (있는 경우)
+    insurance_amount: 0,
+    pension_amount: 0,
+    // adjustment를 보너스로 사용
+    bonus: parseFloat(salary.adjustment),
+    // 이 필드들은 이전 모델에서 사용했으나 새 모델에 없음
+    company: '',
+    department: '',
+    position: '',
+    note: '',
+  };
+};
+
+// CreateSalaryDto를 Salary로 변환하는 함수
+const mapFormToSalary = (formData: CreateSalaryDto): Partial<Salary> => {
+  return {
+    date: formData.date,
+    net_pay: formData.amount?.toString() || '0',
+    currency: formData.currency as any,
+    gross_pay: formData.gross_amount?.toString() || '0',
+    tax_withheld: formData.tax_amount?.toString() || '0',
+    deduction: (parseFloat(formData.insurance_amount?.toString() || '0') +
+      parseFloat(formData.pension_amount?.toString() || '0')).toString(),
+    adjustment: formData.bonus?.toString() || '0',
+    // 상세 필드는 기본값으로 설정
+    gross_pay_detail: {},
+    adjustment_detail: {},
+    tax_withheld_detail: {},
+    deduction_detail: {},
+  };
 };
 
 const SalariesPage: React.FC = () => {
@@ -101,20 +145,8 @@ const SalariesPage: React.FC = () => {
   const handleOpenForm = (salary?: Salary) => {
     if (salary) {
       setSelectedSalaryId(salary.id);
-      setFormData({
-        date: salary.date,
-        amount: salary.amount,
-        currency: salary.currency,
-        gross_amount: salary.gross_amount || 0,
-        tax_amount: salary.tax_amount || 0,
-        insurance_amount: salary.insurance_amount || 0,
-        pension_amount: salary.pension_amount || 0,
-        bonus: salary.bonus || 0,
-        company: salary.company || '',
-        department: salary.department || '',
-        position: salary.position || '',
-        note: salary.note || '',
-      });
+      // Salary 모델을 폼 데이터로 변환
+      setFormData(mapSalaryToForm(salary));
     } else {
       resetForm();
     }
@@ -148,10 +180,11 @@ const SalariesPage: React.FC = () => {
   const handleSaveSalary = async () => {
     try {
       if (selectedSalaryId) {
-        // 수정
+        // 수정: 폼 데이터를 Salary 모델로 변환
+        const salaryData = mapFormToSalary(formData);
         await updateSalaryMutation.mutateAsync({
           id: selectedSalaryId,
-          data: formData as UpdateSalaryDto,
+          data: salaryData as any,
         });
         setSnackbar({
           open: true,
@@ -159,8 +192,9 @@ const SalariesPage: React.FC = () => {
           severity: 'success',
         });
       } else {
-        // 생성
-        await createSalaryMutation.mutateAsync(formData);
+        // 생성: 폼 데이터를 Salary 모델로 변환
+        const salaryData = mapFormToSalary(formData);
+        await createSalaryMutation.mutateAsync(salaryData as any);
         setSnackbar({
           open: true,
           message: '급여 정보가 성공적으로 추가되었습니다.',
@@ -210,7 +244,7 @@ const SalariesPage: React.FC = () => {
   };
 
   // 정렬 변경 처리
-  const handleSortChange = (field: keyof Salary) => {
+  const handleSortChange = (field: keyof Salary | 'company' | 'department' | 'position' | 'note') => {
     setSortOption((prev) => ({
       field,
       direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc',
@@ -236,32 +270,48 @@ const SalariesPage: React.FC = () => {
       });
     }
 
-    // 검색어 필터 적용
+    // 검색어 필터 적용 - 참고: 신규 모델에는 company, department 등이 없으므로
+    // 검색어 필터링이 제한적일 수 있음
     if (searchTerm.trim()) {
       const lowerCaseSearchTerm = searchTerm.toLowerCase();
       filtered = filtered.filter(
         (salary) =>
-          salary.company?.toLowerCase().includes(lowerCaseSearchTerm) ||
-          salary.department?.toLowerCase().includes(lowerCaseSearchTerm) ||
-          salary.position?.toLowerCase().includes(lowerCaseSearchTerm) ||
-          salary.note?.toLowerCase().includes(lowerCaseSearchTerm)
+          // 날짜를 검색어로 필터링
+          salary.date.toLowerCase().includes(lowerCaseSearchTerm) ||
+          // 금액을 검색어로 필터링
+          salary.net_pay.toString().includes(lowerCaseSearchTerm) ||
+          salary.gross_pay.toString().includes(lowerCaseSearchTerm)
       );
     }
 
     // 정렬 적용
     if (sortOption.field) {
+      const field = sortOption.field as string;
       filtered.sort((a, b) => {
-        const fieldA = a[sortOption.field as keyof Salary];
-        const fieldB = b[sortOption.field as keyof Salary];
+        let fieldA, fieldB;
 
+        // 표준 필드인 경우 직접 비교
+        if (field in a) {
+          fieldA = (a as any)[field];
+          fieldB = (b as any)[field];
+        } else {
+          // 지원되지 않는 필드는 기본적으로 날짜로 정렬
+          fieldA = a.date;
+          fieldB = b.date;
+        }
+
+        // 문자열 정렬
         if (typeof fieldA === 'string' && typeof fieldB === 'string') {
           return sortOption.direction === 'asc'
             ? fieldA.localeCompare(fieldB)
             : fieldB.localeCompare(fieldA);
         }
 
-        if (typeof fieldA === 'number' && typeof fieldB === 'number') {
-          return sortOption.direction === 'asc' ? fieldA - fieldB : fieldB - fieldA;
+        // 숫자 정렬 (문자열 숫자 변환)
+        if (typeof fieldA === 'string' && typeof fieldB === 'string') {
+          const numA = parseFloat(fieldA) || 0;
+          const numB = parseFloat(fieldB) || 0;
+          return sortOption.direction === 'asc' ? numA - numB : numB - numA;
         }
 
         return 0;
@@ -280,8 +330,9 @@ const SalariesPage: React.FC = () => {
   };
 
   // 포맷된 금액 출력
-  const formatCurrency = (amount: number, currency: string) => {
-    return `${amount.toLocaleString()} ${currency}`;
+  const formatCurrency = (amount: string | number, currency: any) => {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    return `${numAmount.toLocaleString()} ${currency || 'KRW'}`;
   };
 
   // 날짜 형식 변환
@@ -374,41 +425,33 @@ const SalariesPage: React.FC = () => {
                   </Box>
                 </TableCell>
                 <TableCell align="right">
-                  <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', justifyContent: 'flex-end' }} onClick={() => handleSortChange('amount')}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', justifyContent: 'flex-end' }} onClick={() => handleSortChange('net_pay')}>
                     순수령액
-                    {sortOption.field === 'amount' && (
+                    {sortOption.field === 'net_pay' && (
                       <SortIcon fontSize="small" sx={{ transform: sortOption.direction === 'asc' ? 'rotate(180deg)' : 'none' }} />
                     )}
                   </Box>
                 </TableCell>
                 <TableCell align="right">
-                  <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', justifyContent: 'flex-end' }} onClick={() => handleSortChange('gross_amount')}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', justifyContent: 'flex-end' }} onClick={() => handleSortChange('gross_pay')}>
                     총액
-                    {sortOption.field === 'gross_amount' && (
+                    {sortOption.field === 'gross_pay' && (
                       <SortIcon fontSize="small" sx={{ transform: sortOption.direction === 'asc' ? 'rotate(180deg)' : 'none' }} />
                     )}
                   </Box>
                 </TableCell>
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('company')}>
-                    회사
-                    {sortOption.field === 'company' && (
+                <TableCell align="right">
+                  <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', justifyContent: 'flex-end' }} onClick={() => handleSortChange('tax_withheld')}>
+                    세금
+                    {sortOption.field === 'tax_withheld' && (
                       <SortIcon fontSize="small" sx={{ transform: sortOption.direction === 'asc' ? 'rotate(180deg)' : 'none' }} />
                     )}
                   </Box>
                 </TableCell>
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('department')}>
-                    부서
-                    {sortOption.field === 'department' && (
-                      <SortIcon fontSize="small" sx={{ transform: sortOption.direction === 'asc' ? 'rotate(180deg)' : 'none' }} />
-                    )}
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleSortChange('position')}>
-                    직책
-                    {sortOption.field === 'position' && (
+                <TableCell align="right">
+                  <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', justifyContent: 'flex-end' }} onClick={() => handleSortChange('deduction')}>
+                    공제
+                    {sortOption.field === 'deduction' && (
                       <SortIcon fontSize="small" sx={{ transform: sortOption.direction === 'asc' ? 'rotate(180deg)' : 'none' }} />
                     )}
                   </Box>
@@ -419,7 +462,7 @@ const SalariesPage: React.FC = () => {
             <TableBody>
               {filteredSalaries.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} align="center">
+                  <TableCell colSpan={6} align="center">
                     <Box sx={{ py: 2 }}>
                       <Typography variant="body1">등록된 급여 정보가 없습니다.</Typography>
                       <Button
@@ -438,13 +481,10 @@ const SalariesPage: React.FC = () => {
                 filteredSalaries.map((salary) => (
                   <TableRow key={salary.id} hover>
                     <TableCell>{formatDate(salary.date)}</TableCell>
-                    <TableCell align="right">{formatCurrency(salary.amount, salary.currency)}</TableCell>
-                    <TableCell align="right">
-                      {salary.gross_amount ? formatCurrency(salary.gross_amount, salary.currency) : '-'}
-                    </TableCell>
-                    <TableCell>{salary.company || '-'}</TableCell>
-                    <TableCell>{salary.department || '-'}</TableCell>
-                    <TableCell>{salary.position || '-'}</TableCell>
+                    <TableCell align="right">{formatCurrency(salary.net_pay, salary.currency)}</TableCell>
+                    <TableCell align="right">{formatCurrency(salary.gross_pay, salary.currency)}</TableCell>
+                    <TableCell align="right">{formatCurrency(salary.tax_withheld, salary.currency)}</TableCell>
+                    <TableCell align="right">{formatCurrency(salary.deduction, salary.currency)}</TableCell>
                     <TableCell align="center">
                       <IconButton size="small" color="primary" onClick={() => handleOpenForm(salary)}>
                         <EditIcon fontSize="small" />

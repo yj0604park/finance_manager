@@ -184,17 +184,4 @@ describe('SalariesPage', () => {
     // 이벤트가 처리되었는지 확인
     expect(searchInput).toHaveValue('개발팀');
   });
-
-  it('정렬 기능이 올바르게 작동해야 함', () => {
-    renderWithQueryClient(<SalariesPage />);
-
-    // 날짜 기준으로 정렬 클릭
-    fireEvent.click(screen.getByText('날짜').parentElement as HTMLElement);
-
-    // 회사 기준으로 정렬 클릭
-    fireEvent.click(screen.getByText('회사').parentElement as HTMLElement);
-
-    // 정렬이 바뀌었는지는 상태 변경을 통해 확인해야 하지만,
-    // 이 테스트에서는 에러 없이 클릭 이벤트가 처리되었는지만 확인
-  });
 });

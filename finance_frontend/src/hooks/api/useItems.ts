@@ -1,93 +1,102 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ItemsWrapper } from '../../api/wrappers';
 import { Item } from '../../api/models/Item';
 import { PatchedItem } from '../../api/models/PatchedItem';
 
-/**
- * 아이템 목록을 가져오는 훅
- */
-export const useItems = () => {
-  return useQuery({
-    queryKey: ['items'],
-    queryFn: () => ItemsWrapper.getAll()
-  });
-};
+// 쿼리 키 상수
+export const ITEMS_QUERY_KEY = 'items';
 
 /**
- * 특정 아이템을 가져오는 훅
+ * 모든 아이템 정보를 가져오는 훅
  */
-export const useItem = (id: number) => {
+export function useItems() {
   return useQuery({
-    queryKey: ['items', id],
-    queryFn: () => ItemsWrapper.getById(id),
-    enabled: !!id // id가 존재할 때만 쿼리 실행
+    queryKey: [ITEMS_QUERY_KEY],
+    queryFn: () => ItemsWrapper.getAll(),
   });
-};
+}
 
 /**
- * 아이템 생성 훅
+ * 특정 ID의 아이템 정보를 가져오는 훅
  */
-export const useCreateItem = () => {
+export function useItem(id?: number) {
+  return useQuery({
+    queryKey: [ITEMS_QUERY_KEY, id],
+    queryFn: () => ItemsWrapper.getById(id!),
+    enabled: !!id,
+  });
+}
+
+/**
+ * 새 아이템 정보를 생성하는 훅
+ */
+export function useCreateItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: Item) => ItemsWrapper.create(data),
     onSuccess: () => {
       // 아이템 목록 캐시 무효화
-      queryClient.invalidateQueries({ queryKey: ['items'] });
-    }
+      queryClient.invalidateQueries({ queryKey: [ITEMS_QUERY_KEY] });
+    },
   });
-};
+}
 
 /**
- * 아이템 업데이트 훅
+ * 아이템 정보를 업데이트하는 훅
  */
-export const useUpdateItem = () => {
+export function useUpdateItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: Item }) =>
       ItemsWrapper.update(id, data),
-    onSuccess: (updated: Item) => {
-      // 아이템 목록 캐시 무효화
-      queryClient.invalidateQueries({ queryKey: ['items'] });
-      // 특정 아이템 캐시 업데이트
-      queryClient.setQueryData(['items', updated.id], updated);
-    }
+    onSuccess: (updatedItem) => {
+      // 목록 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: [ITEMS_QUERY_KEY] });
+      // 개별 항목 캐시 업데이트
+      queryClient.setQueryData(
+        [ITEMS_QUERY_KEY, updatedItem.id],
+        updatedItem
+      );
+    },
   });
-};
+}
 
 /**
- * 아이템 부분 업데이트 훅
+ * 아이템 정보를 부분 업데이트하는 훅
  */
-export const usePartialUpdateItem = () => {
+export function usePartialUpdateItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: PatchedItem }) =>
       ItemsWrapper.partialUpdate(id, data),
-    onSuccess: (updated: Item) => {
-      // 아이템 목록 캐시 무효화
-      queryClient.invalidateQueries({ queryKey: ['items'] });
-      // 특정 아이템 캐시 업데이트
-      queryClient.setQueryData(['items', updated.id], updated);
-    }
+    onSuccess: (updatedItem) => {
+      // 목록 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: [ITEMS_QUERY_KEY] });
+      // 개별 항목 캐시 업데이트
+      queryClient.setQueryData(
+        [ITEMS_QUERY_KEY, updatedItem.id],
+        updatedItem
+      );
+    },
   });
-};
+}
 
 /**
- * 아이템 삭제 훅
+ * 아이템 정보를 삭제하는 훅
  */
-export const useDeleteItem = () => {
+export function useDeleteItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (id: number) => ItemsWrapper.delete(id),
-    onSuccess: (_, id) => {
-      // 아이템 목록 캐시 무효화
-      queryClient.invalidateQueries({ queryKey: ['items'] });
-      // 특정 아이템 캐시 제거
-      queryClient.removeQueries({ queryKey: ['items', id] });
-    }
+    onSuccess: (_data, id) => {
+      // 목록 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: [ITEMS_QUERY_KEY] });
+      // 개별 항목 캐시 제거
+      queryClient.removeQueries({ queryKey: [ITEMS_QUERY_KEY, id] });
+    },
   });
-};
+}

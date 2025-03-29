@@ -20,7 +20,8 @@ export class ItemsWrapper {
   }
 
   /**
-   * 특정 아이템 정보 가져오기
+   * 아이템 상세 정보 가져오기
+   * @param id 아이템 ID
    */
   static async getById(id: number): Promise<Item> {
     try {
@@ -32,7 +33,8 @@ export class ItemsWrapper {
   }
 
   /**
-   * 새 아이템 생성
+   * 아이템 생성
+   * @param data 아이템 데이터
    */
   static async create(data: Item): Promise<Item> {
     try {
@@ -44,7 +46,9 @@ export class ItemsWrapper {
   }
 
   /**
-   * 아이템 정보 업데이트
+   * 아이템 수정
+   * @param id 아이템 ID
+   * @param data 수정할 아이템 데이터
    */
   static async update(id: number, data: Item): Promise<Item> {
     try {
@@ -56,7 +60,9 @@ export class ItemsWrapper {
   }
 
   /**
-   * 아이템 부분 업데이트
+   * 아이템 부분 수정
+   * @param id 아이템 ID
+   * @param data 수정할 아이템 데이터
    */
   static async partialUpdate(id: number, data: PatchedItem): Promise<Item> {
     try {
@@ -69,6 +75,7 @@ export class ItemsWrapper {
 
   /**
    * 아이템 삭제
+   * @param id 아이템 ID
    */
   static async delete(id: number): Promise<void> {
     try {
