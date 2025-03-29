@@ -31,8 +31,12 @@ export function mockApiService<T, K extends keyof T>(
   methodName: K,
   mockImplementation: (...args: unknown[]) => unknown
 ) {
-  const mockedService = vi.mocked(service);
-  mockedService[methodName] = vi.fn(mockImplementation) as unknown as T[K];
+  // Vitest의 vi.fn을 사용하여 모의 함수를 생성
+  const mockFn = vi.fn(mockImplementation);
+
+  // 원본 메서드를 모의 함수로 대체
+  (service[methodName] as unknown) = mockFn;
+
   return service;
 }
 

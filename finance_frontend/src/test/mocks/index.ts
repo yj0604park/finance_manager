@@ -45,7 +45,7 @@ export const resetTestEnv = () => {
  * 개별 테스트 파일에서 API 모킹을 쉽게 설정할 수 있도록 도와주는 유틸리티 함수
  * 이 함수는 setupApiMocks와 충돌하므로 필요할 때만 사용하세요.
  */
-export const setupCustomApiMocks = <T extends Record<string, any>>(services: T): T => {
+export const setupCustomApiMocks = <T extends Record<string, unknown>>(services: T): T => {
   // 모킹 초기화
   vi.clearAllMocks();
 
@@ -55,11 +55,13 @@ export const setupCustomApiMocks = <T extends Record<string, any>>(services: T):
   // 각 서비스의 모든 메서드 모킹 설정
   Object.entries(services).forEach(([serviceName, mockImplementation]) => {
     if (mockImplementation && typeof mockImplementation === 'object') {
-      Object.entries(mockImplementation).forEach(([methodName, mockFn]) => {
+      Object.entries(mockImplementation as Record<string, unknown>).forEach(([methodName, mockFn]) => {
         if (typeof mockFn === 'function') {
           const service = services[serviceName];
-          if (service && service[methodName]) {
-            vi.mocked(service[methodName]).mockImplementation(mockFn);
+          if (service && typeof service === 'object' && methodName in service) {
+            Object.defineProperty(service, methodName, {
+              value: vi.fn(mockFn as (...args: unknown[]) => unknown)
+            });
           }
         }
       });

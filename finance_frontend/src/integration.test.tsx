@@ -27,8 +27,12 @@ vi.mock('@mui/material', () => {
     CardContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     Button: ({ onClick, children }: { onClick?: () => void; children: React.ReactNode }) =>
       <button onClick={onClick}>{children}</button>,
-    TextField: ({ label, placeholder, value, onChange }: { label?: string; placeholder?: string; value?: string; onChange?: (e: any) => void }) =>
-      <input aria-label={label} placeholder={placeholder} value={value || ''} onChange={onChange} />,
+    TextField: ({ label, placeholder, value, onChange }: {
+      label?: string;
+      placeholder?: string;
+      value?: string;
+      onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+    }) => <input aria-label={label} placeholder={placeholder} value={value || ''} onChange={onChange} />,
     Link: ({ to, children }: { to?: string; children: React.ReactNode }) =>
       <a href={to}>{children}</a>,
     Grid: ({ children }: { children: React.ReactNode }) =>

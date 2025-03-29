@@ -1,4 +1,62 @@
 import { vi } from 'vitest';
+import React from 'react';
+
+// 재사용 가능한 일반적인 prop 타입
+interface CommonProps {
+  children?: React.ReactNode;
+  [key: string]: unknown;
+}
+
+// 특정 컴포넌트들의 타입
+interface SnackbarProps extends CommonProps {
+  'aria-label'?: string;
+}
+
+interface AlertProps extends CommonProps {
+  'aria-label'?: string;
+}
+
+interface TextFieldProps {
+  label?: string;
+  placeholder?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+interface FormControlProps {
+  children: React.ReactNode;
+  label?: string;
+}
+
+interface SelectProps {
+  value?: string | number;
+  label?: string;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  children: React.ReactNode;
+}
+
+interface MenuItemProps {
+  value: string | number;
+  children: React.ReactNode;
+}
+
+interface GridProps extends CommonProps {
+  'aria-label'?: string;
+}
+
+interface TableCellProps extends CommonProps {
+  align?: 'left' | 'center' | 'right' | 'justify' | 'char';
+}
+
+interface TablePaginationProps {
+  component: React.ElementType;
+  count: number;
+  page: number;
+  onPageChange: (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => void;
+  rowsPerPage: number;
+  onRowsPerPageChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  rowsPerPageOptions: number[];
+}
 
 /**
  * Material UI 컴포넌트 모킹
@@ -17,13 +75,13 @@ export const setupMaterialUIMocks = () => {
       Stack: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
       Button: ({ onClick, children }: { onClick?: () => void; children: React.ReactNode }) =>
         <button onClick={onClick}>{children}</button>,
-      Snackbar: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => {
+      Snackbar: ({ children, ...props }: SnackbarProps) => {
         if (props['aria-label']) {
           return <div role="button" aria-label={props['aria-label']}>{children}</div>;
         }
         return <div data-testid="Snackbar">{children}</div>;
       },
-      Alert: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => {
+      Alert: ({ children, ...props }: AlertProps) => {
         if (props['aria-label']) {
           return <div role="button" aria-label={props['aria-label']}>{children}</div>;
         }
@@ -34,12 +92,7 @@ export const setupMaterialUIMocks = () => {
       DialogTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
       DialogContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
       DialogActions: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-      TextField: ({ label, placeholder, value, onChange }: {
-        label?: string;
-        placeholder?: string;
-        value?: string;
-        onChange?: (e: any) => void;
-      }) => (
+      TextField: ({ label, placeholder, value, onChange }: TextFieldProps) => (
         <input
           placeholder={placeholder}
           aria-label={label}
@@ -47,10 +100,7 @@ export const setupMaterialUIMocks = () => {
           onChange={onChange}
         />
       ),
-      FormControl: ({ children, label }: {
-        children: React.ReactNode;
-        label?: string;
-      }) => {
+      FormControl: ({ children, label }: FormControlProps) => {
         if (label) {
           return <div role="form" aria-label={label}>{children}</div>;
         }
@@ -58,19 +108,14 @@ export const setupMaterialUIMocks = () => {
       },
       InputLabel: ({ id, children }: { id: string; children: React.ReactNode }) =>
         <label id={id}>{children}</label>,
-      Select: ({ value, label, onChange, children }: {
-        value?: any;
-        label?: string;
-        onChange?: (e: any) => void;
-        children: React.ReactNode
-      }) => (
+      Select: ({ value, label, onChange, children }: SelectProps) => (
         <select aria-label={label} value={value || ''} onChange={onChange}>
           {children}
         </select>
       ),
-      MenuItem: ({ value, children }: { value: any; children: React.ReactNode }) =>
+      MenuItem: ({ value, children }: MenuItemProps) =>
         <option value={value}>{children}</option>,
-      Grid: ({ children, ...props }: { children?: React.ReactNode;[key: string]: any }) => {
+      Grid: ({ children, ...props }: GridProps) => {
         if (props['aria-label']) {
           return <div role="button" aria-label={props['aria-label']}>{children}</div>;
         }
@@ -80,17 +125,11 @@ export const setupMaterialUIMocks = () => {
         <button onClick={onClick}>{children}</button>,
       Table: ({ children }: { children: React.ReactNode }) => <table>{children}</table>,
       TableBody: ({ children }: { children: React.ReactNode }) => <tbody>{children}</tbody>,
-      TableCell: ({ align, children, ...props }: {
-        align?: 'left' | 'center' | 'right' | 'justify' | 'char';
-        children: React.ReactNode;
-        [key: string]: any;
-      }) => <td align={align} {...props}>{children}</td>,
+      TableCell: ({ align, children, ...props }: TableCellProps) =>
+        <td align={align} {...props}>{children}</td>,
       TableContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
       TableHead: ({ children }: { children: React.ReactNode }) => <thead>{children}</thead>,
-      TableRow: ({ children, ...props }: {
-        children: React.ReactNode;
-        [key: string]: any;
-      }) => <tr {...props}>{children}</tr>,
+      TableRow: ({ children, ...props }: CommonProps) => <tr {...props}>{children}</tr>,
       Paper: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
       Container: ({ children, maxWidth }: { children: React.ReactNode; maxWidth?: string }) =>
         <div data-max-width={maxWidth}>{children}</div>,
@@ -100,15 +139,7 @@ export const setupMaterialUIMocks = () => {
         page,
         onRowsPerPageChange,
         rowsPerPageOptions
-      }: {
-        component: any;
-        count: number;
-        page: number;
-        onPageChange: (event: any, page: number) => void;
-        rowsPerPage: number;
-        onRowsPerPageChange: (event: any) => void;
-        rowsPerPageOptions: number[];
-      }) => (
+      }: TablePaginationProps) => (
         <div data-testid="TablePagination">
           <span>페이지: {page + 1}</span>
           <select onChange={(e) => onRowsPerPageChange(e)}>
@@ -126,7 +157,7 @@ export const setupMaterialUIMocks = () => {
         to?: string;
         onClick?: () => void;
         children: React.ReactNode;
-        [key: string]: any;
+        [key: string]: unknown;
       }) => <a href={to || '#'} onClick={onClick} {...props}>{children}</a>,
     };
   });
