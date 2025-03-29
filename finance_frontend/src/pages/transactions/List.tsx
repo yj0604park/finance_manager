@@ -23,6 +23,7 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  CircularProgress,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -46,6 +47,9 @@ import TransactionFormModal from '../../components/transactions/TransactionFormM
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useLocation } from 'react-router-dom';
+import { useTransactionsQuery, useTransactionQuery, useDeleteTransactionMutation } from '../../hooks/query/useTransactionsQuery';
+import { useAccountsQuery } from '../../hooks/query/useAccountsQuery';
+import { useBanksQuery } from '../../hooks/query/useBanksQuery';
 
 const TransactionList: React.FC = () => {
   const location = useLocation();
@@ -54,14 +58,32 @@ const TransactionList: React.FC = () => {
   const accountIdFromUrl = queryParams.get('accountId');
   const transactionIdFromUrl = queryParams.get('transactionId');
 
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [banks, setBanks] = useState<Bank[]>([]);
+  // React Query를 사용하여 데이터 가져오기
+  const {
+    data: transactions = [],
+    isLoading: transactionsLoading,
+    error: transactionsError
+  } = useTransactionsQuery();
+
+  const {
+    data: accounts = [],
+    isLoading: accountsLoading
+  } = useAccountsQuery();
+
+  const {
+    data: banks = [],
+    isLoading: banksLoading
+  } = useBanksQuery();
+
+  // Items와 Retailers 데이터를 위한 상태 추가
   const [items, setItems] = useState<Item[]>([]);
   const [retailers, setRetailers] = useState<Retailer[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [itemsLoading, setItemsLoading] = useState(true);
+  const [retailersLoading, setRetailersLoading] = useState(true);
+
+  const deleteTransactionMutation = useDeleteTransactionMutation();
+
+  const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
@@ -82,55 +104,40 @@ const TransactionList: React.FC = () => {
     severity: 'success',
   });
 
-  const fetchTransactions = async () => {
-    try {
-      setLoading(true);
-      const response = await TransactionsService.transactionsList();
-      setTransactions(response);
-      setFilteredTransactions(response);
-    } catch (err) {
-      setError('거래 내역을 불러오는데 실패했습니다.');
-      console.error('거래 내역 조회 실패:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // ID가 있는 경우 해당 트랜잭션 조회 (편집용)
+  const { data: transactionDetail } = useTransactionQuery(
+    transactionIdFromUrl ? parseInt(transactionIdFromUrl) : undefined
+  );
 
-  const fetchAccounts = async () => {
-    try {
-      const response = await AccountsService.accountsList();
-      setAccounts(response);
-    } catch (err) {
-      console.error('계좌 목록 조회 실패:', err);
-    }
-  };
-
-  const fetchBanks = async () => {
-    try {
-      const response = await BanksService.banksList();
-      setBanks(response);
-    } catch (err) {
-      console.error('은행 목록 조회 실패:', err);
-    }
-  };
-
+  // Items와 Retailers 데이터 로드
   const fetchItems = async () => {
     try {
+      setItemsLoading(true);
       const response = await ItemsService.itemsList();
       setItems(response);
     } catch (err) {
       console.error('항목 목록 조회 실패:', err);
+    } finally {
+      setItemsLoading(false);
     }
   };
 
   const fetchRetailers = async () => {
     try {
+      setRetailersLoading(true);
       const response = await RetailersService.retailersList();
       setRetailers(response);
     } catch (err) {
       console.error('판매처 목록 조회 실패:', err);
+    } finally {
+      setRetailersLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchItems();
+    fetchRetailers();
+  }, []);
 
   // handleEdit 함수를 useCallback으로 선언하여 의존성 문제 해결
   const handleEdit = useCallback(async (id: number) => {
@@ -155,12 +162,6 @@ const TransactionList: React.FC = () => {
   }, [transactions, setSelectedTransaction, setModalOpen, setSnackbar]);
 
   useEffect(() => {
-    fetchTransactions();
-    fetchAccounts();
-    fetchBanks();
-    fetchItems();
-    fetchRetailers();
-
     // URL에서 bankId와 accountId를 가져와서 필터 설정
     if (bankIdFromUrl) {
       setSelectedBankId(bankIdFromUrl);
@@ -169,14 +170,17 @@ const TransactionList: React.FC = () => {
       setSelectedAccountId(accountIdFromUrl);
     }
 
-    // ID가 URL에 있으면 해당 거래내역 편집
-    if (transactionIdFromUrl) {
-      handleEdit(Number(transactionIdFromUrl));
+    // ID가 URL에 있고 transactionDetail이 있으면 편집 모달 열기
+    if (transactionIdFromUrl && transactionDetail) {
+      setSelectedTransaction(transactionDetail);
+      setModalOpen(true);
     }
-  }, [bankIdFromUrl, accountIdFromUrl, transactionIdFromUrl, handleEdit]);
+  }, [bankIdFromUrl, accountIdFromUrl, transactionIdFromUrl, transactionDetail]);
 
   useEffect(() => {
     // 검색어, 은행, 계좌 기준으로 필터링
+    if (!transactions) return;
+
     const filtered = transactions.filter((transaction) => {
       const matchesSearch =
         transaction.note?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -246,13 +250,12 @@ const TransactionList: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('정말로 이 거래 내역을 삭제하시겠습니까?')) {
       try {
-        await TransactionsService.transactionsDestroy(id);
+        await deleteTransactionMutation.mutateAsync(id);
         setSnackbar({
           open: true,
           message: '거래 내역이 삭제되었습니다.',
           severity: 'success',
         });
-        fetchTransactions();
       } catch (err) {
         setSnackbar({
           open: true,
@@ -290,7 +293,6 @@ const TransactionList: React.FC = () => {
         });
       }
       setModalOpen(false);
-      fetchTransactions();
 
       // URL 파라미터 제거
       if (window.history.replaceState) {
@@ -311,16 +313,31 @@ const TransactionList: React.FC = () => {
 
   // 거래 내역 목록 렌더링
   const renderTransactionList = () => {
-    if (loading) {
-      return <Typography>로딩 중...</Typography>;
+    if (transactionsLoading || accountsLoading || banksLoading || itemsLoading || retailersLoading) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+          <CircularProgress />
+        </Box>
+      );
     }
 
-    if (error) {
-      return <Alert severity="error">{error}</Alert>;
+    if (transactionsError) {
+      return (
+        <Alert
+          severity="error"
+          sx={{ my: 2 }}
+        >
+          거래 내역을 불러오는데 실패했습니다. 나중에 다시 시도해 주세요.
+        </Alert>
+      );
     }
 
     if (filteredTransactions.length === 0) {
-      return <Typography>거래 내역이 없습니다.</Typography>;
+      return (
+        <Paper sx={{ p: 3, mt: 2, textAlign: 'center' }}>
+          <Typography>거래 내역이 없습니다.</Typography>
+        </Paper>
+      );
     }
 
     return (
@@ -333,7 +350,6 @@ const TransactionList: React.FC = () => {
                 <TableCell>은행</TableCell>
                 <TableCell>계좌</TableCell>
                 <TableCell>유형</TableCell>
-                <TableCell>판매처</TableCell>
                 <TableCell>메모</TableCell>
                 <TableCell align="right">금액</TableCell>
                 <TableCell align="center">액션</TableCell>
@@ -344,7 +360,6 @@ const TransactionList: React.FC = () => {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((transaction) => {
                   const account = accounts.find((a) => a.id === transaction.account);
-                  const retailer = retailers.find((r) => r.id === transaction.retailer);
 
                   return (
                     <TableRow key={transaction.id}>
@@ -360,7 +375,6 @@ const TransactionList: React.FC = () => {
                             ? '지출'
                             : transaction.transaction_type}
                       </TableCell>
-                      <TableCell>{retailer?.name || '-'}</TableCell>
                       <TableCell>{transaction.note || '-'}</TableCell>
                       <TableCell align="right">
                         {parseFloat(transaction.amount).toLocaleString()}원
@@ -402,110 +416,118 @@ const TransactionList: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="lg">
-      <Box sx={{ mt: 4, mb: 4 }}>
-        <Grid container spacing={2} alignItems="center" sx={{ mb: 3 }}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h5" component="h1" gutterBottom>
-              거래 내역
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={handleAdd}
-              sx={{ ml: 1 }}
-            >
-              거래 추가
-            </Button>
-          </Grid>
-        </Grid>
+    <Container>
+      <Box sx={{ my: 2 }}>
+        <Typography variant="h5" gutterBottom>
+          거래 내역 관리
+        </Typography>
 
-        <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              placeholder="검색어를 입력하세요"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} md={6} sx={{ display: 'flex', gap: 2 }}>
-            <FormControl fullWidth>
-              <InputLabel id="bank-filter-label">은행</InputLabel>
-              <Select
-                labelId="bank-filter-label"
-                value={selectedBankId}
-                label="은행"
-                onChange={handleBankChange}
+        {/* 필터링 및 검색 UI */}
+        <Paper sx={{ p: 2, mb: 2 }}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} sm={3}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="bank-select-label">은행</InputLabel>
+                <Select
+                  labelId="bank-select-label"
+                  value={selectedBankId}
+                  label="은행"
+                  onChange={handleBankChange}
+                >
+                  <MenuItem value="all">전체 은행</MenuItem>
+                  {banks.map((bank) => (
+                    <MenuItem key={bank.id} value={bank.id.toString()}>
+                      {bank.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="account-select-label">계좌</InputLabel>
+                <Select
+                  labelId="account-select-label"
+                  value={selectedAccountId}
+                  label="계좌"
+                  onChange={handleAccountChange}
+                  disabled={selectedBankId === 'all' && filteredAccounts.length === 0}
+                >
+                  <MenuItem value="all">전체 계좌</MenuItem>
+                  {filteredAccounts.map((account) => (
+                    <MenuItem key={account.id} value={account.id.toString()}>
+                      {account.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                size="small"
+                placeholder="검색어를 입력하세요"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid item xs={6} sm={1}>
+              <Button
+                fullWidth
+                variant="outlined"
+                color="primary"
+                onClick={handleClearFilters}
+                startIcon={<ClearAllIcon />}
               >
-                <MenuItem value="all">모든 은행</MenuItem>
-                {banks.map((bank) => (
-                  <MenuItem key={bank.id} value={bank.id.toString()}>
-                    {bank.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl fullWidth>
-              <InputLabel id="account-filter-label">계좌</InputLabel>
-              <Select
-                labelId="account-filter-label"
-                value={selectedAccountId}
-                label="계좌"
-                onChange={handleAccountChange}
+                초기화
+              </Button>
+            </Grid>
+            <Grid item xs={6} sm={1}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={handleAdd}
+                startIcon={<AddIcon />}
               >
-                <MenuItem value="all">모든 계좌</MenuItem>
-                {filteredAccounts.map((account) => (
-                  <MenuItem key={account.id} value={account.id.toString()}>
-                    {account.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <Button variant="outlined" startIcon={<ClearAllIcon />} onClick={handleClearFilters}>
-              초기화
-            </Button>
+                추가
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
+        </Paper>
 
+        {/* 거래 내역 테이블 */}
         {renderTransactionList()}
-
-        <TransactionFormModal
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          onSubmit={handleSubmit}
-          transaction={selectedTransaction}
-          accounts={accounts}
-          items={items}
-          retailers={retailers}
-        />
-
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-        >
-          <Alert
-            onClose={() => setSnackbar({ ...snackbar, open: false })}
-            severity={snackbar.severity}
-            sx={{ width: '100%' }}
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
       </Box>
+
+      {/* 거래 내역 폼 모달 */}
+      <TransactionFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleSubmit}
+        transaction={selectedTransaction}
+        accounts={accounts}
+        items={items}
+        retailers={retailers}
+      />
+
+      {/* 알림 스낵바 */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={5000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

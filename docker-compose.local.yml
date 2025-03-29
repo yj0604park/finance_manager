@@ -39,12 +39,20 @@ services:
       dockerfile: ./compose/local/vite/Dockerfile
     image: finance_frontend_local_vite
     container_name: finance_frontend_local_vite
+    user: root
     volumes:
-      - ./finance_frontend/src:/work/src
+      - ./finance_frontend:/work
+      - node_modules:/work/node_modules
     env_file:
       - ./.envs/.local/.vite
     ports:
-      - 8080:8080
+      - "8080:8080"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WDS_SOCKET_HOST=127.0.0.1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ipc: host
 
   vite-test:
     build:

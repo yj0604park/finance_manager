@@ -14,12 +14,16 @@ export const banksKeys = {
 
 /**
  * 은행 목록 조회 쿼리 훅
- * @param params 필터링 파라미터
+ * @param params 필터링 파라미터 (클라이언트 측 필터링에만 사용됨)
  */
 export const useBanksQuery = (params?: BankFilterParams) => {
   return useQuery({
     queryKey: banksKeys.list(params || {}),
-    queryFn: () => BanksClient.getAll(params),
+    queryFn: async () => {
+      // BanksClient.getAll은 매개변수를 받지 않음
+      // params는 쿼리 키와 클라이언트 측 필터링에만 사용
+      return await BanksClient.getAll();
+    },
   });
 };
 

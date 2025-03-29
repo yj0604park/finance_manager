@@ -15,12 +15,16 @@ export const accountsKeys = {
 
 /**
  * 계좌 목록 조회 쿼리 훅
- * @param params 필터링 파라미터
+ * @param params 필터링 파라미터 (클라이언트 측 필터링에만 사용됨)
  */
 export const useAccountsQuery = (params?: AccountFilterParams) => {
   return useQuery({
     queryKey: accountsKeys.list(params || {}),
-    queryFn: () => AccountsClient.getAll(params),
+    queryFn: async () => {
+      // AccountsClient.getAll은 매개변수를 받지 않음
+      // params는 쿼리 키와 클라이언트 측 필터링에만 사용
+      return await AccountsClient.getAll();
+    },
   });
 };
 
@@ -31,7 +35,11 @@ export const useAccountsQuery = (params?: AccountFilterParams) => {
 export const useAccountsByBankQuery = (bankId: number) => {
   return useQuery({
     queryKey: accountsKeys.byBank(bankId),
-    queryFn: () => AccountsClient.getAll({ bank: bankId }),
+    queryFn: async () => {
+      // 서버에서 모든 계좌를 가져온 후 클라이언트에서 은행 ID로 필터링
+      const accounts = await AccountsClient.getAll();
+      return accounts.filter(account => account.bank === bankId);
+    },
     enabled: !!bankId, // bankId가 유효할 때만 쿼리 실행
   });
 };
