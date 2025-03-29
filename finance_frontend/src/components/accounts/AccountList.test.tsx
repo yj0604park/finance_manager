@@ -10,7 +10,6 @@ import {
   setupMaterialUIMocks,
   setupMuiIconsMocks,
   setupRouterMocks,
-  mockNavigate,
   resetTestEnv
 } from '../../test/mocks';
 

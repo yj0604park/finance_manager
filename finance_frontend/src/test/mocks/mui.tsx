@@ -34,12 +34,11 @@ export const setupMaterialUIMocks = () => {
       DialogTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
       DialogContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
       DialogActions: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-      TextField: ({ label, placeholder, value, onChange, InputProps }: {
+      TextField: ({ label, placeholder, value, onChange }: {
         label?: string;
         placeholder?: string;
         value?: string;
         onChange?: (e: any) => void;
-        InputProps?: any;
       }) => (
         <input
           placeholder={placeholder}
@@ -48,8 +47,7 @@ export const setupMaterialUIMocks = () => {
           onChange={onChange}
         />
       ),
-      FormControl: ({ fullWidth, children, label }: {
-        fullWidth?: boolean;
+      FormControl: ({ children, label }: {
         children: React.ReactNode;
         label?: string;
       }) => {
@@ -60,8 +58,7 @@ export const setupMaterialUIMocks = () => {
       },
       InputLabel: ({ id, children }: { id: string; children: React.ReactNode }) =>
         <label id={id}>{children}</label>,
-      Select: ({ labelId, value, label, onChange, children }: {
-        labelId?: string;
+      Select: ({ value, label, onChange, children }: {
         value?: any;
         label?: string;
         onChange?: (e: any) => void;
@@ -100,11 +97,7 @@ export const setupMaterialUIMocks = () => {
       InputAdornment: ({ position, children }: { position?: string; children: React.ReactNode }) =>
         <div data-position={position}>{children}</div>,
       TablePagination: ({
-        component,
-        count,
         page,
-        onPageChange,
-        rowsPerPage,
         onRowsPerPageChange,
         rowsPerPageOptions
       }: {

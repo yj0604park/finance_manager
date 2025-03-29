@@ -4,7 +4,7 @@
 
 // TypeScript에 vitest 전역 변수가 있음을 알림
 declare global {
-  var vitest: any;
+  // vitest가 이미 node_modules/vitest/globals.d.ts에 선언되어 있음
 }
 
 /**

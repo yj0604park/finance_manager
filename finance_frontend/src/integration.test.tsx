@@ -15,9 +15,9 @@ vi.mock('@mui/material', () => {
     Drawer: ({ open, children }: { open: boolean; children: React.ReactNode }) =>
       open ? <div data-testid="drawer">{children}</div> : null,
     List: ({ children }: { children: React.ReactNode }) => <ul>{children}</ul>,
-    ListItem: ({ button, onClick, children }: { button?: boolean; onClick?: () => void; children: React.ReactNode }) =>
+    ListItem: ({ onClick, children }: { onClick?: () => void; children: React.ReactNode }) =>
       <li onClick={onClick}>{children}</li>,
-    ListItemButton: ({ onClick, disabled, children, sx }: { onClick?: () => void; disabled?: boolean; children: React.ReactNode; sx?: any }) =>
+    ListItemButton: ({ onClick, disabled, children }: { onClick?: () => void; disabled?: boolean; children: React.ReactNode }) =>
       <button onClick={onClick} disabled={disabled}>{children}</button>,
     ListItemIcon: ({ children }: { children: React.ReactNode }) => <span className="icon">{children}</span>,
     ListItemText: ({ primary }: { primary: string }) => <span>{primary}</span>,
@@ -29,17 +29,17 @@ vi.mock('@mui/material', () => {
       <button onClick={onClick}>{children}</button>,
     TextField: ({ label, placeholder, value, onChange }: { label?: string; placeholder?: string; value?: string; onChange?: (e: any) => void }) =>
       <input aria-label={label} placeholder={placeholder} value={value || ''} onChange={onChange} />,
-    Link: ({ component, to, children }: { component?: string; to?: string; children: React.ReactNode }) =>
+    Link: ({ to, children }: { to?: string; children: React.ReactNode }) =>
       <a href={to}>{children}</a>,
-    Grid: ({ container, item, children }: { container?: boolean; item?: boolean; children: React.ReactNode }) =>
+    Grid: ({ children }: { children: React.ReactNode }) =>
       <div>{children}</div>,
-    Stack: ({ direction, spacing, alignItems, children }: { direction?: string; spacing?: number; alignItems?: string; children: React.ReactNode }) =>
+    Stack: ({ children }: { children: React.ReactNode }) =>
       <div data-testid="stack">{children}</div>,
-    Avatar: ({ children, sx }: { children?: React.ReactNode; sx?: any }) =>
+    Avatar: ({ children }: { children?: React.ReactNode }) =>
       <div data-testid="avatar">{children}</div>,
-    Chip: ({ avatar, label, variant, sx }: { avatar?: React.ReactNode; label?: string; variant?: string; sx?: any }) =>
+    Chip: ({ avatar, label }: { avatar?: React.ReactNode; label?: string }) =>
       <div data-testid="chip">{avatar}{label}</div>,
-    Collapse: ({ in: inProp, timeout, unmountOnExit, children }: { in: boolean; timeout: string; unmountOnExit?: boolean; children: React.ReactNode }) =>
+    Collapse: ({ in: inProp, children }: { in: boolean; children: React.ReactNode }) =>
       inProp ? <div>{children}</div> : null,
     Tooltip: ({ title, children }: { title: string; children: React.ReactNode }) =>
       <div title={title}>{children}</div>,
@@ -58,7 +58,7 @@ vi.mock('@mui/material', () => {
         drawer: 1200
       },
       transitions: {
-        create: (prop: string, options?: any) => `all 0.3s ease`,
+        create: () => `all 0.3s ease`,
         easing: {
           sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
           easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
@@ -120,7 +120,7 @@ vi.mock('react-router-dom', () => {
       }
       return null;
     },
-    Navigate: ({ to, replace }: { to: string, replace?: boolean }) => <div>Navigate to {to}</div>,
+    Navigate: ({ to }: { to: string }) => <div>Navigate to {to}</div>,
   };
 });
 
