@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, Paper, Typography, Box } from '@mui/material';
+import { Container, Paper, Typography, Box } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import {
   AccountBalance as BankIcon,
   CreditCard as CardIcon,
@@ -12,6 +13,7 @@ import { AccountsService } from '../api/services/AccountsService';
 import { TransactionsService } from '../api/services/TransactionsService';
 import { Account } from '../api/models/Account';
 import { Transaction } from '../api/models/Transaction';
+import { ChartDataItem, IncomeExpenseData } from '../types/chart';
 
 const Dashboard: React.FC = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -39,7 +41,7 @@ const Dashboard: React.FC = () => {
   }, []);
 
   // 샘플 데이터 (실제 API 연동 전까지 사용)
-  const monthlyData = [
+  const monthlyData: IncomeExpenseData[] = [
     { name: '1월', income: 5000000, expense: 3000000 },
     { name: '2월', income: 5500000, expense: 3200000 },
     { name: '3월', income: 4800000, expense: 3500000 },
@@ -48,7 +50,7 @@ const Dashboard: React.FC = () => {
     { name: '6월', income: 6000000, expense: 3600000 },
   ];
 
-  const categoryData = [
+  const categoryData: ChartDataItem[] = [
     { name: '식비', value: 35 },
     { name: '주거', value: 25 },
     { name: '교통', value: 15 },
@@ -59,6 +61,9 @@ const Dashboard: React.FC = () => {
   const totalBalance = accounts.reduce((sum, account) => sum + parseFloat(account.amount), 0);
   const monthlyIncome = monthlyData[monthlyData.length - 1].income;
   const monthlyExpense = monthlyData[monthlyData.length - 1].expense;
+
+  // 라인 차트용 데이터는 그대로 사용
+  const monthlyDataForChart: ChartDataItem[] = monthlyData;
 
   if (loading) {
     return (
@@ -72,7 +77,7 @@ const Dashboard: React.FC = () => {
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Grid container spacing={3}>
         {/* 요약 카드 */}
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SummaryCard
             title="총 자산"
             value={`${totalBalance.toLocaleString()}원`}
@@ -80,7 +85,7 @@ const Dashboard: React.FC = () => {
             color="#1976d2"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SummaryCard
             title="이번 달 수입"
             value={`${monthlyIncome.toLocaleString()}원`}
@@ -88,7 +93,7 @@ const Dashboard: React.FC = () => {
             color="#2e7d32"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SummaryCard
             title="이번 달 지출"
             value={`${monthlyExpense.toLocaleString()}원`}
@@ -96,7 +101,7 @@ const Dashboard: React.FC = () => {
             color="#d32f2f"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SummaryCard
             title="순수입"
             value={`${(monthlyIncome - monthlyExpense).toLocaleString()}원`}
@@ -106,15 +111,22 @@ const Dashboard: React.FC = () => {
         </Grid>
 
         {/* 차트 */}
-        <Grid item xs={12} md={8}>
-          <ChartCard title="월별 수입/지출 추이" type="line" data={monthlyData} height={400} />
+        <Grid size={{ xs: 12, md: 8 }}>
+          <ChartCard
+            title="월별 수입/지출 추이"
+            type="line"
+            data={monthlyDataForChart}
+            height={400}
+            lineKeys={['income', 'expense']}
+            colors={['#2e7d32', '#d32f2f']}
+          />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <ChartCard title="카테고리별 지출" type="pie" data={categoryData} height={400} />
         </Grid>
 
         {/* 최근 거래 내역 */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
               최근 거래 내역

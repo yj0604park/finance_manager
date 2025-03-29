@@ -35,14 +35,10 @@ import {
 import { Transaction } from '../../api/models/Transaction';
 import { TransactionTypeEnum } from '../../api/models/TransactionTypeEnum';
 import { TransactionsService } from '../../api/services/TransactionsService';
-import { AccountsService } from '../../api/services/AccountsService';
 import { ItemsService } from '../../api/services/ItemsService';
 import { RetailersService } from '../../api/services/RetailersService';
-import { BanksService } from '../../api/services/BanksService';
-import { Account } from '../../api/models/Account';
 import { Item } from '../../api/models/Item';
 import { Retailer } from '../../api/models/Retailer';
-import { Bank } from '../../api/models/Bank';
 import TransactionFormModal from '../../components/transactions/TransactionFormModal';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';

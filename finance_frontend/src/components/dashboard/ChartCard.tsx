@@ -12,7 +12,9 @@ import {
   PieChart,
   Pie,
   Cell,
+  Legend,
 } from 'recharts';
+import { ChartDataItem } from '../../types/chart';
 
 const StyledCard = styled(Card)(() => ({
   height: '100%',
@@ -24,19 +26,15 @@ const StyledCard = styled(Card)(() => ({
   },
 }));
 
-// 차트 데이터 인터페이스 정의
-interface ChartDataItem {
-  name: string;
-  value: number;
-  [key: string]: string | number; // 추가 프로퍼티를 위한 인덱스 시그니처
-}
-
-interface ChartCardProps {
+export interface ChartCardProps {
   title: string;
   type: 'line' | 'pie';
   data: ChartDataItem[];
   height?: number;
   colors?: string[];
+  lineKeys?: string[]; // 라인 차트에서 표시할 데이터 키 배열
+  valueKey?: string; // 파이 차트에서 사용할 값 키
+  nameKey?: string; // 파이 차트에서 사용할 이름 키
 }
 
 const ChartCard: React.FC<ChartCardProps> = ({
@@ -45,6 +43,9 @@ const ChartCard: React.FC<ChartCardProps> = ({
   data,
   height = 300,
   colors = ['#1976d2', '#2e7d32', '#ed6c02', '#9c27b0', '#d32f2f'],
+  lineKeys = ['value'],
+  valueKey = 'value',
+  nameKey = 'name',
 }) => {
   const renderChart = () => {
     if (type === 'line') {
@@ -52,10 +53,19 @@ const ChartCard: React.FC<ChartCardProps> = ({
         <ResponsiveContainer width="100%" height={height}>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey={nameKey} />
             <YAxis />
             <Tooltip />
-            <Line type="monotone" dataKey="value" stroke={colors[0]} />
+            <Legend />
+            {lineKeys.map((key, index) => (
+              <Line
+                key={key}
+                type="monotone"
+                dataKey={key}
+                stroke={colors[index % colors.length]}
+                name={key}
+              />
+            ))}
           </LineChart>
         </ResponsiveContainer>
       );
@@ -64,12 +74,13 @@ const ChartCard: React.FC<ChartCardProps> = ({
     return (
       <ResponsiveContainer width="100%" height={height}>
         <PieChart>
-          <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+          <Pie data={data} dataKey={valueKey} nameKey={nameKey} cx="50%" cy="50%" outerRadius={80} label>
             {data.map((_, index) => (
               <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
             ))}
           </Pie>
           <Tooltip />
+          <Legend />
         </PieChart>
       </ResponsiveContainer>
     );
