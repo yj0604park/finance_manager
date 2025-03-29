@@ -20,7 +20,12 @@ import {
   Grid2,
   Link,
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Receipt as ReceiptIcon } from '@mui/icons-material';
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Add as AddIcon,
+  Receipt as ReceiptIcon,
+} from '@mui/icons-material';
 import { Account } from '../../api/models/Account';
 import { CurrencyToEnum } from '../../api/models/CurrencyToEnum';
 import { Bank } from '../../api/models/Bank';
@@ -51,12 +56,13 @@ const AccountList: React.FC<AccountListProps> = ({
     }
   }, [defaultBankId]);
 
-  const filteredAccounts = selectedBankId === 'all'
-    ? accounts
-    : accounts.filter(account => account.bank === parseInt(selectedBankId));
+  const filteredAccounts =
+    selectedBankId === 'all'
+      ? accounts
+      : accounts.filter((account) => account.bank === parseInt(selectedBankId));
 
   const getBankName = (bankId: number) => {
-    const bank = banks.find(b => b.id === bankId);
+    const bank = banks.find((b) => b.id === bankId);
     return bank ? bank.name : '알 수 없는 은행';
   };
 
@@ -128,7 +134,7 @@ const AccountList: React.FC<AccountListProps> = ({
                       onClick={() => handleViewTransactions(account.id)}
                       sx={{
                         textDecoration: 'none',
-                        '&:hover': { textDecoration: 'underline', cursor: 'pointer' }
+                        '&:hover': { textDecoration: 'underline', cursor: 'pointer' },
                       }}
                     >
                       {account.name}
@@ -148,9 +154,7 @@ const AccountList: React.FC<AccountListProps> = ({
                     />
                   </TableCell>
                   <TableCell align="right">
-                    {account.last_update
-                      ? new Date(account.last_update).toLocaleDateString()
-                      : '-'}
+                    {account.last_update ? new Date(account.last_update).toLocaleDateString() : '-'}
                   </TableCell>
                   <TableCell align="center">
                     <Tooltip title="거래 내역">
@@ -163,20 +167,12 @@ const AccountList: React.FC<AccountListProps> = ({
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="수정">
-                      <IconButton
-                        size="small"
-                        onClick={() => onEdit(account)}
-                        color="primary"
-                      >
+                      <IconButton size="small" onClick={() => onEdit(account)} color="primary">
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="삭제">
-                      <IconButton
-                        size="small"
-                        onClick={() => onDelete(account)}
-                        color="error"
-                      >
+                      <IconButton size="small" onClick={() => onDelete(account)} color="error">
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>

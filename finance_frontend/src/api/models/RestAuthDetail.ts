@@ -3,5 +3,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export type RestAuthDetail = {
-    readonly detail: string;
+  readonly detail: string;
 };

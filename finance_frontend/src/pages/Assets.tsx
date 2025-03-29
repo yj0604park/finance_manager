@@ -12,12 +12,12 @@ import {
   Tabs,
   Tab,
   Divider,
-  Paper
+  Paper,
 } from '@mui/material';
 import {
   AttachMoney as MoneyIcon,
   Add as AddIcon,
-  TrendingUp as TrendingUpIcon
+  TrendingUp as TrendingUpIcon,
 } from '@mui/icons-material';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
@@ -38,11 +38,7 @@ const TabPanel: React.FC<TabPanelProps> = (props) => {
       aria-labelledby={`assets-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 };
@@ -65,36 +61,36 @@ const Assets: React.FC = () => {
       name: '예금',
       amount: 10000000,
       rate: 2.5,
-      type: '현금성 자산'
+      type: '현금성 자산',
     },
     {
       id: '2',
       name: '주식',
       amount: 15000000,
       rate: 0,
-      type: '투자 자산'
+      type: '투자 자산',
     },
     {
       id: '3',
       name: '펀드',
       amount: 5000000,
       rate: 3.2,
-      type: '투자 자산'
+      type: '투자 자산',
     },
     {
       id: '4',
       name: '부동산',
       amount: 250000000,
       rate: 0,
-      type: '실물 자산'
-    }
+      type: '실물 자산',
+    },
   ];
 
   // 자산 분류별 차트 데이터
   const pieData = [
     { name: '현금성 자산', value: 10000000, color: '#1976d2' },
     { name: '투자 자산', value: 20000000, color: '#2e7d32' },
-    { name: '실물 자산', value: 250000000, color: '#ed6c02' }
+    { name: '실물 자산', value: 250000000, color: '#ed6c02' },
   ];
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -111,11 +107,7 @@ const Assets: React.FC = () => {
         <Typography variant="h4" component="h1" gutterBottom>
           자산 관리
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          sx={{ borderRadius: 2 }}
-        >
+        <Button variant="contained" startIcon={<AddIcon />} sx={{ borderRadius: 2 }}>
           새 자산 추가
         </Button>
       </Box>
@@ -178,15 +170,17 @@ const Assets: React.FC = () => {
                 </Box>
                 <Divider sx={{ my: 2 }} />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="body1">
-                    월 예상 수익:
-                  </Typography>
-                  <Typography variant="body1" color="success.main" sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography variant="body1">월 예상 수익:</Typography>
+                  <Typography
+                    variant="body1"
+                    color="success.main"
+                    sx={{ display: 'flex', alignItems: 'center' }}
+                  >
                     <TrendingUpIcon sx={{ mr: 0.5 }} />
                     {formatCurrency(
                       assets
-                        .filter(asset => asset.rate > 0)
-                        .reduce((sum, asset) => sum + (asset.amount * asset.rate / 100 / 12), 0)
+                        .filter((asset) => asset.rate > 0)
+                        .reduce((sum, asset) => sum + (asset.amount * asset.rate) / 100 / 12, 0)
                     )}
                   </Typography>
                 </Box>
@@ -210,14 +204,16 @@ const Assets: React.FC = () => {
                 <Grid container spacing={2}>
                   {assets.map((asset) => (
                     <Grid item xs={12} sm={6} md={4} key={asset.id}>
-                      <Card sx={{
-                        borderRadius: 2,
-                        transition: 'transform 0.3s, box-shadow 0.3s',
-                        '&:hover': {
-                          transform: 'translateY(-4px)',
-                          boxShadow: 6
-                        }
-                      }}>
+                      <Card
+                        sx={{
+                          borderRadius: 2,
+                          transition: 'transform 0.3s, box-shadow 0.3s',
+                          '&:hover': {
+                            transform: 'translateY(-4px)',
+                            boxShadow: 6,
+                          },
+                        }}
+                      >
                         <CardContent>
                           <Typography variant="h6" gutterBottom>
                             {asset.name}
@@ -242,73 +238,79 @@ const Assets: React.FC = () => {
 
               <TabPanel value={tabValue} index={1}>
                 <Grid container spacing={2}>
-                  {assets.filter(asset => asset.type === '현금성 자산').map((asset) => (
-                    <Grid item xs={12} sm={6} md={4} key={asset.id}>
-                      <Card sx={{ borderRadius: 2 }}>
-                        <CardContent>
-                          <Typography variant="h6" gutterBottom>
-                            {asset.name}
-                          </Typography>
-                          <Typography variant="body1" color="text.secondary" gutterBottom>
-                            금액: {formatCurrency(asset.amount)}
-                          </Typography>
-                          {asset.rate > 0 && (
-                            <Typography variant="body2" color="success.main" gutterBottom>
-                              수익률: {asset.rate}%
+                  {assets
+                    .filter((asset) => asset.type === '현금성 자산')
+                    .map((asset) => (
+                      <Grid item xs={12} sm={6} md={4} key={asset.id}>
+                        <Card sx={{ borderRadius: 2 }}>
+                          <CardContent>
+                            <Typography variant="h6" gutterBottom>
+                              {asset.name}
                             </Typography>
-                          )}
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ))}
+                            <Typography variant="body1" color="text.secondary" gutterBottom>
+                              금액: {formatCurrency(asset.amount)}
+                            </Typography>
+                            {asset.rate > 0 && (
+                              <Typography variant="body2" color="success.main" gutterBottom>
+                                수익률: {asset.rate}%
+                              </Typography>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
                 </Grid>
               </TabPanel>
 
               <TabPanel value={tabValue} index={2}>
                 <Grid container spacing={2}>
-                  {assets.filter(asset => asset.type === '투자 자산').map((asset) => (
-                    <Grid item xs={12} sm={6} md={4} key={asset.id}>
-                      <Card sx={{ borderRadius: 2 }}>
-                        <CardContent>
-                          <Typography variant="h6" gutterBottom>
-                            {asset.name}
-                          </Typography>
-                          <Typography variant="body1" color="text.secondary" gutterBottom>
-                            금액: {formatCurrency(asset.amount)}
-                          </Typography>
-                          {asset.rate > 0 && (
-                            <Typography variant="body2" color="success.main" gutterBottom>
-                              수익률: {asset.rate}%
+                  {assets
+                    .filter((asset) => asset.type === '투자 자산')
+                    .map((asset) => (
+                      <Grid item xs={12} sm={6} md={4} key={asset.id}>
+                        <Card sx={{ borderRadius: 2 }}>
+                          <CardContent>
+                            <Typography variant="h6" gutterBottom>
+                              {asset.name}
                             </Typography>
-                          )}
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ))}
+                            <Typography variant="body1" color="text.secondary" gutterBottom>
+                              금액: {formatCurrency(asset.amount)}
+                            </Typography>
+                            {asset.rate > 0 && (
+                              <Typography variant="body2" color="success.main" gutterBottom>
+                                수익률: {asset.rate}%
+                              </Typography>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
                 </Grid>
               </TabPanel>
 
               <TabPanel value={tabValue} index={3}>
                 <Grid container spacing={2}>
-                  {assets.filter(asset => asset.type === '실물 자산').map((asset) => (
-                    <Grid item xs={12} sm={6} md={4} key={asset.id}>
-                      <Card sx={{ borderRadius: 2 }}>
-                        <CardContent>
-                          <Typography variant="h6" gutterBottom>
-                            {asset.name}
-                          </Typography>
-                          <Typography variant="body1" color="text.secondary" gutterBottom>
-                            금액: {formatCurrency(asset.amount)}
-                          </Typography>
-                          {asset.rate > 0 && (
-                            <Typography variant="body2" color="success.main" gutterBottom>
-                              수익률: {asset.rate}%
+                  {assets
+                    .filter((asset) => asset.type === '실물 자산')
+                    .map((asset) => (
+                      <Grid item xs={12} sm={6} md={4} key={asset.id}>
+                        <Card sx={{ borderRadius: 2 }}>
+                          <CardContent>
+                            <Typography variant="h6" gutterBottom>
+                              {asset.name}
                             </Typography>
-                          )}
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ))}
+                            <Typography variant="body1" color="text.secondary" gutterBottom>
+                              금액: {formatCurrency(asset.amount)}
+                            </Typography>
+                            {asset.rate > 0 && (
+                              <Typography variant="body2" color="success.main" gutterBottom>
+                                수익률: {asset.rate}%
+                              </Typography>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
                 </Grid>
               </TabPanel>
             </Paper>

@@ -3,19 +3,19 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ItemTransaction = {
-    readonly id: number;
-    date: string;
-    time?: string;
-    readonly created_at: string;
-    readonly updated_at: string;
-    amount: string;
-    purchase_price: string;
-    quantity: string;
-    tax?: string | null;
-    fee?: string | null;
-    subsidy?: string | null;
-    note?: string | null;
-    user: number;
-    item: number;
-    transaction?: number | null;
+  readonly id: number;
+  date: string;
+  time?: string;
+  readonly created_at: string;
+  readonly updated_at: string;
+  amount: string;
+  purchase_price: string;
+  quantity: string;
+  tax?: string | null;
+  fee?: string | null;
+  subsidy?: string | null;
+  note?: string | null;
+  user: number;
+  item: number;
+  transaction?: number | null;
 };

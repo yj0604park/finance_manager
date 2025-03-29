@@ -121,11 +121,7 @@ const Banks: React.FC = () => {
     try {
       if (selectedBank) {
         await BanksService.banksUpdate(selectedBank.id, bankData as Bank);
-        setBanks(
-          banks.map((b) =>
-            b.id === selectedBank.id ? { ...b, ...bankData } : b
-          )
-        );
+        setBanks(banks.map((b) => (b.id === selectedBank.id ? { ...b, ...bankData } : b)));
         setNotification({
           open: true,
           message: '은행이 수정되었습니다.',
@@ -144,9 +140,7 @@ const Banks: React.FC = () => {
     } catch (err) {
       setNotification({
         open: true,
-        message: selectedBank
-          ? '은행 수정에 실패했습니다.'
-          : '은행 추가에 실패했습니다.',
+        message: selectedBank ? '은행 수정에 실패했습니다.' : '은행 추가에 실패했습니다.',
         severity: 'error',
       });
       console.error('Error submitting bank:', err);

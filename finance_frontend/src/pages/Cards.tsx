@@ -8,7 +8,7 @@ import {
   Button,
   Box,
   Alert,
-  CircularProgress
+  CircularProgress,
 } from '@mui/material';
 import { CreditCard as CardIcon, Add as AddIcon } from '@mui/icons-material';
 
@@ -23,7 +23,7 @@ const Cards: React.FC = () => {
       type: '체크',
       number: '1234-5678-9012-3456',
       expiryDate: '12/25',
-      bank: '신한은행'
+      bank: '신한은행',
     },
     {
       id: '2',
@@ -31,8 +31,8 @@ const Cards: React.FC = () => {
       type: '체크',
       number: '5678-1234-3456-9012',
       expiryDate: '09/24',
-      bank: '국민은행'
-    }
+      bank: '국민은행',
+    },
   ];
 
   return (
@@ -41,11 +41,7 @@ const Cards: React.FC = () => {
         <Typography variant="h4" component="h1" gutterBottom>
           카드 관리
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          sx={{ borderRadius: 2 }}
-        >
+        <Button variant="contained" startIcon={<AddIcon />} sx={{ borderRadius: 2 }}>
           새 카드 추가
         </Button>
       </Box>
@@ -68,8 +64,8 @@ const Cards: React.FC = () => {
                   transition: 'transform 0.3s, box-shadow 0.3s',
                   '&:hover': {
                     transform: 'translateY(-4px)',
-                    boxShadow: 6
-                  }
+                    boxShadow: 6,
+                  },
                 }}
               >
                 <CardContent>

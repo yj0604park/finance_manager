@@ -23,12 +23,7 @@ interface BankFormModalProps {
   bank?: Bank;
 }
 
-const BankFormModal: React.FC<BankFormModalProps> = ({
-  open,
-  onClose,
-  onSubmit,
-  bank,
-}) => {
+const BankFormModal: React.FC<BankFormModalProps> = ({ open, onClose, onSubmit, bank }) => {
   const [formData, setFormData] = useState<Partial<Bank>>({
     name: '',
     country: CountryEnum.KOREA,

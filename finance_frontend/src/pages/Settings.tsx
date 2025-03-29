@@ -1,7 +1,16 @@
 import React from 'react';
 import {
-  Box, Typography, Paper, Container, Grid, Switch,
-  FormControlLabel, Divider, Button, TextField, Card, CardContent
+  Box,
+  Typography,
+  Container,
+  Grid,
+  Switch,
+  FormControlLabel,
+  Divider,
+  Button,
+  TextField,
+  Card,
+  CardContent,
 } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
 
@@ -17,13 +26,17 @@ const Settings: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" sx={{ mb: 4 }}>설정</Typography>
+      <Typography variant="h4" sx={{ mb: 4 }}>
+        설정
+      </Typography>
 
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>일반 설정</Typography>
+              <Typography variant="h6" gutterBottom>
+                일반 설정
+              </Typography>
               <Divider sx={{ mb: 2 }} />
 
               <Box sx={{ mb: 2 }}>
@@ -40,12 +53,7 @@ const Settings: React.FC = () => {
 
               <Box sx={{ mb: 2 }}>
                 <FormControlLabel
-                  control={
-                    <Switch
-                      checked={darkMode}
-                      onChange={() => setDarkMode(!darkMode)}
-                    />
-                  }
+                  control={<Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />}
                   label="다크 모드"
                 />
               </Box>
@@ -56,7 +64,9 @@ const Settings: React.FC = () => {
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>계정 설정</Typography>
+              <Typography variant="h6" gutterBottom>
+                계정 설정
+              </Typography>
               <Divider sx={{ mb: 2 }} />
 
               <Box sx={{ mb: 3 }}>
@@ -75,11 +85,7 @@ const Settings: React.FC = () => {
       </Grid>
 
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          variant="contained"
-          startIcon={<SaveIcon />}
-          onClick={handleSave}
-        >
+        <Button variant="contained" startIcon={<SaveIcon />} onClick={handleSave}>
           설정 저장
         </Button>
       </Box>

@@ -9,8 +9,8 @@
  * * `CREDITCARD` - 신용카드
  */
 export enum ExchangeBrokderEnum {
-    ETC = 'ETC',
-    BANK = 'BANK',
-    WIREBARLEY = 'WIREBARLEY',
-    CREDITCARD = 'CREDITCARD',
+  ETC = 'ETC',
+  BANK = 'BANK',
+  WIREBARLEY = 'WIREBARLEY',
+  CREDITCARD = 'CREDITCARD',
 }

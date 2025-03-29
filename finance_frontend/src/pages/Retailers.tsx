@@ -208,10 +208,7 @@ const Retailers: React.FC = () => {
                         <TableCell>{retailer.retailer_type}</TableCell>
                         <TableCell>{retailer.category}</TableCell>
                         <TableCell align="right">
-                          <IconButton
-                            color="primary"
-                            onClick={() => handleOpenDialog(retailer)}
-                          >
+                          <IconButton color="primary" onClick={() => handleOpenDialog(retailer)}>
                             <EditIcon />
                           </IconButton>
                           <IconButton
@@ -233,9 +230,7 @@ const Retailers: React.FC = () => {
 
       {/* 판매처 추가/수정 다이얼로그 */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>
-          {currentRetailer ? '판매처 수정' : '판매처 추가'}
-        </DialogTitle>
+        <DialogTitle>{currentRetailer ? '판매처 수정' : '판매처 추가'}</DialogTitle>
         <DialogContent>
           <Box mt={2}>
             <TextField
@@ -253,7 +248,12 @@ const Retailers: React.FC = () => {
                 labelId="retailer-type-label"
                 value={retailerInput.retailer_type}
                 label="판매처 유형"
-                onChange={(e) => setRetailerInput({ ...retailerInput, retailer_type: e.target.value as RetailerTypeEnum })}
+                onChange={(e) =>
+                  setRetailerInput({
+                    ...retailerInput,
+                    retailer_type: e.target.value as RetailerTypeEnum,
+                  })
+                }
               >
                 {Object.values(RetailerTypeEnum).map((type) => (
                   <MenuItem key={type} value={type}>
@@ -276,7 +276,9 @@ const Retailers: React.FC = () => {
                 labelId="category-label"
                 value={retailerInput.category}
                 label="카테고리"
-                onChange={(e) => setRetailerInput({ ...retailerInput, category: e.target.value as CategoryEnum })}
+                onChange={(e) =>
+                  setRetailerInput({ ...retailerInput, category: e.target.value as CategoryEnum })
+                }
               >
                 {Object.values(CategoryEnum).map((category) => (
                   <MenuItem key={category} value={category}>
@@ -303,9 +305,7 @@ const Retailers: React.FC = () => {
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
         <DialogTitle>판매처 삭제</DialogTitle>
         <DialogContent>
-          <Typography>
-            '{currentRetailer?.name}' 판매처를 삭제하시겠습니까?
-          </Typography>
+          <Typography>'{currentRetailer?.name}' 판매처를 삭제하시겠습니까?</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDeleteDialog}>취소</Button>

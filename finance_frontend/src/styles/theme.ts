@@ -35,11 +35,7 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: [
-      'Roboto',
-      'Arial',
-      'sans-serif',
-    ].join(','),
+    fontFamily: ['Roboto', 'Arial', 'sans-serif'].join(','),
     h4: {
       fontWeight: 600,
     },

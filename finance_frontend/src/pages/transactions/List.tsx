@@ -161,19 +161,20 @@ const TransactionList: React.FC = () => {
 
   useEffect(() => {
     // 검색어, 은행, 계좌 기준으로 필터링
-    const filtered = transactions.filter(transaction => {
+    const filtered = transactions.filter((transaction) => {
       const matchesSearch =
         transaction.note?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         transaction.amount.includes(searchTerm) ||
         transaction.date.includes(searchTerm);
 
       // 은행 필터링
-      const matchesBank = selectedBankId === 'all' ||
-        accounts.find(a => a.id === transaction.account)?.bank.toString() === selectedBankId;
+      const matchesBank =
+        selectedBankId === 'all' ||
+        accounts.find((a) => a.id === transaction.account)?.bank.toString() === selectedBankId;
 
       // 계좌 필터링
-      const matchesAccount = selectedAccountId === 'all' ||
-        transaction.account.toString() === selectedAccountId;
+      const matchesAccount =
+        selectedAccountId === 'all' || transaction.account.toString() === selectedAccountId;
 
       return matchesSearch && matchesBank && matchesAccount;
     });
@@ -213,17 +214,18 @@ const TransactionList: React.FC = () => {
   };
 
   const getBankNameById = (accountId: number) => {
-    const account = accounts.find(a => a.id === accountId);
+    const account = accounts.find((a) => a.id === accountId);
     if (!account) return '알 수 없음';
 
-    const bank = banks.find(b => b.id === account.bank);
+    const bank = banks.find((b) => b.id === account.bank);
     return bank ? bank.name : '알 수 없음';
   };
 
   // 선택된 은행에 속한 계좌만 필터링
-  const filteredAccounts = selectedBankId === 'all'
-    ? accounts
-    : accounts.filter(account => account.bank.toString() === selectedBankId);
+  const filteredAccounts =
+    selectedBankId === 'all'
+      ? accounts
+      : accounts.filter((account) => account.bank.toString() === selectedBankId);
 
   const handleDelete = async (id: number) => {
     if (window.confirm('정말로 이 거래 내역을 삭제하시겠습니까?')) {
@@ -253,7 +255,7 @@ const TransactionList: React.FC = () => {
 
   const handleEdit = async (id: number) => {
     try {
-      const transaction = transactions.find(t => t.id === id);
+      const transaction = transactions.find((t) => t.id === id);
       if (transaction) {
         setSelectedTransaction(transaction);
         setModalOpen(true);
@@ -275,7 +277,10 @@ const TransactionList: React.FC = () => {
   const handleSubmit = async (transactionData: Partial<Transaction>) => {
     try {
       if (selectedTransaction) {
-        await TransactionsService.transactionsUpdate(selectedTransaction.id, transactionData as Transaction);
+        await TransactionsService.transactionsUpdate(
+          selectedTransaction.id,
+          transactionData as Transaction
+        );
         setSnackbar({
           open: true,
           message: '거래 내역이 수정되었습니다.',
@@ -300,7 +305,9 @@ const TransactionList: React.FC = () => {
     } catch (err) {
       setSnackbar({
         open: true,
-        message: selectedTransaction ? '거래 내역 수정에 실패했습니다.' : '거래 내역 추가에 실패했습니다.',
+        message: selectedTransaction
+          ? '거래 내역 수정에 실패했습니다.'
+          : '거래 내역 추가에 실패했습니다.',
         severity: 'error',
       });
       console.error('거래 내역 저장 실패:', err);
@@ -341,8 +348,8 @@ const TransactionList: React.FC = () => {
               {filteredTransactions
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((transaction) => {
-                  const account = accounts.find(a => a.id === transaction.account);
-                  const retailer = retailers.find(r => r.id === transaction.retailer);
+                  const account = accounts.find((a) => a.id === transaction.account);
+                  const retailer = retailers.find((r) => r.id === transaction.retailer);
 
                   return (
                     <TableRow key={transaction.id}>
@@ -352,9 +359,11 @@ const TransactionList: React.FC = () => {
                       <TableCell>{getBankNameById(transaction.account)}</TableCell>
                       <TableCell>{account?.name || '알 수 없음'}</TableCell>
                       <TableCell>
-                        {transaction.transaction_type === TransactionTypeEnum.DEPOSIT ? '수입' :
-                          transaction.transaction_type === TransactionTypeEnum.WITHDRAW ? '지출' :
-                            transaction.transaction_type}
+                        {transaction.transaction_type === TransactionTypeEnum.DEPOSIT
+                          ? '수입'
+                          : transaction.transaction_type === TransactionTypeEnum.WITHDRAW
+                            ? '지출'
+                            : transaction.transaction_type}
                       </TableCell>
                       <TableCell>{retailer?.name || '-'}</TableCell>
                       <TableCell>{transaction.note || '-'}</TableCell>
@@ -470,11 +479,7 @@ const TransactionList: React.FC = () => {
               </Select>
             </FormControl>
 
-            <Button
-              variant="outlined"
-              startIcon={<ClearAllIcon />}
-              onClick={handleClearFilters}
-            >
+            <Button variant="outlined" startIcon={<ClearAllIcon />} onClick={handleClearFilters}>
               초기화
             </Button>
           </Grid>

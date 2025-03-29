@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PatchedUser = {
-    name?: string;
-    readonly url?: string;
+  name?: string;
+  readonly url?: string;
 };

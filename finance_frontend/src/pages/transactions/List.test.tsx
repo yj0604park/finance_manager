@@ -108,7 +108,7 @@ describe('TransactionList 컴포넌트 테스트', () => {
       user: 1,
       is_reviewed: false,
       created_at: '2023-05-01T10:00:00Z',
-      updated_at: '2023-05-01T10:00:00Z'
+      updated_at: '2023-05-01T10:00:00Z',
     },
     {
       id: 2,
@@ -122,7 +122,7 @@ describe('TransactionList 컴포넌트 테스트', () => {
       user: 1,
       is_reviewed: false,
       created_at: '2023-05-02T14:30:00Z',
-      updated_at: '2023-05-02T14:30:00Z'
+      updated_at: '2023-05-02T14:30:00Z',
     },
     {
       id: 3,
@@ -136,7 +136,7 @@ describe('TransactionList 컴포넌트 테스트', () => {
       user: 1,
       is_reviewed: false,
       created_at: '2023-05-03T09:15:00Z',
-      updated_at: '2023-05-03T09:15:00Z'
+      updated_at: '2023-05-03T09:15:00Z',
     },
   ];
 
@@ -144,10 +144,16 @@ describe('TransactionList 컴포넌트 테스트', () => {
     vi.clearAllMocks();
 
     // API 응답 모킹
-    require('../../api/services/TransactionsService').TransactionsService.transactionsList.mockResolvedValue(mockTransactions);
-    require('../../api/services/AccountsService').AccountsService.accountsList.mockResolvedValue(mockAccounts);
+    require('../../api/services/TransactionsService').TransactionsService.transactionsList.mockResolvedValue(
+      mockTransactions
+    );
+    require('../../api/services/AccountsService').AccountsService.accountsList.mockResolvedValue(
+      mockAccounts
+    );
     require('../../api/services/BanksService').BanksService.banksList.mockResolvedValue(mockBanks);
-    require('../../api/services/RetailersService').RetailersService.retailersList.mockResolvedValue(mockRetailers);
+    require('../../api/services/RetailersService').RetailersService.retailersList.mockResolvedValue(
+      mockRetailers
+    );
   });
 
   const renderWithRouter = (initialEntry = '/transactions/list') => {

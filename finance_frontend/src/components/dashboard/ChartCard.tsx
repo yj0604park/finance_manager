@@ -57,15 +57,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
     return (
       <ResponsiveContainer width="100%" height={height}>
         <PieChart>
-          <Pie
-            data={data}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius={80}
-            label
-          >
+          <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
             {data.map((_, index) => (
               <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
             ))}
@@ -82,9 +74,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
         <Typography variant="h6" component="div" color="text.secondary" gutterBottom>
           {title}
         </Typography>
-        <Box sx={{ height }}>
-          {renderChart()}
-        </Box>
+        <Box sx={{ height }}>{renderChart()}</Box>
       </CardContent>
     </StyledCard>
   );

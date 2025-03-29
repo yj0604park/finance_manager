@@ -3,5 +3,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export type VerifyEmail = {
-    key: string;
+  key: string;
 };

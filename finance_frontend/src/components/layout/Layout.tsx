@@ -1,7 +1,5 @@
 import { ReactNode, useState } from 'react';
-import {
-  Box, useTheme, useMediaQuery
-} from '@mui/material';
+import { Box, useTheme, useMediaQuery } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -44,10 +42,7 @@ export const Layout = ({ children }: LayoutProps) => {
           />
         )}
 
-        <MainContent
-          isAuthenticated={isAuthenticated}
-          drawerWidth={DRAWER_WIDTH}
-        >
+        <MainContent isAuthenticated={isAuthenticated} drawerWidth={DRAWER_WIDTH}>
           {children}
         </MainContent>
       </Box>

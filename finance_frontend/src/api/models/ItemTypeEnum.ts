@@ -7,6 +7,6 @@
  * * `STOCK` - 주식
  */
 export enum ItemTypeEnum {
-    ITEM = 'ITEM',
-    STOCK = 'STOCK',
+  ITEM = 'ITEM',
+  STOCK = 'STOCK',
 }

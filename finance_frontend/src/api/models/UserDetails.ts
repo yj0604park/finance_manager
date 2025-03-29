@@ -6,8 +6,8 @@
  * User model w/o password
  */
 export type UserDetails = {
-    readonly pk: number;
-    readonly email: string;
-    readonly first_name: string;
-    readonly last_name: string;
+  readonly pk: number;
+  readonly email: string;
+  readonly first_name: string;
+  readonly last_name: string;
 };

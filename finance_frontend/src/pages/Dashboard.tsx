@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Grid, Paper, Typography, Box } from '@mui/material';
-import { AccountBalance as BankIcon, CreditCard as CardIcon, TrendingUp as TrendingUpIcon, TrendingDown as TrendingDownIcon } from '@mui/icons-material';
+import {
+  AccountBalance as BankIcon,
+  CreditCard as CardIcon,
+  TrendingUp as TrendingUpIcon,
+  TrendingDown as TrendingDownIcon,
+} from '@mui/icons-material';
 import ChartCard from '../components/dashboard/ChartCard';
 import SummaryCard from '../components/dashboard/SummaryCard';
 import { AccountsService } from '../api/services/AccountsService';
@@ -102,20 +107,10 @@ const Dashboard: React.FC = () => {
 
         {/* 차트 */}
         <Grid item xs={12} md={8}>
-          <ChartCard
-            title="월별 수입/지출 추이"
-            type="line"
-            data={monthlyData}
-            height={400}
-          />
+          <ChartCard title="월별 수입/지출 추이" type="line" data={monthlyData} height={400} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <ChartCard
-            title="카테고리별 지출"
-            type="pie"
-            data={categoryData}
-            height={400}
-          />
+          <ChartCard title="카테고리별 지출" type="pie" data={categoryData} height={400} />
         </Grid>
 
         {/* 최근 거래 내역 */}

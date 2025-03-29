@@ -22,10 +22,12 @@ vi.mock('./api/services/BanksService', () => ({
       { id: 1, name: '신한은행', country: 'KOREA', amount: '0', user: 1 },
       { id: 2, name: '국민은행', country: 'KOREA', amount: '0', user: 1 },
     ]),
-    banksCreate: vi.fn().mockImplementation((data) =>
-      Promise.resolve({ ...data, id: Math.floor(Math.random() * 1000) })),
-    banksUpdate: vi.fn().mockImplementation((id, data) =>
-      Promise.resolve({ ...data, id })),
+    banksCreate: vi
+      .fn()
+      .mockImplementation((data) =>
+        Promise.resolve({ ...data, id: Math.floor(Math.random() * 1000) })
+      ),
+    banksUpdate: vi.fn().mockImplementation((id, data) => Promise.resolve({ ...data, id })),
     banksDestroy: vi.fn().mockResolvedValue({}),
   },
 }));
@@ -54,10 +56,12 @@ vi.mock('./api/services/AccountsService', () => ({
         nickname: '비상금',
       },
     ]),
-    accountsCreate: vi.fn().mockImplementation((data) =>
-      Promise.resolve({ ...data, id: Math.floor(Math.random() * 1000) })),
-    accountsUpdate: vi.fn().mockImplementation((id, data) =>
-      Promise.resolve({ ...data, id })),
+    accountsCreate: vi
+      .fn()
+      .mockImplementation((data) =>
+        Promise.resolve({ ...data, id: Math.floor(Math.random() * 1000) })
+      ),
+    accountsUpdate: vi.fn().mockImplementation((id, data) => Promise.resolve({ ...data, id })),
     accountsDestroy: vi.fn().mockResolvedValue({}),
   },
 }));
@@ -90,10 +94,12 @@ vi.mock('./api/services/TransactionsService', () => ({
         is_reviewed: false,
       },
     ]),
-    transactionsCreate: vi.fn().mockImplementation((data) =>
-      Promise.resolve({ ...data, id: Math.floor(Math.random() * 1000) })),
-    transactionsUpdate: vi.fn().mockImplementation((id, data) =>
-      Promise.resolve({ ...data, id })),
+    transactionsCreate: vi
+      .fn()
+      .mockImplementation((data) =>
+        Promise.resolve({ ...data, id: Math.floor(Math.random() * 1000) })
+      ),
+    transactionsUpdate: vi.fn().mockImplementation((id, data) => Promise.resolve({ ...data, id })),
     transactionsDestroy: vi.fn().mockResolvedValue({}),
   },
 }));
@@ -104,10 +110,12 @@ vi.mock('./api/services/RetailersService', () => ({
       { id: 1, name: '슈퍼마켓', retailer_type: 'STORE', user: 1 },
       { id: 2, name: '커피숍', retailer_type: 'STORE', user: 1 },
     ]),
-    retailersCreate: vi.fn().mockImplementation((data) =>
-      Promise.resolve({ ...data, id: Math.floor(Math.random() * 1000) })),
-    retailersUpdate: vi.fn().mockImplementation((id, data) =>
-      Promise.resolve({ ...data, id })),
+    retailersCreate: vi
+      .fn()
+      .mockImplementation((data) =>
+        Promise.resolve({ ...data, id: Math.floor(Math.random() * 1000) })
+      ),
+    retailersUpdate: vi.fn().mockImplementation((id, data) => Promise.resolve({ ...data, id })),
     retailersDestroy: vi.fn().mockResolvedValue({}),
   },
 }));

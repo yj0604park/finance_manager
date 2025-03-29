@@ -56,14 +56,18 @@ const TransactionList: React.FC<TransactionListProps> = ({
           <TableBody>
             {transactions.map((transaction) => (
               <TableRow key={transaction.id}>
-                <TableCell>
-                  {new Date(transaction.date).toLocaleDateString()}
-                </TableCell>
+                <TableCell>{new Date(transaction.date).toLocaleDateString()}</TableCell>
                 <TableCell>{transaction.account}</TableCell>
                 <TableCell>
                   <Chip
-                    label={transaction.transaction_type === TransactionTypeEnum.DEPOSIT ? '수입' : '지출'}
-                    color={transaction.transaction_type === TransactionTypeEnum.DEPOSIT ? 'success' : 'error'}
+                    label={
+                      transaction.transaction_type === TransactionTypeEnum.DEPOSIT ? '수입' : '지출'
+                    }
+                    color={
+                      transaction.transaction_type === TransactionTypeEnum.DEPOSIT
+                        ? 'success'
+                        : 'error'
+                    }
                     size="small"
                   />
                 </TableCell>
@@ -73,20 +77,12 @@ const TransactionList: React.FC<TransactionListProps> = ({
                 </TableCell>
                 <TableCell align="center">
                   <Tooltip title="수정">
-                    <IconButton
-                      size="small"
-                      onClick={() => onEdit(transaction)}
-                      color="primary"
-                    >
+                    <IconButton size="small" onClick={() => onEdit(transaction)} color="primary">
                       <EditIcon />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="삭제">
-                    <IconButton
-                      size="small"
-                      onClick={() => onDelete(transaction)}
-                      color="error"
-                    >
+                    <IconButton size="small" onClick={() => onDelete(transaction)} color="error">
                       <DeleteIcon />
                     </IconButton>
                   </Tooltip>

@@ -22,11 +22,7 @@ export const NotFound = () => {
         <Typography color="text.secondary" align="center">
           요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.
         </Typography>
-        <Button
-          variant="contained"
-          onClick={() => navigate('/dashboard')}
-          sx={{ mt: 2 }}
-        >
+        <Button variant="contained" onClick={() => navigate('/dashboard')} sx={{ mt: 2 }}>
           대시보드로 이동
         </Button>
       </Stack>

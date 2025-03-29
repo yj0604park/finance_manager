@@ -4,22 +4,27 @@ import {
   BarChart as BarChartIcon,
   CreditCard as CardIcon,
   Dashboard as DashboardIcon,
-  ExpandLess, ExpandMore,
+  ExpandLess,
+  ExpandMore,
   ExitToApp as LogoutIcon,
   AttachMoney as MoneyIcon,
   Settings as SettingsIcon,
   Receipt as TransactionIcon,
-  Store as StoreIcon
+  Store as StoreIcon,
 } from '@mui/icons-material';
 import {
   Box,
-  Collapse, Divider,
+  Collapse,
+  Divider,
   Drawer,
-  List, ListItem, ListItemButton, ListItemIcon,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
   ListItemText,
   Tooltip,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -39,22 +44,22 @@ const navItems: NavItem[] = [
   {
     title: '대시보드',
     path: '/dashboard',
-    icon: <DashboardIcon />
+    icon: <DashboardIcon />,
   },
   {
     title: '은행 관리',
     path: '/banks',
-    icon: <BankIcon />
+    icon: <BankIcon />,
   },
   {
     title: '계좌 관리',
     path: '/accounts',
-    icon: <CardIcon />
+    icon: <CardIcon />,
   },
   {
     title: '판매처 관리',
     path: '/retailers',
-    icon: <StoreIcon />
+    icon: <StoreIcon />,
   },
   {
     title: '거래',
@@ -64,30 +69,30 @@ const navItems: NavItem[] = [
       {
         title: '거래 내역',
         path: '/transactions/list',
-        icon: <ArticleIcon />
+        icon: <ArticleIcon />,
       },
       {
         title: '거래 분석',
         path: '/transactions/analysis',
-        icon: <BarChartIcon />
-      }
-    ]
+        icon: <BarChartIcon />,
+      },
+    ],
   },
   {
     title: '카드',
     path: '/cards',
-    icon: <CardIcon />
+    icon: <CardIcon />,
   },
   {
     title: '자산 관리',
     path: '/assets',
-    icon: <MoneyIcon />
+    icon: <MoneyIcon />,
   },
   {
     title: '설정',
     path: '/settings',
-    icon: <SettingsIcon />
-  }
+    icon: <SettingsIcon />,
+  },
 ];
 
 // Sidebar 속성 인터페이스
@@ -112,9 +117,9 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, drawerWidth }: SidebarProps) 
 
   // 하위 메뉴 토글 함수
   const handleToggleSubMenu = (path: string) => {
-    setOpenSubMenus(prev => ({
+    setOpenSubMenus((prev) => ({
       ...prev,
-      [path]: !prev[path]
+      [path]: !prev[path],
     }));
   };
 
@@ -140,7 +145,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, drawerWidth }: SidebarProps) 
           disablePadding
           sx={{
             display: 'block',
-            opacity: item.disabled ? 0.5 : 1
+            opacity: item.disabled ? 0.5 : 1,
           }}
         >
           <ListItemButton
@@ -180,9 +185,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, drawerWidth }: SidebarProps) 
                 color: isActive(item.path) ? 'primary.main' : 'inherit',
               }}
             />
-            {item.children && (
-              openSubMenus[item.path] ? <ExpandLess /> : <ExpandMore />
-            )}
+            {item.children && (openSubMenus[item.path] ? <ExpandLess /> : <ExpandMore />)}
           </ListItemButton>
         </ListItem>
 
@@ -234,9 +237,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, drawerWidth }: SidebarProps) 
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* 메뉴 항목 */}
       <Box sx={{ mt: 1, flexGrow: 1 }}>
-        <List sx={{ pt: 1 }}>
-          {renderNavItems(navItems)}
-        </List>
+        <List sx={{ pt: 1 }}>{renderNavItems(navItems)}</List>
       </Box>
 
       {/* 로그아웃 버튼 */}
@@ -265,10 +266,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, drawerWidth }: SidebarProps) 
   );
 
   return (
-    <Box
-      component="nav"
-      sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
-    >
+    <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}>
       {/* 모바일 드로어 */}
       <Drawer
         variant="temporary"
@@ -284,7 +282,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, drawerWidth }: SidebarProps) 
             width: drawerWidth,
             boxShadow: 3,
             top: `${appBarHeight}px`, // 앱바 높이만큼 아래로 배치
-            height: `calc(100% - ${appBarHeight}px)` // 앱바 높이를 뺀 높이로 설정
+            height: `calc(100% - ${appBarHeight}px)`, // 앱바 높이를 뺀 높이로 설정
           },
         }}
       >
@@ -302,7 +300,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, drawerWidth }: SidebarProps) 
             borderRight: '1px solid rgba(0, 0, 0, 0.08)',
             boxShadow: '2px 0 8px rgba(0,0,0,0.05)',
             top: `${appBarHeight}px`, // 앱바 높이만큼 아래로 배치
-            height: `calc(100% - ${appBarHeight}px)` // 앱바 높이를 뺀 높이로 설정
+            height: `calc(100% - ${appBarHeight}px)`, // 앱바 높이를 뺀 높이로 설정
           },
         }}
         open

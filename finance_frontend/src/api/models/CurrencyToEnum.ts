@@ -7,6 +7,6 @@
  * * `USD` - 달러
  */
 export enum CurrencyToEnum {
-    KRW = 'KRW',
-    USD = 'USD',
+  KRW = 'KRW',
+  USD = 'USD',
 }

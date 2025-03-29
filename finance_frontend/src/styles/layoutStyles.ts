@@ -29,7 +29,7 @@ export const userChipStyle: SxProps<Theme> = {
   '& .MuiChip-avatar': {
     bgcolor: 'secondary.main',
     color: 'white',
-  }
+  },
 };
 
 // 메인 컨텐츠 래퍼 스타일
@@ -62,7 +62,7 @@ export const mainContentBoxStyle = (isAuthenticated: boolean): SxProps<Theme> =>
 export const mainContainerStyle: SxProps<Theme> = {
   mt: 4,
   mb: 8,
-  minHeight: 'calc(100vh - 64px)'
+  minHeight: 'calc(100vh - 64px)',
 };
 
 // 컨텐츠 박스 스타일
@@ -85,5 +85,5 @@ export const appRootBoxStyle: SxProps<Theme> = {
   margin: 0,
   padding: 0,
   boxSizing: 'border-box',
-  overflow: 'hidden'
+  overflow: 'hidden',
 };

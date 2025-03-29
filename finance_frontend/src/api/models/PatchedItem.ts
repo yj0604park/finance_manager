@@ -5,10 +5,10 @@
 import type { CurrencyToEnum } from './CurrencyToEnum';
 import type { ItemTypeEnum } from './ItemTypeEnum';
 export type PatchedItem = {
-    readonly id?: number;
-    currency?: CurrencyToEnum;
-    name?: string;
-    code?: string | null;
-    item_type?: ItemTypeEnum;
-    user?: number;
+  readonly id?: number;
+  currency?: CurrencyToEnum;
+  name?: string;
+  code?: string | null;
+  item_type?: ItemTypeEnum;
+  user?: number;
 };

@@ -7,6 +7,6 @@
  * * `USA` - 미국
  */
 export enum CountryEnum {
-    KOREA = 'KOREA',
-    USA = 'USA',
+  KOREA = 'KOREA',
+  USA = 'USA',
 }

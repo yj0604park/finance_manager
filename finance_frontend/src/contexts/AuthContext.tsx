@@ -1,6 +1,14 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getAuthToken, setAuthToken as saveAuthToken, removeAuthToken as clearAuthToken, isAuthenticated as checkAuth } from '../utils/auth';
-import { setAuthToken as setApiAuthToken, clearAuthToken as clearApiAuthToken } from '../api/client';
+import {
+  getAuthToken,
+  setAuthToken as saveAuthToken,
+  removeAuthToken as clearAuthToken,
+  isAuthenticated as checkAuth,
+} from '../utils/auth';
+import {
+  setAuthToken as setApiAuthToken,
+  clearAuthToken as clearApiAuthToken,
+} from '../api/client';
 
 interface User {
   email: string;

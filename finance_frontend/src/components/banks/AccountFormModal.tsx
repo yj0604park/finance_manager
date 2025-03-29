@@ -27,12 +27,7 @@ interface AccountFormModalProps {
   bank: Bank;
 }
 
-const AccountFormModal: React.FC<AccountFormModalProps> = ({
-  open,
-  onClose,
-  onSubmit,
-  bank,
-}) => {
+const AccountFormModal: React.FC<AccountFormModalProps> = ({ open, onClose, onSubmit, bank }) => {
   const [name, setName] = useState('');
   const [currency, setCurrency] = useState<CurrencyToEnum>(CurrencyToEnum.KRW);
   const [nickname, setNickname] = useState('');

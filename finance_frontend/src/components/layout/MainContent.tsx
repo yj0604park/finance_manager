@@ -1,9 +1,6 @@
 import { ReactNode } from 'react';
 import { Box, useTheme } from '@mui/material';
-import {
-  mainContentWrapperStyle,
-  mainContentBoxStyle
-} from '../../styles/layoutStyles';
+import { mainContentWrapperStyle, mainContentBoxStyle } from '../../styles/layoutStyles';
 
 interface MainContentProps {
   children: ReactNode;
@@ -15,13 +12,8 @@ const MainContent = ({ children, isAuthenticated, drawerWidth }: MainContentProp
   const theme = useTheme();
 
   return (
-    <Box
-      component="main"
-      sx={mainContentWrapperStyle(isAuthenticated, drawerWidth, theme)}
-    >
-      <Box sx={mainContentBoxStyle(isAuthenticated)}>
-        {children}
-      </Box>
+    <Box component="main" sx={mainContentWrapperStyle(isAuthenticated, drawerWidth, theme)}>
+      <Box sx={mainContentBoxStyle(isAuthenticated)}>{children}</Box>
     </Box>
   );
 };

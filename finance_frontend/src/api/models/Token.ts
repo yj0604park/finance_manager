@@ -6,5 +6,5 @@
  * Serializer for Token model.
  */
 export type Token = {
-    key: string;
+  key: string;
 };

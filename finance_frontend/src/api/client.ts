@@ -43,9 +43,9 @@ export function setAuthToken(token: string): void {
 
   // 인증 헤더 설정
   OpenAPI.HEADERS = {
-    'Authorization': `Token ${token}`,
+    Authorization: `Token ${token}`,
     'Content-Type': 'application/json',
-    'Accept': 'application/json'
+    Accept: 'application/json',
   };
 }
 
@@ -125,10 +125,7 @@ export async function logout(): Promise<void> {
 }
 
 // Export commonly used services for direct import
-export {
-  AccountsService,
-  BanksService
-};
+export { AccountsService, BanksService };
 
 // Initialize the client when this module is imported
 initializeApiClient();

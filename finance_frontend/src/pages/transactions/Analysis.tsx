@@ -13,7 +13,7 @@ import {
   Divider,
   Card,
   CardContent,
-  CardHeader
+  CardHeader,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { format, startOfMonth, endOfMonth, startOfYear, endOfYear, sub } from 'date-fns';
@@ -34,7 +34,7 @@ import {
   Cell,
   ResponsiveContainer,
   LineChart,
-  Line
+  Line,
 } from 'recharts';
 
 // 차트 색상 정의
@@ -49,7 +49,7 @@ const INCOME_TYPES = [
   TransactionTypeEnum.STOCK_INCOME,
   TransactionTypeEnum.RENT_INCOME,
   TransactionTypeEnum.DIVIDEND,
-  TransactionTypeEnum.ETC_INCOME
+  TransactionTypeEnum.ETC_INCOME,
 ];
 
 const EXPENSE_TYPES = [
@@ -67,7 +67,7 @@ const EXPENSE_TYPES = [
   TransactionTypeEnum.MEDICAL,
   TransactionTypeEnum.PARENTING,
   TransactionTypeEnum.INTEREST_EXPENSE,
-  TransactionTypeEnum.ETC_EXPENSE
+  TransactionTypeEnum.ETC_EXPENSE,
 ];
 
 const TransactionAnalysis: React.FC = () => {
@@ -139,14 +139,20 @@ const TransactionAnalysis: React.FC = () => {
   // 4. 총 수입 계산
   const calculateTotalIncome = () => {
     return transactions
-      .filter(transaction => transaction.transaction_type && INCOME_TYPES.includes(transaction.transaction_type))
+      .filter(
+        (transaction) =>
+          transaction.transaction_type && INCOME_TYPES.includes(transaction.transaction_type)
+      )
       .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
   };
 
   // 5. 총 지출 계산
   const calculateTotalExpense = () => {
     return transactions
-      .filter(transaction => transaction.transaction_type && EXPENSE_TYPES.includes(transaction.transaction_type))
+      .filter(
+        (transaction) =>
+          transaction.transaction_type && EXPENSE_TYPES.includes(transaction.transaction_type)
+      )
       .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
   };
 
@@ -157,9 +163,9 @@ const TransactionAnalysis: React.FC = () => {
 
   // 7. 일별 거래 데이터 준비
   const prepareDailyData = () => {
-    const dailyData: { [key: string]: { date: string, income: number, expense: number } } = {};
+    const dailyData: { [key: string]: { date: string; income: number; expense: number } } = {};
 
-    transactions.forEach(transaction => {
+    transactions.forEach((transaction) => {
       const date = transaction.date.split('T')[0]; // YYYY-MM-DD 형식
 
       if (!dailyData[date]) {
@@ -168,7 +174,10 @@ const TransactionAnalysis: React.FC = () => {
 
       if (transaction.transaction_type && INCOME_TYPES.includes(transaction.transaction_type)) {
         dailyData[date].income += Number(transaction.amount);
-      } else if (transaction.transaction_type && EXPENSE_TYPES.includes(transaction.transaction_type)) {
+      } else if (
+        transaction.transaction_type &&
+        EXPENSE_TYPES.includes(transaction.transaction_type)
+      ) {
         dailyData[date].expense += Number(transaction.amount);
       }
     });
@@ -178,9 +187,9 @@ const TransactionAnalysis: React.FC = () => {
 
   // 8. 거래 유형별 비율 데이터 준비
   const prepareTypeData = () => {
-    const typeData: { name: string, value: number }[] = [
+    const typeData: { name: string; value: number }[] = [
       { name: '수입', value: calculateTotalIncome() },
-      { name: '지출', value: calculateTotalExpense() }
+      { name: '지출', value: calculateTotalExpense() },
     ];
 
     return typeData;
@@ -189,7 +198,9 @@ const TransactionAnalysis: React.FC = () => {
   // 로딩 중 표시
   if (loading) {
     return (
-      <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+      <Container
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}
+      >
         <CircularProgress />
       </Container>
     );
@@ -245,12 +256,7 @@ const TransactionAnalysis: React.FC = () => {
               />
             </Grid>
             <Grid item xs={12} sm={2}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={fetchTransactions}
-              >
+              <Button variant="contained" color="primary" fullWidth onClick={fetchTransactions}>
                 조회
               </Button>
             </Grid>

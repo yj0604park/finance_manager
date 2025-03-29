@@ -13,12 +13,12 @@
  * * `INTERNET` - 인터넷
  */
 export enum RetailerTypeEnum {
-    ETC = 'ETC',
-    STORE = 'STORE',
-    PERSON = 'PERSON',
-    BANK = 'BANK',
-    SERVICE = 'SERVICE',
-    INCOME = 'INCOME',
-    RESTAURANT = 'RESTAURANT',
-    INTERNET = 'INTERNET',
+  ETC = 'ETC',
+  STORE = 'STORE',
+  PERSON = 'PERSON',
+  BANK = 'BANK',
+  SERVICE = 'SERVICE',
+  INCOME = 'INCOME',
+  RESTAURANT = 'RESTAURANT',
+  INTERNET = 'INTERNET',
 }

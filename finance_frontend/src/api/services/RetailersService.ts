@@ -23,9 +23,7 @@ export class RetailersService {
    * @returns Retailer
    * @throws ApiError
    */
-  public static retailersCreate(
-    requestBody: Retailer,
-  ): CancelablePromise<Retailer> {
+  public static retailersCreate(requestBody: Retailer): CancelablePromise<Retailer> {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/retailers/',
@@ -38,14 +36,12 @@ export class RetailersService {
    * @returns Retailer
    * @throws ApiError
    */
-  public static retailersRetrieve(
-    id: number,
-  ): CancelablePromise<Retailer> {
+  public static retailersRetrieve(id: number): CancelablePromise<Retailer> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/retailers/{id}/',
       path: {
-        'id': id,
+        id: id,
       },
     });
   }
@@ -55,15 +51,12 @@ export class RetailersService {
    * @returns Retailer
    * @throws ApiError
    */
-  public static retailersUpdate(
-    id: number,
-    requestBody: Retailer,
-  ): CancelablePromise<Retailer> {
+  public static retailersUpdate(id: number, requestBody: Retailer): CancelablePromise<Retailer> {
     return __request(OpenAPI, {
       method: 'PUT',
       url: '/api/retailers/{id}/',
       path: {
-        'id': id,
+        id: id,
       },
       body: requestBody,
       mediaType: 'application/json',
@@ -77,13 +70,13 @@ export class RetailersService {
    */
   public static retailersPartialUpdate(
     id: number,
-    requestBody?: PatchedRetailer,
+    requestBody?: PatchedRetailer
   ): CancelablePromise<Retailer> {
     return __request(OpenAPI, {
       method: 'PATCH',
       url: '/api/retailers/{id}/',
       path: {
-        'id': id,
+        id: id,
       },
       body: requestBody,
       mediaType: 'application/json',
@@ -94,14 +87,12 @@ export class RetailersService {
    * @returns void
    * @throws ApiError
    */
-  public static retailersDestroy(
-    id: number,
-  ): CancelablePromise<void> {
+  public static retailersDestroy(id: number): CancelablePromise<void> {
     return __request(OpenAPI, {
       method: 'DELETE',
       url: '/api/retailers/{id}/',
       path: {
-        'id': id,
+        id: id,
       },
     });
   }

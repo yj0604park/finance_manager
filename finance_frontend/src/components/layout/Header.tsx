@@ -1,6 +1,13 @@
 import {
-  AppBar, Toolbar, Typography, Box,
-  Avatar, Stack, IconButton, Button, Chip
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  Avatar,
+  Stack,
+  IconButton,
+  Button,
+  Chip,
 } from '@mui/material';
 import { AccountBalanceWallet, Menu as MenuIcon, Login as LoginIcon } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
@@ -8,7 +15,7 @@ import {
   appBarStyle,
   logoAvatarStyle,
   logoTypographyStyle,
-  userChipStyle
+  userChipStyle,
 } from '../../styles/layoutStyles';
 
 interface HeaderProps {
@@ -32,12 +39,7 @@ const Header = ({ isAuthenticated, isMobile, handleDrawerToggle }: HeaderProps) 
     >
       <Toolbar sx={{ py: isMobile ? 1 : 1.5 }}>
         {(isMobile || isAuthenticated) && (
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2 }}
-          >
+          <IconButton color="inherit" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
         )}
@@ -45,16 +47,12 @@ const Header = ({ isAuthenticated, isMobile, handleDrawerToggle }: HeaderProps) 
           <Avatar
             sx={{
               ...logoAvatarStyle(),
-              display: { xs: 'none', md: 'flex' }
+              display: { xs: 'none', md: 'flex' },
             }}
           >
             <AccountBalanceWallet fontSize="small" />
           </Avatar>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={logoTypographyStyle(isMobile)}
-          >
+          <Typography variant="h6" component="div" sx={logoTypographyStyle(isMobile)}>
             금융 관리 시스템
           </Typography>
         </Stack>

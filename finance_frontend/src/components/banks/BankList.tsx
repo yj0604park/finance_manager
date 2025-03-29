@@ -44,9 +44,17 @@ interface BankRowProps {
   onToggle: () => void;
 }
 
-const BankRow: React.FC<BankRowProps> = ({ bank, accounts, onEdit, onDelete, onAddAccount, open, onToggle }) => {
+const BankRow: React.FC<BankRowProps> = ({
+  bank,
+  accounts,
+  onEdit,
+  onDelete,
+  onAddAccount,
+  open,
+  onToggle,
+}) => {
   const navigate = useNavigate();
-  const bankAccounts = accounts.filter(account => account.bank === bank.id);
+  const bankAccounts = accounts.filter((account) => account.bank === bank.id);
 
   const handleBankNameClick = () => {
     navigate(`/accounts?bankId=${bank.id}`);
@@ -56,11 +64,7 @@ const BankRow: React.FC<BankRowProps> = ({ bank, accounts, onEdit, onDelete, onA
     <>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
-          <IconButton
-            size="small"
-            onClick={onToggle}
-            disabled={bankAccounts.length === 0}
-          >
+          <IconButton size="small" onClick={onToggle} disabled={bankAccounts.length === 0}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -71,16 +75,14 @@ const BankRow: React.FC<BankRowProps> = ({ bank, accounts, onEdit, onDelete, onA
             onClick={handleBankNameClick}
             sx={{
               textDecoration: 'none',
-              '&:hover': { textDecoration: 'underline', cursor: 'pointer' }
+              '&:hover': { textDecoration: 'underline', cursor: 'pointer' },
             }}
           >
             {bank.name}
           </Link>
         </TableCell>
         <TableCell>{bank.country}</TableCell>
-        <TableCell align="right">
-          {parseFloat(bank.amount).toLocaleString()}원
-        </TableCell>
+        <TableCell align="right">{parseFloat(bank.amount).toLocaleString()}원</TableCell>
         <TableCell align="center">
           <Tooltip title="계좌 추가">
             <IconButton
@@ -93,21 +95,12 @@ const BankRow: React.FC<BankRowProps> = ({ bank, accounts, onEdit, onDelete, onA
             </IconButton>
           </Tooltip>
           <Tooltip title="수정">
-            <IconButton
-              size="small"
-              onClick={() => onEdit(bank)}
-              color="primary"
-              sx={{ mr: 1 }}
-            >
+            <IconButton size="small" onClick={() => onEdit(bank)} color="primary" sx={{ mr: 1 }}>
               <EditIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="삭제">
-            <IconButton
-              size="small"
-              onClick={() => onDelete(bank)}
-              color="error"
-            >
+            <IconButton size="small" onClick={() => onDelete(bank)} color="error">
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -147,15 +140,22 @@ const BankRow: React.FC<BankRowProps> = ({ bank, accounts, onEdit, onDelete, onA
   );
 };
 
-const BankList: React.FC<BankListProps> = ({ banks, accounts, onEdit, onDelete, onAdd, onAddAccount }) => {
+const BankList: React.FC<BankListProps> = ({
+  banks,
+  accounts,
+  onEdit,
+  onDelete,
+  onAdd,
+  onAddAccount,
+}) => {
   const [openRows, setOpenRows] = React.useState<{ [key: number]: boolean }>({});
   const [allOpen, setAllOpen] = React.useState(true);
 
   // 초기 상태 설정: 모든 은행의 계좌를 보여줌
   React.useEffect(() => {
     const initialOpenRows: { [key: number]: boolean } = {};
-    banks.forEach(bank => {
-      const hasAccounts = accounts.some(account => account.bank === bank.id);
+    banks.forEach((bank) => {
+      const hasAccounts = accounts.some((account) => account.bank === bank.id);
       initialOpenRows[bank.id] = hasAccounts;
     });
     setOpenRows(initialOpenRows);
@@ -163,8 +163,8 @@ const BankList: React.FC<BankListProps> = ({ banks, accounts, onEdit, onDelete, 
 
   const handleToggleAll = () => {
     const newOpenRows: { [key: number]: boolean } = {};
-    banks.forEach(bank => {
-      const hasAccounts = accounts.some(account => account.bank === bank.id);
+    banks.forEach((bank) => {
+      const hasAccounts = accounts.some((account) => account.bank === bank.id);
       newOpenRows[bank.id] = hasAccounts && !allOpen;
     });
     setOpenRows(newOpenRows);
@@ -172,9 +172,9 @@ const BankList: React.FC<BankListProps> = ({ banks, accounts, onEdit, onDelete, 
   };
 
   const handleToggleRow = (bankId: number) => {
-    setOpenRows(prev => ({
+    setOpenRows((prev) => ({
       ...prev,
-      [bankId]: !prev[bankId]
+      [bankId]: !prev[bankId],
     }));
   };
 
@@ -195,7 +195,7 @@ const BankList: React.FC<BankListProps> = ({ banks, accounts, onEdit, onDelete, 
           <TableHead>
             <TableRow>
               <TableCell>
-                <Tooltip title={allOpen ? "모두 접기" : "모두 열기"}>
+                <Tooltip title={allOpen ? '모두 접기' : '모두 열기'}>
                   <IconButton onClick={handleToggleAll} size="small">
                     {allOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                   </IconButton>

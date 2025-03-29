@@ -65,7 +65,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
 
       // 선택된 품목이 있으면 설정
       if (transaction.retailer) {
-        const selectedRetailer = retailers.find(r => r.id === transaction.retailer);
+        const selectedRetailer = retailers.find((r) => r.id === transaction.retailer);
         if (selectedRetailer) {
           // 여기서 품목 관련 설정을 할 수 있음 (현재는 품목과 판매처 간 직접적인 연결이 없음)
         }
@@ -84,8 +84,9 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
   }, [transaction, accounts, items, retailers]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }> |
-    { target: { name?: string; value: unknown } }
+    e:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | { target: { name?: string; value: unknown } }
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -135,12 +136,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
             />
             <FormControl fullWidth required>
               <InputLabel>계좌</InputLabel>
-              <Select
-                name="account"
-                value={formData.account}
-                onChange={handleChange}
-                label="계좌"
-              >
+              <Select name="account" value={formData.account} onChange={handleChange} label="계좌">
                 {accounts.map((account) => (
                   <MenuItem key={account.id} value={account.id}>
                     {account.name}
@@ -165,11 +161,9 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
             <Autocomplete
               options={retailers}
               getOptionLabel={(option) => option.name}
-              value={retailers.find(r => r.id === formData.retailer) || null}
+              value={retailers.find((r) => r.id === formData.retailer) || null}
               onChange={handleRetailerChange}
-              renderInput={(params) => (
-                <TextField {...params} label="판매처" fullWidth />
-              )}
+              renderInput={(params) => <TextField {...params} label="판매처" fullWidth />}
             />
 
             {/* 품목 선택 */}
@@ -178,9 +172,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({
               getOptionLabel={(option) => option.name}
               value={selectedItem}
               onChange={handleItemChange}
-              renderInput={(params) => (
-                <TextField {...params} label="품목" fullWidth />
-              )}
+              renderInput={(params) => <TextField {...params} label="품목" fullWidth />}
             />
 
             <TextField

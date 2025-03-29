@@ -4,9 +4,9 @@
 /* eslint-disable */
 import type { CountryEnum } from './CountryEnum';
 export type PatchedBank = {
-    readonly id?: number;
-    amount?: string;
-    name?: string;
-    country?: CountryEnum;
-    user?: number;
+  readonly id?: number;
+  amount?: string;
+  name?: string;
+  country?: CountryEnum;
+  user?: number;
 };

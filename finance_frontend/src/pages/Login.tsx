@@ -1,8 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Box, TextField, Button, Typography, Container,
-  Alert, Avatar, InputAdornment, IconButton, Card, Divider
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Alert,
+  Avatar,
+  InputAdornment,
+  IconButton,
+  Card,
+  Divider,
 } from '@mui/material';
 import { Visibility, VisibilityOff, LockOutlined, AccountCircle } from '@mui/icons-material';
 import { RestAuthService } from '../api/services/RestAuthService';
@@ -55,7 +64,11 @@ const Login = () => {
       if (err && typeof err === 'object' && 'name' in err && err.name === 'ApiError') {
         const apiError = err as ApiError;
 
-        if (apiError.body && apiError.body.non_field_errors && apiError.body.non_field_errors.length > 0) {
+        if (
+          apiError.body &&
+          apiError.body.non_field_errors &&
+          apiError.body.non_field_errors.length > 0
+        ) {
           // API에서 반환된 실제 에러 메시지 표시
           setError(apiError.body.non_field_errors[0]);
         } else {
@@ -121,7 +134,7 @@ const Login = () => {
               fullWidth
               name="password"
               label="비밀번호"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               id="password"
               autoComplete="current-password"
               value={password}
