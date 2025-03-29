@@ -12,6 +12,7 @@ import { useAuth } from '../contexts/AuthContext';
 import Cards from '../pages/Cards';
 import Assets from '../pages/Assets';
 import Retailers from '../pages/Retailers';
+import ItemsPage from '../pages/ItemsPage';
 
 // 인증이 필요한 라우트를 보호하는 컴포넌트
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -58,6 +59,14 @@ const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <Retailers />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/items"
+        element={
+          <ProtectedRoute>
+            <ItemsPage />
           </ProtectedRoute>
         }
       />

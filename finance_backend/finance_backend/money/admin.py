@@ -63,7 +63,7 @@ class AccountSnapshotAdmin(admin.ModelAdmin):
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ("id", "code", "name", "currency")
+    list_display = ("id", "code", "name")
 
 
 @admin.register(ItemTransaction)

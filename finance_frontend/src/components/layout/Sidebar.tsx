@@ -8,6 +8,7 @@ import {
   ExpandMore,
   ExitToApp as LogoutIcon,
   AttachMoney as MoneyIcon,
+  Inventory as InventoryIcon,
   Settings as SettingsIcon,
   Receipt as TransactionIcon,
   Store as StoreIcon,
@@ -60,6 +61,11 @@ const navItems: NavItem[] = [
     title: '판매처 관리',
     path: '/retailers',
     icon: <StoreIcon />,
+  },
+  {
+    title: '아이템 관리',
+    path: '/items',
+    icon: <InventoryIcon />,
   },
   {
     title: '거래',

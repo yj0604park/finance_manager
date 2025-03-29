@@ -45,13 +45,9 @@ class AccountDetailSerializer(serializers.ModelSerializer[Account]):
         depth = 1
 
 
-class AccountCreateSerializer(serializers.ModelSerializer[Account]):
-    class Meta:
-        model = Account
-        fields = "__all__"
-
-
 class AccountSnapshotSerializer(serializers.ModelSerializer[AccountSnapshot]):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = AccountSnapshot
         fields = "__all__"

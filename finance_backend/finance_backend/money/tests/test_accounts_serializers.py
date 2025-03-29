@@ -6,13 +6,12 @@ from rest_framework.request import Request
 from rest_framework.test import APIRequestFactory
 
 from finance_backend.money.api.serializers.accounts_serializers import (
-    AccountCreateSerializer,
     AccountDetailSerializer,
     AccountSerializer,
     AccountSnapshotSerializer,
     BankSerializer,
 )
-from finance_backend.money.choices import AccountType, CurrencyType
+from finance_backend.money.choices import CurrencyType
 from finance_backend.money.models.accounts import Account, AccountSnapshot, Bank
 from finance_backend.money.models.items import Item
 from finance_backend.users.tests.factories import UserFactory
@@ -82,24 +81,6 @@ class AccountsSerializersTest(TestCase):
         assert data["bank"]["id"] == self.bank.id
         assert data["bank"]["name"] == self.bank.name
         assert data["bank"]["amount"] == str(self.bank.amount)
-
-    def test_account_create_serializer(self):
-        data = {
-            "user": self.user.id,
-            "bank": self.bank.id,
-            "name": "New Account",
-            "currency": CurrencyType.USD,
-            "amount": "0.00",
-            "account_type": "CHECKING_ACCOUNT",
-        }
-        serializer = AccountCreateSerializer(data=data)
-        assert serializer.is_valid()
-        account = serializer.save()
-        assert account.name == "New Account"
-        assert account.bank == self.bank
-        assert account.currency == CurrencyType.USD
-        assert account.amount == Decimal("0.00")
-        assert account.account_type == AccountType.CHECKING_ACCOUNT
 
     def test_account_snapshot_serializer(self):
         serializer = AccountSnapshotSerializer(self.snapshot)
