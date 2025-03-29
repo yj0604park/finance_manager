@@ -94,7 +94,7 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
         bank: banks[0]?.id || 0
       }));
     }
-  }, [banks, open, account, bank, formData.bank]);
+  }, [banks, open, account, bank]);
 
   // 폼 데이터 변경 시 유효성 검사
   useEffect(() => {
