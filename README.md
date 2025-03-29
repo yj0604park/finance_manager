@@ -1,4 +1,14 @@
-# 금융 내역 관리 시스템 요구사항
+# 금융 관리 시스템
+
+[![CI](https://github.com/yourusername/finance/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/finance/actions/workflows/ci.yml)
+[![Test](https://github.com/yourusername/finance/actions/workflows/test.yml/badge.svg)](https://github.com/yourusername/finance/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/yourusername/finance/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/finance)
+
+현대적인 금융 관리 시스템을 위한 웹 애플리케이션입니다.
+
+## 프로젝트 구조
+
+## 금융 내역 관리 시스템 요구사항
 
 ## 1. 사전 정의된 거래 유형 (Predefined Transaction Types)
 
