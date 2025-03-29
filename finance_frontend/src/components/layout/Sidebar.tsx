@@ -12,6 +12,9 @@ import {
   Settings as SettingsIcon,
   Receipt as TransactionIcon,
   Store as StoreIcon,
+  AccountBalanceWallet as AccountsIcon,
+  Business as AssetIcon,
+  MonetizationOn as SalaryIcon,
 } from '@mui/icons-material';
 import {
   Box,
@@ -55,7 +58,7 @@ const navItems: NavItem[] = [
   {
     title: '계좌 관리',
     path: '/accounts',
-    icon: <CardIcon />,
+    icon: <AccountsIcon />,
   },
   {
     title: '판매처 관리',
@@ -92,7 +95,12 @@ const navItems: NavItem[] = [
   {
     title: '자산 관리',
     path: '/assets',
-    icon: <MoneyIcon />,
+    icon: <AssetIcon />,
+  },
+  {
+    title: '급여 관리',
+    path: '/salaries',
+    icon: <SalaryIcon />,
   },
   {
     title: '설정',

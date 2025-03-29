@@ -2,8 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 
-import type { CurrencyToEnum } from './CurrencyToEnum';
-
 /**
  * 아이템 가격 모델
  */
