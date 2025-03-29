@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+import React from 'react';
 
 /**
  * 라우터 모킹
@@ -8,16 +9,20 @@ import { vi } from 'vitest';
 export const setupRouterMocks = () => {
   const mockNavigate = vi.fn();
 
-  vi.mock('react-router-dom', () => ({
-    useNavigate: () => mockNavigate,
-    useParams: () => ({}),
-    useLocation: () => ({ search: '' }),
-    Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
-      <a href={to}>{children}</a>
-    )
-  }));
+  vi.mock('react-router-dom', async () => {
+    const actual = await import('react-router-dom');
+    return {
+      ...actual,
+      useNavigate: () => mockNavigate,
+      useParams: () => ({}),
+      useLocation: () => ({ search: '' }),
+      Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
+        <a href={to}>{children}</a>
+      )
+    };
+  });
 
-  return { mockNavigate };
+  return mockNavigate;
 };
 
 /**

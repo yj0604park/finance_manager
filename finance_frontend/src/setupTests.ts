@@ -1,8 +1,25 @@
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
+import { setupMaterialUIMocks, setupMuiIconsMocks } from './test/mocks/mui';
+import { setupRouterMocks } from './test/mocks/components';
 
-// 테스트를 위한 전역 설정
-// 필요한 경우 global mock 설정
+// 모든 테스트 전 설정
+beforeAll(() => {
+  // Material UI 컴포넌트 모킹
+  setupMaterialUIMocks();
+  setupMuiIconsMocks();
+
+  // 라우터 모킹
+  setupRouterMocks();
+
+  console.log('[테스트] 테스트 환경이 초기화되었습니다.');
+});
+
+// 각 테스트 사이에 모킹 상태 리셋
+afterEach(() => {
+  vi.clearAllMocks();
+  document.body.innerHTML = '<div></div>';
+});
 
 // Material UI 컴포넌트 모킹
 vi.mock('@mui/material', () => {
@@ -84,32 +101,3 @@ vi.mock('@apollo/client', () => {
     useMutation: vi.fn().mockReturnValue([vi.fn(), { loading: false }]),
   };
 });
-
-// API 서비스 모킹
-vi.mock('./api/services/TransactionsService', () => ({
-  TransactionsService: {
-    transactionsList: vi.fn().mockResolvedValue([]),
-    transactionsCreate: vi.fn(),
-    transactionsUpdate: vi.fn(),
-    transactionsDestroy: vi.fn(),
-    transactionsRetrieve: vi.fn(),
-  },
-}));
-
-vi.mock('./api/services/AccountsService', () => ({
-  AccountsService: {
-    accountsList: vi.fn().mockResolvedValue([]),
-  },
-}));
-
-vi.mock('./api/services/BanksService', () => ({
-  BanksService: {
-    banksList: vi.fn().mockResolvedValue([]),
-  },
-}));
-
-vi.mock('./api/services/RetailersService', () => ({
-  RetailersService: {
-    retailersList: vi.fn().mockResolvedValue([]),
-  },
-}));

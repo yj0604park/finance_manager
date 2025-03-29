@@ -1,17 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import App from './App';
-
-// Material UI 모킹을 만들기
-const mockMui = (componentName: string) => {
-  return ({ children, ...props }: { children: React.ReactNode;[key: string]: any }) => {
-    if (props['aria-label']) {
-      return <div role="button" aria-label={props['aria-label']}>{children}</div>;
-    }
-    return <div data-testid={componentName}>{children}</div>;
-  };
-};
 
 // MUI 모킹
 vi.mock('@mui/material', () => {

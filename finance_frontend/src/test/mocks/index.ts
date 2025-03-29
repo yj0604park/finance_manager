@@ -1,30 +1,34 @@
 import { vi } from 'vitest';
 import { setupMaterialUIMocks, setupMuiIconsMocks } from './mui';
-import { setupApiMocks, mockApiData } from './api';
 import { setupRouterMocks, setupTransactionModalMock, setupAccountModalMock } from './components';
+import { mockApiData as _mockApiData, setupApiMocks as _setupApiMocks } from './api';
+import { Transaction } from '../../api/models/Transaction';
+import { Account } from '../../api/models/Account';
+import { Bank } from '../../api/models/Bank';
+import { Retailer } from '../../api/models/Retailer';
 
 // Material UI 모킹
 export { setupMaterialUIMocks, setupMuiIconsMocks } from './mui';
 
-// API 서비스 모킹
-export { setupApiMocks, mockApiData } from './api';
-
 // 컴포넌트 모킹
 export { setupRouterMocks, setupTransactionModalMock, setupAccountModalMock } from './components';
+
+// API 모킹
+export const mockApiData = _mockApiData;
+export const setupApiMocks = _setupApiMocks;
 
 /**
  * 테스트 모킹 세팅
  *
  * 테스트에 필요한 모든 모킹을 한번에 설정합니다.
- * 모든 vi.mock 호출은 파일 최상단에서 호이스팅되어 실행됩니다.
  */
 export const setupTestMocks = () => {
-  // API 서비스 모킹
-  setupApiMocks();
-
   // Material UI 모킹
   setupMaterialUIMocks();
   setupMuiIconsMocks();
+
+  // API 모킹
+  _setupApiMocks();
 };
 
 /**
@@ -38,4 +42,34 @@ export const resetTestEnv = () => {
 
   // 모든 모킹 초기화
   vi.clearAllMocks();
+};
+
+/**
+ * API 모킹 헬퍼 함수
+ *
+ * 개별 테스트 파일에서 API 모킹을 쉽게 설정할 수 있도록 도와주는 유틸리티 함수
+ * 이 함수는 setupApiMocks와 충돌하므로 필요할 때만 사용하세요.
+ */
+export const setupCustomApiMocks = <T extends Record<string, any>>(services: T): T => {
+  // 모킹 초기화
+  vi.clearAllMocks();
+
+  // 서비스가 없으면 그대로 반환
+  if (!services) return services;
+
+  // 각 서비스의 모든 메서드 모킹 설정
+  Object.entries(services).forEach(([serviceName, mockImplementation]) => {
+    if (mockImplementation && typeof mockImplementation === 'object') {
+      Object.entries(mockImplementation).forEach(([methodName, mockFn]) => {
+        if (typeof mockFn === 'function') {
+          const service = services[serviceName];
+          if (service && service[methodName]) {
+            vi.mocked(service[methodName]).mockImplementation(mockFn);
+          }
+        }
+      });
+    }
+  });
+
+  return services;
 };
