@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./dashboard
+        working-directory: ./finance_frontend
 
     strategy:
       matrix:
@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
-          cache-dependency-path: "./dashboard/yarn.lock"
+          cache-dependency-path: "./finance_frontend/yarn.lock"
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile

@@ -30,8 +30,22 @@ vi.mock('@mui/material', () => {
     Grid: vi.fn(),
     Chip: vi.fn(),
     InputAdornment: vi.fn(),
+    Tooltip: vi.fn(),
+    IconButton: vi.fn(),
+    Table: vi.fn(),
+    TableBody: vi.fn(),
+    TableCell: vi.fn(),
+    TableContainer: vi.fn(),
+    TableHead: vi.fn(),
+    TableRow: vi.fn(),
+    Paper: vi.fn(),
   };
 });
+
+// Grid2 모킹
+vi.mock('@mui/material/Unstable_Grid2', () => ({
+  default: vi.fn(),
+}));
 
 // Material UI 아이콘 모킹
 vi.mock('@mui/icons-material/ArrowBack', () => ({
@@ -39,6 +53,18 @@ vi.mock('@mui/icons-material/ArrowBack', () => ({
 }));
 
 vi.mock('@mui/icons-material/Add', () => ({
+  default: vi.fn(),
+}));
+
+vi.mock('@mui/icons-material/Edit', () => ({
+  default: vi.fn(),
+}));
+
+vi.mock('@mui/icons-material/Delete', () => ({
+  default: vi.fn(),
+}));
+
+vi.mock('@mui/icons-material/Receipt', () => ({
   default: vi.fn(),
 }));
 
@@ -63,3 +89,32 @@ vi.mock('@apollo/client', () => {
     useMutation: vi.fn().mockReturnValue([vi.fn(), { loading: false }]),
   };
 });
+
+// API 서비스 모킹
+vi.mock('./api/services/TransactionsService', () => ({
+  TransactionsService: {
+    transactionsList: vi.fn().mockResolvedValue([]),
+    transactionsCreate: vi.fn(),
+    transactionsUpdate: vi.fn(),
+    transactionsDestroy: vi.fn(),
+    transactionsRetrieve: vi.fn(),
+  },
+}));
+
+vi.mock('./api/services/AccountsService', () => ({
+  AccountsService: {
+    accountsList: vi.fn().mockResolvedValue([]),
+  },
+}));
+
+vi.mock('./api/services/BanksService', () => ({
+  BanksService: {
+    banksList: vi.fn().mockResolvedValue([]),
+  },
+}));
+
+vi.mock('./api/services/RetailersService', () => ({
+  RetailersService: {
+    retailersList: vi.fn().mockResolvedValue([]),
+  },
+}));
