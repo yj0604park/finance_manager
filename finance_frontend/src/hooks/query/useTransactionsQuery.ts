@@ -1,12 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { TransactionsService } from '../../api/services/TransactionsService';
 import { Transaction } from '../../api/models/Transaction';
+import { TransactionFilters, FilterFunction } from '../../types/filter';
 
 // 쿼리 키
 export const transactionsKeys = {
   all: ['transactions'] as const,
   lists: () => [...transactionsKeys.all, 'list'] as const,
-  list: (filters: any) => [...transactionsKeys.lists(), filters] as const,
+  list: (filters: TransactionFilters) => [...transactionsKeys.lists(), filters] as const,
   details: () => [...transactionsKeys.all, 'detail'] as const,
   detail: (id: number) => [...transactionsKeys.details(), id] as const,
 };
@@ -14,12 +15,18 @@ export const transactionsKeys = {
 /**
  * 거래 내역 목록 조회 쿼리 훅
  * @param params 필터링 파라미터
+ * @param filterFn 추가 필터링 함수 (클라이언트 측 필터링)
  */
-export const useTransactionsQuery = (params?: any) => {
+export const useTransactionsQuery = (params?: TransactionFilters, filterFn?: FilterFunction<Transaction>) => {
   return useQuery({
     queryKey: transactionsKeys.list(params || {}),
     queryFn: async () => {
       const transactions = await TransactionsService.transactionsList();
+
+      // 클라이언트 측 필터링 적용 (필요한 경우)
+      if (filterFn) {
+        return transactions.filter(filterFn);
+      }
 
       // 응답이 빈 배열이더라도 에러로 처리하지 않고 그대로 반환
       return transactions;
