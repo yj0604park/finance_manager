@@ -73,7 +73,7 @@ export interface FilterCondition {
 /**
  * 모달 상태
  */
-export interface ModalState<T = any> {
+export interface ModalState<T = unknown> {
   open: boolean;
   data?: T | null;
   mode?: 'create' | 'edit' | 'view' | 'delete';

@@ -25,12 +25,12 @@ interface ApiError {
   statusText: string;
   body: {
     non_field_errors?: string[];
-    [key: string]: any;
+    [key: string]: unknown;
   };
   request: {
     method: string;
     url: string;
-    body: any;
+    body: unknown;
     mediaType: string;
   };
   name: string;

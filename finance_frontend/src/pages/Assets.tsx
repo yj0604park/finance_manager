@@ -146,7 +146,7 @@ const Assets: React.FC = () => {
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value: any) => formatCurrency(value)} />
+                      <Tooltip formatter={(value: number) => formatCurrency(value)} />
                       <Legend />
                     </PieChart>
                   </ResponsiveContainer>

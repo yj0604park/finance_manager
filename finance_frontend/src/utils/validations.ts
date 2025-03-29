@@ -12,7 +12,7 @@ export type ValidationResult = {
 };
 
 // 일반적인 유효성 검사 함수들
-export const isRequired = (value: any, fieldName: string): ValidationError | null => {
+export const isRequired = (value: unknown, fieldName: string): ValidationError | null => {
   if (value === undefined || value === null || value === '') {
     return { field: fieldName, message: `${fieldName}은(는) 필수 항목입니다.` };
   }
@@ -114,7 +114,11 @@ export const validateAccountForm = (data: Partial<Account>): ValidationResult =>
 };
 
 // 특정 필드 여러 검증 규칙 적용
-export const validateField = (value: any, fieldName: string, validations: ((value: any, fieldName: string) => ValidationError | null)[]): ValidationError | null => {
+export const validateField = (
+  value: unknown,
+  fieldName: string,
+  validations: ((value: unknown, fieldName: string) => ValidationError | null)[]
+): ValidationError | null => {
   for (const validation of validations) {
     const error = validation(value, fieldName);
     if (error) return error;

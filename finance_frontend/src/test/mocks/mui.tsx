@@ -122,8 +122,7 @@ export const setupMaterialUIMocks = () => {
         <span data-color={color}>{label}</span>,
       Tooltip: ({ title, children }: { title: string; children: React.ReactNode }) =>
         <div title={title}>{children}</div>,
-      Link: ({ component, to, onClick, children, ...props }: {
-        component?: string;
+      Link: ({ to, onClick, children, ...props }: {
         to?: string;
         onClick?: () => void;
         children: React.ReactNode;

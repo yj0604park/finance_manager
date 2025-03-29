@@ -26,12 +26,13 @@ export function renderWithProviders(ui: React.ReactElement, options = {}) {
  *
  * 특정 API 서비스의 메서드를 모킹합니다.
  */
-export function mockApiService<T extends Record<K, any>, K extends keyof T>(
+export function mockApiService<T, K extends keyof T>(
   service: T,
   methodName: K,
-  mockImplementation: (...args: any[]) => any
+  mockImplementation: (...args: unknown[]) => unknown
 ) {
-  vi.mocked(service[methodName]).mockImplementation(mockImplementation);
+  const mockedService = vi.mocked(service);
+  mockedService[methodName] = vi.fn(mockImplementation) as unknown as T[K];
   return service;
 }
 
