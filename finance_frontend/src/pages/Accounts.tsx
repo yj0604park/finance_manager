@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Box, Alert, Snackbar } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 import AccountList from '../components/accounts/AccountList';
 import AccountFormModal from '../components/accounts/AccountFormModal';
 import { Account } from '../api/models/Account';
@@ -8,6 +9,10 @@ import { AccountsService } from '../api/services/AccountsService';
 import { BanksService } from '../api/services/BanksService';
 
 const Accounts: React.FC = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const bankIdFromUrl = queryParams.get('bankId');
+
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [banks, setBanks] = useState<Bank[]>([]);
   const [loading, setLoading] = useState(true);
@@ -132,9 +137,11 @@ const Accounts: React.FC = () => {
       <Box sx={{ my: 4 }}>
         <AccountList
           accounts={accounts}
+          banks={banks}
           onEdit={handleEdit}
           onDelete={handleDelete}
           onAdd={handleAdd}
+          defaultBankId={bankIdFromUrl}
         />
         <AccountFormModal
           open={modalOpen}

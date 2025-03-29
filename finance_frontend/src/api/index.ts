@@ -62,7 +62,7 @@ export { IncomesService } from './services/IncomesService';
 export { ItemPricesService } from './services/ItemPricesService';
 export { ItemsService } from './services/ItemsService';
 export { ItemTransactionsService } from './services/ItemTransactionsService';
-export { ReatilersService } from './services/ReatilersService';
+export { RetailersService } from './services/RetailersService';
 export { RestAuthService } from './services/RestAuthService';
 export { SchemaService } from './services/SchemaService';
 export { TransactionsService } from './services/TransactionsService';

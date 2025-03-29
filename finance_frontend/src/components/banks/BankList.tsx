@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Table,
   TableBody,
@@ -12,6 +13,7 @@ import {
   Typography,
   Box,
   Collapse,
+  Link,
 } from '@mui/material';
 import {
   Edit as EditIcon,
@@ -43,7 +45,12 @@ interface BankRowProps {
 }
 
 const BankRow: React.FC<BankRowProps> = ({ bank, accounts, onEdit, onDelete, onAddAccount, open, onToggle }) => {
+  const navigate = useNavigate();
   const bankAccounts = accounts.filter(account => account.bank === bank.id);
+
+  const handleBankNameClick = () => {
+    navigate(`/accounts?bankId=${bank.id}`);
+  };
 
   return (
     <>
@@ -57,7 +64,19 @@ const BankRow: React.FC<BankRowProps> = ({ bank, accounts, onEdit, onDelete, onA
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>{bank.name}</TableCell>
+        <TableCell>
+          <Link
+            component="button"
+            variant="body2"
+            onClick={handleBankNameClick}
+            sx={{
+              textDecoration: 'none',
+              '&:hover': { textDecoration: 'underline', cursor: 'pointer' }
+            }}
+          >
+            {bank.name}
+          </Link>
+        </TableCell>
         <TableCell>{bank.country}</TableCell>
         <TableCell align="right">
           {parseFloat(bank.amount).toLocaleString()}원
@@ -98,9 +117,6 @@ const BankRow: React.FC<BankRowProps> = ({ bank, accounts, onEdit, onDelete, onA
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                계좌 목록
-              </Typography>
               <Table size="small">
                 <TableHead>
                   <TableRow>

@@ -8,7 +8,8 @@ import {
   ExitToApp as LogoutIcon,
   AttachMoney as MoneyIcon,
   Settings as SettingsIcon,
-  Receipt as TransactionIcon
+  Receipt as TransactionIcon,
+  Store as StoreIcon
 } from '@mui/icons-material';
 import {
   Box,
@@ -49,6 +50,11 @@ const navItems: NavItem[] = [
     title: '계좌 관리',
     path: '/accounts',
     icon: <CardIcon />
+  },
+  {
+    title: '판매처 관리',
+    path: '/retailers',
+    icon: <StoreIcon />
   },
   {
     title: '거래',
