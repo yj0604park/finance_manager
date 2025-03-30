@@ -8,13 +8,8 @@ import LoadingState from '../components/common/LoadingState';
 import ErrorState from '../components/common/ErrorState';
 import { useModal } from '../hooks/useModal';
 import { useNotification } from '../hooks/useNotification';
-import {
-  useBanksQuery,
-  useCreateBankMutation,
-  useUpdateBankMutation,
-  useDeleteBankMutation
-} from '../hooks/query/useBanksQuery';
-import { useAccountsQuery, useCreateAccountMutation } from '../hooks/query/useAccountsQuery';
+import { useBanks, useCreateBank, useUpdateBank, useDeleteBank } from '../hooks/api/useBanks';
+import { useAccounts, useCreateAccount } from '../hooks/api/useAccounts';
 import BankListAdapter from '../components/adapters/BankListAdapter';
 import BankFormModalAdapter from '../components/adapters/BankFormModalAdapter';
 import AccountFormModalAdapter from '../components/adapters/AccountFormModalAdapter';
@@ -22,12 +17,12 @@ import { convertBankToApi } from '../utils/typeConverters';
 
 const Banks: React.FC = () => {
   // React Query 훅 사용
-  const { data: apiBanks, isLoading, isError, error } = useBanksQuery();
-  const { data: accounts = [] } = useAccountsQuery();
-  const createBankMutation = useCreateBankMutation();
-  const updateBankMutation = useUpdateBankMutation();
-  const deleteBankMutation = useDeleteBankMutation();
-  const createAccountMutation = useCreateAccountMutation();
+  const { data: apiBanks, isLoading, isError, error } = useBanks();
+  const { data: accounts = [] } = useAccounts();
+  const createBankMutation = useCreateBank();
+  const updateBankMutation = useUpdateBank();
+  const deleteBankMutation = useDeleteBank();
+  const createAccountMutation = useCreateAccount();
 
   const { notification, showNotification, hideNotification } = useNotification();
 

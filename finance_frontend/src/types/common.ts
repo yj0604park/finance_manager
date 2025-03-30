@@ -4,7 +4,6 @@
  */
 export interface BaseEntity {
   id: number;
-  user?: number; // 로그인 사용자 ID
 }
 
 /**

@@ -23,7 +23,6 @@ describe('거래내역 API 테스트', () => {
       created_at: '2023-03-01T09:00:00Z',
       updated_at: '2023-03-01T09:00:00Z',
       amount: '10000',
-      user: 1,
       account: 1,
       transaction_type: TransactionTypeEnum.ETC_EXPENSE,
       note: '테스트 거래내역'
@@ -34,7 +33,6 @@ describe('거래내역 API 테스트', () => {
       created_at: '2023-03-02T09:00:00Z',
       updated_at: '2023-03-02T09:00:00Z',
       amount: '20000',
-      user: 1,
       account: 2,
       transaction_type: TransactionTypeEnum.SALARY,
       note: '테스트 거래내역 2'
@@ -47,7 +45,6 @@ describe('거래내역 API 테스트', () => {
     created_at: '2023-03-05T09:00:00Z',
     updated_at: '2023-03-05T09:00:00Z',
     amount: '10000',
-    user: 1,
     account: 2,
     transaction_type: TransactionTypeEnum.ETC_EXPENSE,
     note: '테스트 거래내역 상세'
@@ -59,7 +56,6 @@ describe('거래내역 API 테스트', () => {
     created_at: '2023-03-15T09:00:00Z',
     updated_at: '2023-03-15T09:00:00Z',
     amount: '50000',
-    user: 1,
     account: 2,
     transaction_type: TransactionTypeEnum.ETC_EXPENSE,
     note: '새 트랜잭션'
@@ -99,7 +95,6 @@ describe('거래내역 API 테스트', () => {
     const newTransaction: Partial<Transaction> = {
       date: '2023-03-15',
       amount: '50000',
-      user: 1,
       account: 2,
       note: '새 트랜잭션'
     };

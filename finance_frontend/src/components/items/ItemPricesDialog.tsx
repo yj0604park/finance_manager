@@ -27,8 +27,9 @@ import {
   Delete as DeleteIcon,
   Close as CloseIcon,
 } from '@mui/icons-material';
-import { useItemPricesByItemQuery, useCreateItemPriceMutation, useUpdateItemPriceMutation, useDeleteItemPriceMutation } from '../../hooks/query/useItemPricesQuery';
-import { CreateItemPriceDto, UpdateItemPriceDto } from '../../api/models/ItemPrice';
+import { useItemPricesByItem, useCreateItemPrice, useUpdateItemPrice, useDeleteItemPrice } from '../../hooks/api/useItemPrices';
+import { ItemPrice } from '../../api/models/ItemPrice';
+import { CurrencyToEnum } from '../../api/models/CurrencyToEnum';
 
 interface ItemPricesDialogProps {
   open: boolean;
@@ -46,10 +47,10 @@ const ItemPricesDialog: React.FC<ItemPricesDialogProps> = ({
   // 상태 관리
   const [openForm, setOpenForm] = useState(false);
   const [selectedPriceId, setSelectedPriceId] = useState<number | null>(null);
-  const [formData, setFormData] = useState<CreateItemPriceDto>({
+  const [formData, setFormData] = useState<Partial<ItemPrice>>({
     item: itemId,
-    price: 0,
-    currency: 'KRW',
+    price: '0',
+    currency: CurrencyToEnum.KRW,
     date: new Date().toISOString().split('T')[0],
     source: '',
     note: '',
@@ -61,17 +62,17 @@ const ItemPricesDialog: React.FC<ItemPricesDialogProps> = ({
   });
 
   // 쿼리 및 뮤테이션 훅 사용
-  const { data: prices, isLoading } = useItemPricesByItemQuery(itemId);
-  const createPriceMutation = useCreateItemPriceMutation();
-  const updatePriceMutation = useUpdateItemPriceMutation();
-  const deletePriceMutation = useDeleteItemPriceMutation(itemId);
+  const { data: prices, isLoading } = useItemPricesByItem(itemId);
+  const createPriceMutation = useCreateItemPrice();
+  const updatePriceMutation = useUpdateItemPrice();
+  const deletePriceMutation = useDeleteItemPrice();
 
   // 폼 초기화
   const resetForm = () => {
     setFormData({
       item: itemId,
-      price: 0,
-      currency: 'KRW',
+      price: '0',
+      currency: CurrencyToEnum.KRW,
       date: new Date().toISOString().split('T')[0],
       source: '',
       note: '',
@@ -80,13 +81,13 @@ const ItemPricesDialog: React.FC<ItemPricesDialogProps> = ({
   };
 
   // 폼 열기
-  const handleOpenForm = (price?: { id: number } & UpdateItemPriceDto) => {
+  const handleOpenForm = (price?: ItemPrice) => {
     if (price) {
       setSelectedPriceId(price.id);
       setFormData({
         item: itemId,
-        price: price.price || 0,
-        currency: price.currency || 'KRW',
+        price: price.price || '0',
+        currency: price.currency || CurrencyToEnum.KRW,
         date: price.date || new Date().toISOString().split('T')[0],
         source: price.source || '',
         note: price.note || '',
@@ -106,7 +107,10 @@ const ItemPricesDialog: React.FC<ItemPricesDialogProps> = ({
   // 입력 필드 변경 처리
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: name === 'price' ? Number(value) : value }));
+    setFormData((prev: Partial<ItemPrice>) => ({
+      ...prev,
+      [name]: name === 'price' ? value : value
+    }));
   };
 
   // 가격 저장 (생성 또는 수정)
@@ -119,7 +123,7 @@ const ItemPricesDialog: React.FC<ItemPricesDialogProps> = ({
           data: {
             ...formData,
             id: selectedPriceId,
-          },
+          } as ItemPrice,
         });
         setSnackbar({
           open: true,
@@ -128,7 +132,7 @@ const ItemPricesDialog: React.FC<ItemPricesDialogProps> = ({
         });
       } else {
         // 생성
-        await createPriceMutation.mutateAsync(formData);
+        await createPriceMutation.mutateAsync(formData as ItemPrice);
         setSnackbar({
           open: true,
           message: '가격이 성공적으로 추가되었습니다.',

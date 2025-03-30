@@ -265,7 +265,7 @@ const Retailers: React.FC = () => {
                     {type === RetailerTypeEnum.SERVICE && '서비스'}
                     {type === RetailerTypeEnum.INCOME && '수입'}
                     {type === RetailerTypeEnum.RESTAURANT && '식당'}
-                    {type === RetailerTypeEnum.INTERNET && '인터넷'}
+                    {type === RetailerTypeEnum.ONLINE && '온라인'}
                     {type === RetailerTypeEnum.ETC && '기타'}
                   </MenuItem>
                 ))}

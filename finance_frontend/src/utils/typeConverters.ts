@@ -43,11 +43,10 @@ export const convertApiToAccount = (apiAccount: ApiAccountModel): Account => {
   return {
     id: apiAccount.id,
     name: apiAccount.name,
-    amount: apiAccount.amount,
+    amount: apiAccount.amount || '0',
     bank: apiAccount.bank,
     currency: apiAccount.currency,
     nickname: apiAccount.nickname,
-    user: apiAccount.user
   };
 };
 
@@ -63,7 +62,6 @@ export const convertAccountToApi = (account: Partial<Account>): Partial<ApiAccou
     bank: account.bank,
     currency: account.currency,
     nickname: account.nickname,
-    user: account.user
   };
 };
 

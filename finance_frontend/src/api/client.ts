@@ -86,10 +86,10 @@ export async function login(email: string, password: string): Promise<string> {
 /**
  * Alternative login method using the auth-token endpoint
  */
-export async function loginWithAuthToken(email: string, password: string): Promise<string> {
+export async function loginWithAuthToken(username: string, password: string): Promise<string> {
   try {
     const authData: AuthToken = {
-      email,
+      username,
       password,
       token: '',
     };

@@ -34,9 +34,9 @@ import {
   FilterList as FilterIcon,
   Sort as SortIcon,
 } from '@mui/icons-material';
-import { useSalariesQuery, useCreateSalaryMutation, useUpdateSalaryMutation, useDeleteSalaryMutation } from '../hooks/query/useSalariesQuery';
+import { useSalaries, useCreateSalary, useUpdateSalary, useDeleteSalary } from '../hooks/api/useSalaries';
 import { Salary } from '../api/models/Salary';
-import { CreateSalaryDto, UpdateSalaryDto } from '../api/models/SalaryModels';
+import { CreateSalaryDto } from '../api/models/SalaryModels';
 
 // 정렬 옵션 타입
 type SortOption = {
@@ -117,10 +117,10 @@ const SalariesPage: React.FC = () => {
   const [filterYear, setFilterYear] = useState<string>('');
 
   // 쿼리 및 뮤테이션 훅 사용
-  const { data: salaries, isLoading } = useSalariesQuery();
-  const createSalaryMutation = useCreateSalaryMutation();
-  const updateSalaryMutation = useUpdateSalaryMutation();
-  const deleteSalaryMutation = useDeleteSalaryMutation();
+  const { data: salaries, isLoading } = useSalaries();
+  const createSalaryMutation = useCreateSalary();
+  const updateSalaryMutation = useUpdateSalary();
+  const deleteSalaryMutation = useDeleteSalary();
 
   // 폼 초기화
   const resetForm = () => {
@@ -168,12 +168,6 @@ const SalariesPage: React.FC = () => {
       ...prev,
       [name]: numericFields.includes(name) ? Number(value) : value,
     }));
-  };
-
-  // 셀렉트 필드 변경 처리
-  const handleSelectChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // 급여 저장 (생성 또는 수정)

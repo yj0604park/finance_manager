@@ -62,8 +62,8 @@ vi.mock('./List', () => ({
 
 describe('TransactionList 컴포넌트 테스트', () => {
   const mockBanks: Bank[] = [
-    { id: 1, name: '신한은행', country: CountryEnum.KOREA, amount: '0', user: 1 },
-    { id: 2, name: '국민은행', country: CountryEnum.KOREA, amount: '0', user: 1 },
+    { id: 1, name: '신한은행', country: CountryEnum.KOREA, amount: '0' },
+    { id: 2, name: '국민은행', country: CountryEnum.KOREA, amount: '0' },
   ];
 
   const mockAccounts: Account[] = [
@@ -74,7 +74,6 @@ describe('TransactionList 컴포넌트 테스트', () => {
       amount: '1000000',
       currency: CurrencyToEnum.KRW,
       is_active: true,
-      user: 1,
       nickname: '',
     },
     {
@@ -84,7 +83,6 @@ describe('TransactionList 컴포넌트 테스트', () => {
       amount: '5000000',
       currency: CurrencyToEnum.KRW,
       is_active: true,
-      user: 1,
       nickname: '비상금',
     },
     {
@@ -94,14 +92,13 @@ describe('TransactionList 컴포넌트 테스트', () => {
       amount: '3000000',
       currency: CurrencyToEnum.KRW,
       is_active: true,
-      user: 1,
       nickname: '',
     },
   ];
 
   const mockRetailers: Retailer[] = [
-    { id: 1, name: '슈퍼마켓', user: 1 },
-    { id: 2, name: '커피숍', user: 1 },
+    { id: 1, name: '슈퍼마켓' },
+    { id: 2, name: '커피숍' },
   ];
 
   const mockTransactions: Transaction[] = [
@@ -114,7 +111,6 @@ describe('TransactionList 컴포넌트 테스트', () => {
       date: '2023-05-01',
       note: '슈퍼마켓 구매',
       retailer: 1,
-      user: 1,
       is_reviewed: false,
       created_at: '2023-05-01T10:00:00Z',
       updated_at: '2023-05-01T10:00:00Z',
@@ -128,7 +124,6 @@ describe('TransactionList 컴포넌트 테스트', () => {
       date: '2023-05-02',
       note: '커피',
       retailer: 2,
-      user: 1,
       is_reviewed: false,
       created_at: '2023-05-02T14:30:00Z',
       updated_at: '2023-05-02T14:30:00Z',
@@ -142,7 +137,6 @@ describe('TransactionList 컴포넌트 테스트', () => {
       date: '2023-05-03',
       note: '월급',
       retailer: null,
-      user: 1,
       is_reviewed: false,
       created_at: '2023-05-03T09:15:00Z',
       updated_at: '2023-05-03T09:15:00Z',

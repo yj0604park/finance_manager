@@ -44,8 +44,8 @@ import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useLocation } from 'react-router-dom';
 import { useTransactionsQuery, useTransactionQuery, useDeleteTransactionMutation } from '../../hooks/query/useTransactionsQuery';
-import { useAccountsQuery } from '../../hooks/query/useAccountsQuery';
-import { useBanksQuery } from '../../hooks/query/useBanksQuery';
+import { useAccounts } from '../../hooks/api/useAccounts';
+import { useBanks } from '../../hooks/api/useBanks';
 
 const TransactionList: React.FC = () => {
   const location = useLocation();
@@ -64,12 +64,12 @@ const TransactionList: React.FC = () => {
   const {
     data: accounts = [],
     isLoading: accountsLoading
-  } = useAccountsQuery();
+  } = useAccounts();
 
   const {
     data: banks = [],
     isLoading: banksLoading
-  } = useBanksQuery();
+  } = useBanks();
 
   // Items와 Retailers 데이터를 위한 상태 추가
   const [items, setItems] = useState<Item[]>([]);

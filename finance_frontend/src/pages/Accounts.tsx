@@ -7,13 +7,13 @@ import LoadingState from '../components/common/LoadingState';
 import ErrorState from '../components/common/ErrorState';
 import { useModal } from '../hooks/useModal';
 import { useNotification } from '../hooks/useNotification';
-import { useBanksQuery } from '../hooks/query/useBanksQuery';
+import { useBanks } from '../hooks/api/useBanks';
 import {
-  useAccountsQuery,
-  useCreateAccountMutation,
-  useUpdateAccountMutation,
-  useDeleteAccountMutation
-} from '../hooks/query/useAccountsQuery';
+  useAccounts,
+  useCreateAccount,
+  useUpdateAccount,
+  useDeleteAccount
+} from '../hooks/api/useAccounts';
 import AccountListAdapter from '../components/adapters/AccountListAdapter';
 import AccountFormModalAdapter from '../components/adapters/AccountFormModalAdapter';
 import { apiAccountsToModels } from '../utils/modelAdapters';
@@ -21,11 +21,11 @@ import { convertBankToApi } from '../utils/typeConverters';
 
 const Accounts: React.FC = () => {
   // React Query 훅 사용
-  const { data: apiAccounts, isLoading, isError, error } = useAccountsQuery();
-  const { data: apiBanks = [] } = useBanksQuery();
-  const createAccountMutation = useCreateAccountMutation();
-  const updateAccountMutation = useUpdateAccountMutation();
-  const deleteAccountMutation = useDeleteAccountMutation();
+  const { data: apiAccounts, isLoading, isError, error } = useAccounts();
+  const { data: apiBanks = [] } = useBanks();
+  const createAccountMutation = useCreateAccount();
+  const updateAccountMutation = useUpdateAccount();
+  const deleteAccountMutation = useDeleteAccount();
 
   const { notification, showNotification, hideNotification } = useNotification();
 
@@ -78,10 +78,7 @@ const Accounts: React.FC = () => {
     if (!confirmModal.data) return;
 
     try {
-      await deleteAccountMutation.mutateAsync({
-        id: confirmModal.data.account.id!,
-        bankId: confirmModal.data.account.bank
-      });
+      await deleteAccountMutation.mutateAsync(confirmModal.data.account.id!);
       showNotification('계좌가 삭제되었습니다.', 'success');
     } catch (err) {
       showNotification('계좌 삭제에 실패했습니다.', 'error');

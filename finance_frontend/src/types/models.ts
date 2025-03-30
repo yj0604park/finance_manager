@@ -20,7 +20,6 @@ export interface Account extends BaseEntity {
   bank: number;
   currency?: CurrencyToEnum;
   nickname?: string | null;
-  user: number;
   bankName?: string | null; // 화면 표시용
 }
 
