@@ -15,7 +15,6 @@ class ItemsTest(TestCase):
             user=self.user,
             name="Test Item",
             code="TEST001",
-            currency=CurrencyType.USD,
         )
         self.item_price = ItemPrice.objects.create(
             user=self.user,
@@ -28,7 +27,6 @@ class ItemsTest(TestCase):
         assert self.item.user == self.user
         assert self.item.name == "Test Item"
         assert self.item.code == "TEST001"
-        assert self.item.currency == CurrencyType.USD
 
     def test_item_str(self):
         assert str(self.item) == "Test Item: TEST001"
@@ -38,7 +36,6 @@ class ItemsTest(TestCase):
             user=self.user,
             name="Test Item",
             code="TEST001",
-            currency=CurrencyType.USD,
         )
         assert str(item) == "Test Item: TEST001"
 
@@ -47,7 +44,6 @@ class ItemsTest(TestCase):
             user=self.user,
             name="Another Item",
             code="TEST002",
-            currency=CurrencyType.USD,
         )
         items = list(Item.objects.all())
         assert items == [self.item, item2]

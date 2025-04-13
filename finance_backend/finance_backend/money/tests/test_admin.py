@@ -60,7 +60,6 @@ class AdminTest(TestCase):
             user=self.user,
             name="Test Item",
             code="TEST001",
-            currency=CurrencyType.USD,
         )
         self.item_transaction = ItemTransaction.objects.create(
             user=self.user,
@@ -168,7 +167,7 @@ class AdminTest(TestCase):
 
     def test_item_admin(self):
         admin = ItemAdmin(Item, self.site)
-        assert admin.list_display == ("id", "code", "name", "currency")
+        assert admin.list_display == ("id", "code", "name")
         assert str(self.item) == "Test Item: TEST001"
 
     def test_item_transaction_admin(self):

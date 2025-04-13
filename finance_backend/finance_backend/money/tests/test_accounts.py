@@ -29,7 +29,6 @@ class AccountsTest(TestCase):
             user=self.user,
             name="Test Item",
             code="TEST001",
-            currency=CurrencyType.USD,
         )
         self.snapshot = AccountSnapshot.objects.create(
             user=self.user,

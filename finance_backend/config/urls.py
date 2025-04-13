@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, re_path, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
@@ -25,6 +25,9 @@ urlpatterns += [
     # DRF auth token
     path("api/auth-token/", obtain_auth_token),
     path("rest-auth/", include("dj_rest_auth.urls")),
+    re_path(r'^rest-auth/registration/account-email-verification-sent',
+        TemplateView.as_view(template_name="account/email_verification_sent.html"),
+        name='email-verification'),
     path("rest-auth/registration/", include("dj_rest_auth.registration.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(

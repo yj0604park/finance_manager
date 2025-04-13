@@ -33,7 +33,6 @@ class TransactionsTest(TestCase):
             user=self.user,
             name="Test Item",
             code="TEST001",
-            currency=CurrencyType.USD,
         )
         self.transaction = Transaction.objects.create(
             user=self.user,

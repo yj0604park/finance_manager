@@ -50,7 +50,6 @@ class APIViewsTest(APITestCase):
             user=self.user,
             name="Test Item",
             code="TEST001",
-            currency=CurrencyType.USD,
         )
         self.item_transaction = ItemTransaction.objects.create(
             user=self.user,
