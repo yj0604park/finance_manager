@@ -3,7 +3,6 @@ from decimal import Decimal
 
 from django.test import TestCase
 
-from finance_backend.money.choices import CurrencyType
 from finance_backend.money.models.items import Item, ItemPrice
 from finance_backend.users.tests.factories import UserFactory
 

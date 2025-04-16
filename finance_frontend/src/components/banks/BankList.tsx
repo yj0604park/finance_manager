@@ -24,6 +24,7 @@ import {
 } from '@mui/icons-material';
 import { Bank } from '../../api/models/Bank';
 import { Account } from '../../api/models/Account';
+import { CountryEnum } from '../../api/models/CountryEnum';
 
 interface BankListProps {
   banks: Bank[];
@@ -62,7 +63,7 @@ const BankRow: React.FC<BankRowProps> = ({
 
   return (
     <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow>
         <TableCell>
           <IconButton size="small" onClick={onToggle} disabled={bankAccounts.length === 0}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -82,34 +83,33 @@ const BankRow: React.FC<BankRowProps> = ({
           </Link>
         </TableCell>
         <TableCell>{bank.country}</TableCell>
-        <TableCell align="right">{parseFloat(bank.amount).toLocaleString()}원</TableCell>
-        <TableCell align="center">
-          <Tooltip title="계좌 추가">
-            <IconButton
-              size="small"
-              onClick={() => onAddAccount(bank)}
-              color="primary"
-              sx={{ mr: 1 }}
-            >
-              <AddIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="수정">
-            <IconButton size="small" onClick={() => onEdit(bank)} color="primary" sx={{ mr: 1 }}>
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="삭제">
-            <IconButton size="small" onClick={() => onDelete(bank)} color="error">
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
+        <TableCell>
+          <Box display="flex" gap={1}>
+            <Tooltip title="Edit">
+              <IconButton size="small" onClick={() => onEdit(bank)}>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <IconButton size="small" onClick={() => onDelete(bank)}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Add Account">
+              <IconButton size="small" onClick={() => onAddAccount(bank)}>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
+            <Box margin={1}>
+              <Typography variant="h6" gutterBottom component="div">
+                Accounts
+              </Typography>
               <Table size="small">
                 <TableHead>
                   <TableRow>
@@ -123,11 +123,22 @@ const BankRow: React.FC<BankRowProps> = ({
                   {bankAccounts.map((account) => (
                     <TableRow key={account.id}>
                       <TableCell>{account.name}</TableCell>
-                      <TableCell>{account.nickname || '-'}</TableCell>
-                      <TableCell align="right">
-                        {parseFloat(account.amount).toLocaleString()}
+                      <TableCell>{account.account_type}</TableCell>
+                      <TableCell>{account.amount}</TableCell>
+                      <TableCell>
+                        <Box display="flex" gap={1}>
+                          <Tooltip title="Edit">
+                            <IconButton size="small">
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Delete">
+                            <IconButton size="small">
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
                       </TableCell>
-                      <TableCell>{account.currency}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -148,30 +159,34 @@ const BankList: React.FC<BankListProps> = ({
   onAdd,
   onAddAccount,
 }) => {
-  const [openRows, setOpenRows] = React.useState<{ [key: number]: boolean }>({});
-  const [allOpen, setAllOpen] = React.useState(true);
+  const [openRows, setOpenRows] = React.useState<Record<number, boolean>>({});
 
-  // 초기 상태 설정: 모든 은행의 계좌를 보여줌
-  React.useEffect(() => {
-    const initialOpenRows: { [key: number]: boolean } = {};
-    banks.forEach((bank) => {
-      const hasAccounts = accounts.some((account) => account.bank === bank.id);
-      initialOpenRows[bank.id] = hasAccounts;
+  // 은행을 국가별로 그룹화하고 각 국가 내에서 은행명으로 정렬
+  const groupedBanks = React.useMemo(() => {
+    const groups: Record<CountryEnum, Bank[]> = {} as Record<CountryEnum, Bank[]>;
+
+    // 먼저 모든 은행을 국가별로 그룹화
+    banks.forEach(bank => {
+      if (!groups[bank.country!]) {
+        groups[bank.country!] = [];
+      }
+      groups[bank.country!].push(bank);
     });
-    setOpenRows(initialOpenRows);
-  }, [banks, accounts]);
 
-  const handleToggleAll = () => {
-    const newOpenRows: { [key: number]: boolean } = {};
-    banks.forEach((bank) => {
-      const hasAccounts = accounts.some((account) => account.bank === bank.id);
-      newOpenRows[bank.id] = hasAccounts && !allOpen;
+    // 각 국가별로 은행을 이름순으로 정렬
+    Object.keys(groups).forEach(country => {
+      groups[country as CountryEnum].sort((a, b) => a.name.localeCompare(b.name));
     });
-    setOpenRows(newOpenRows);
-    setAllOpen(!allOpen);
-  };
 
-  const handleToggleRow = (bankId: number) => {
+    // 국가를 알파벳 순으로 정렬
+    const sortedGroups = Object.entries(groups).sort(([countryA], [countryB]) =>
+      countryA.localeCompare(countryB)
+    );
+
+    return Object.fromEntries(sortedGroups);
+  }, [banks]);
+
+  const handleToggle = (bankId: number) => {
     setOpenRows((prev) => ({
       ...prev,
       [bankId]: !prev[bankId],
@@ -194,31 +209,35 @@ const BankList: React.FC<BankListProps> = ({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <Tooltip title={allOpen ? '모두 접기' : '모두 열기'}>
-                  <IconButton onClick={handleToggleAll} size="small">
-                    {allOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
-              <TableCell>은행명</TableCell>
-              <TableCell>국가</TableCell>
-              <TableCell align="right">잔액</TableCell>
-              <TableCell align="center">작업</TableCell>
+              <TableCell />
+              <TableCell>Name</TableCell>
+              <TableCell>Country</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {banks.map((bank) => (
-              <BankRow
-                key={bank.id}
-                bank={bank}
-                accounts={accounts}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onAddAccount={onAddAccount}
-                open={openRows[bank.id] || false}
-                onToggle={() => handleToggleRow(bank.id)}
-              />
+            {Object.entries(groupedBanks).map(([country, countryBanks]) => (
+              <React.Fragment key={country}>
+                <TableRow>
+                  <TableCell colSpan={4}>
+                    <Typography variant="h6" component="div">
+                      {country}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+                {countryBanks.map((bank) => (
+                  <BankRow
+                    key={bank.id}
+                    bank={bank}
+                    accounts={accounts}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    onAddAccount={onAddAccount}
+                    open={openRows[bank.id] || false}
+                    onToggle={() => handleToggle(bank.id)}
+                  />
+                ))}
+              </React.Fragment>
             ))}
           </TableBody>
         </Table>

@@ -25,9 +25,11 @@ urlpatterns += [
     # DRF auth token
     path("api/auth-token/", obtain_auth_token),
     path("rest-auth/", include("dj_rest_auth.urls")),
-    re_path(r'^rest-auth/registration/account-email-verification-sent',
+    re_path(
+        r"^rest-auth/registration/account-email-verification-sent",
         TemplateView.as_view(template_name="account/email_verification_sent.html"),
-        name='email-verification'),
+        name="email-verification",
+    ),
     path("rest-auth/registration/", include("dj_rest_auth.registration.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(
