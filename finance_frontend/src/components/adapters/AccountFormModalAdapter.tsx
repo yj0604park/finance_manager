@@ -3,7 +3,12 @@ import AccountFormModal from '../common/AccountFormModal';
 import { Bank as InternalBank, Account as InternalAccount } from '../../types/models';
 import { Bank as ApiBank } from '../../api/models/Bank';
 import { Account as ApiAccount } from '../../api/models/Account';
-import { bankToApiModel, banksToApiModels, accountToApiModel, apiAccountToModel } from '../../utils/modelAdapters';
+import {
+  bankToApiModel,
+  banksToApiModels,
+  accountToApiModel,
+  apiAccountToModel
+} from '../../utils/modelAdapters';
 
 // 어댑터 컴포넌트 props 정의
 interface AccountFormModalAdapterProps {
@@ -28,10 +33,10 @@ const AccountFormModalAdapter: React.FC<AccountFormModalAdapterProps> = ({
   bank,
   banks
 }) => {
-  // 내부 모델을 API 모델로 변환
-  const apiAccount = account ? accountToApiModel(account) as ApiAccount : undefined;
-  const apiBank = bank ? bankToApiModel(bank) as ApiBank : undefined;
-  const apiBanks = banks ? banksToApiModels(banks) : undefined;
+  // 내부 모델을 API 모델로 변환 (타입 단언을 사용해 타입 호환성 문제 해결)
+  const apiAccount = account ? (accountToApiModel(account) as ApiAccount) : undefined;
+  const apiBank = bank ? (bankToApiModel(bank) as ApiBank) : undefined;
+  const apiBanks = banks ? banksToApiModels(banks) : [];
 
   // API 모델로부터 폼 제출을 처리하는 핸들러
   const handleSubmit = (apiAccountData: Partial<ApiAccount>) => {
@@ -47,7 +52,7 @@ const AccountFormModalAdapter: React.FC<AccountFormModalAdapterProps> = ({
       onSubmit={handleSubmit}
       account={apiAccount}
       bank={apiBank}
-      bankList={apiBanks || []}
+      bankList={apiBanks}
     />
   );
 };

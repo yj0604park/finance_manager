@@ -118,31 +118,16 @@ const BankRow: React.FC<BankRowProps> = ({
                     <TableCell>계좌 유형</TableCell>
                     <TableCell align="right">잔액</TableCell>
                     <TableCell>통화</TableCell>
-                    <TableCell>수정/삭제</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {bankAccounts.map((account) => (
                     <TableRow key={account.id}>
-                      <TableCell>{account.name}</TableCell>
+                      <TableCell onClick={() => navigate(`/transactions/list?accountId=${account.id}`)}>{account.name}</TableCell>
                       <TableCell>{account.nickname}</TableCell>
                       <TableCell>{account.account_type}</TableCell>
                       <TableCell align="right">{account.amount}</TableCell>
                       <TableCell>{account.currency}</TableCell>
-                      <TableCell>
-                        <Box display="flex" gap={1}>
-                          <Tooltip title="Edit">
-                            <IconButton size="small">
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Delete">
-                            <IconButton size="small">
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
