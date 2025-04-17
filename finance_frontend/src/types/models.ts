@@ -1,7 +1,7 @@
 import { BaseEntity } from './common';
 import { CountryEnum } from '../api/models/CountryEnum';
 import { CurrencyToEnum } from '../api/models/CurrencyToEnum';
-
+import { AccountTypeEnum } from '../api/models/AccountTypeEnum';
 /**
  * 은행 모델 인터페이스
  */
@@ -18,6 +18,7 @@ export interface Account extends BaseEntity {
   name: string;
   amount: string;
   bank: number;
+  account_type: AccountTypeEnum;
   currency?: CurrencyToEnum;
   nickname?: string | null;
   bankName?: string | null; // 화면 표시용

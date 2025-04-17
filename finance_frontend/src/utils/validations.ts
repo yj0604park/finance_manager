@@ -82,19 +82,6 @@ export const validateAccountForm = (data: Partial<Account>): ValidationResult =>
   const bankError = isRequired(data.bank, '은행');
   if (bankError) errors.push(bankError);
 
-  // 금액 검증
-  const amountError = isRequired(data.amount, '잔액');
-  if (amountError) errors.push(amountError);
-
-  if (data.amount) {
-    const numberError = isNumber(data.amount, '잔액');
-    if (numberError) errors.push(numberError);
-    else {
-      const positiveError = isPositive(data.amount, '잔액');
-      if (positiveError) errors.push(positiveError);
-    }
-  }
-
   // 계좌명 길이 검증
   if (data.name) {
     const nameLengthError = maxLength(data.name, 100, '계좌명');

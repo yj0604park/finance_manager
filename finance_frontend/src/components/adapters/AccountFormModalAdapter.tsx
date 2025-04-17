@@ -47,7 +47,7 @@ const AccountFormModalAdapter: React.FC<AccountFormModalAdapterProps> = ({
       onSubmit={handleSubmit}
       account={apiAccount}
       bank={apiBank}
-      banks={apiBanks}
+      bankList={apiBanks || []}
     />
   );
 };

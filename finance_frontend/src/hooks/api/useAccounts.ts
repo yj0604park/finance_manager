@@ -48,8 +48,9 @@ export const useUpdateAccount = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: UpdateAccountDto }) =>
-      AccountsWrapper.update(id, data),
+    mutationFn: ({ id, data }: { id: number; data: UpdateAccountDto }) => {
+      return AccountsWrapper.update(id, data);
+    },
     onSuccess: (updated: Account) => {
       // 계좌 목록 캐시 무효화
       queryClient.invalidateQueries({ queryKey: [ACCOUNTS_QUERY_KEY] });

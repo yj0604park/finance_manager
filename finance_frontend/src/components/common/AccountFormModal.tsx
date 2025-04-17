@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { Account } from '../../api/models/Account';
 import { CurrencyToEnum } from '../../api/models/CurrencyToEnum';
+import { AccountTypeEnum } from '../../api/models/AccountTypeEnum';
 import { Bank } from '../../api/models/Bank';
 import { validateAccountForm, getFormHelperText, hasFieldError, ValidationResult } from '../../utils/validations';
 
@@ -24,8 +25,8 @@ interface AccountFormModalProps {
   onClose: () => void;
   onSubmit: (accountData: Partial<Account>) => void;
   account?: Account;
-  banks?: Bank[];
   bank?: Bank; // 은행 관리 페이지에서 특정 은행 선택 시 사용
+  bankList?: Bank[]; // 계좌 관리 페이지에서 은행 선택 시 사용
 }
 
 const AccountFormModal: React.FC<AccountFormModalProps> = ({
@@ -33,16 +34,16 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
   onClose,
   onSubmit,
   account,
-  banks = [],
   bank,
+  bankList = [],
 }) => {
   // 폼 데이터 상태 관리
   const [formData, setFormData] = useState<Partial<Account>>({
     name: '',
     nickname: '',
-    amount: '0',
     currency: CurrencyToEnum.KRW,
-    bank: bank?.id || banks[0]?.id || 0,
+    account_type: AccountTypeEnum.CHECKING_ACCOUNT,
+    bank: bank?.id || (bankList.length > 0 ? bankList[0].id : 0),
   });
 
   // 검증 결과 상태
@@ -63,8 +64,8 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
       setFormData({
         name: account.name,
         nickname: account.nickname || '',
-        amount: account.amount,
         currency: account.currency || CurrencyToEnum.KRW,
+        account_type: account.account_type || AccountTypeEnum.CHECKING_ACCOUNT,
         bank: account.bank,
       });
     } else {
@@ -72,29 +73,16 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
       setFormData({
         name: '',
         nickname: '',
-        amount: '0',
         currency: CurrencyToEnum.KRW,
-        bank: bank?.id || banks[0]?.id || 0,
+        account_type: AccountTypeEnum.CHECKING_ACCOUNT,
+        bank: bank?.id || (bankList.length > 0 ? bankList[0].id : 0),
       });
     }
 
     // 모달이 새로 열릴 때 검증 상태 초기화
     setValidationResult({ isValid: true, errors: [] });
     setSubmitted(false);
-  }, [open, account, bank, banks]);
-
-  // banks 배열이 처음 로드될 때만 실행되는 별도의 useEffect
-  useEffect(() => {
-    if (!open || account || banks.length === 0) return;
-
-    // bank가 없고, banks 배열이 처음 로드되었을 때만 bank 값 설정
-    if (!bank && formData.bank === 0) {
-      setFormData(prev => ({
-        ...prev,
-        bank: banks[0]?.id || 0
-      }));
-    }
-  }, [banks, open, account, bank]);
+  }, [open, account, bank, bankList]);
 
   // 폼 데이터 변경 시 유효성 검사
   useEffect(() => {
@@ -151,6 +139,25 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
         <DialogTitle>{getModalTitle()}</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+            {!bank && bankList.length > 0 && (
+              <TextField
+                select
+                label="은행"
+                name="bank"
+                value={formData.bank}
+                onChange={handleChange}
+                required
+                fullWidth
+                error={hasFieldError(validationResult, '은행')}
+                helperText={getFormHelperText(validationResult, '은행')}
+              >
+                {bankList.map((b: Bank) => (
+                  <MenuItem key={b.id} value={b.id}>
+                    {b.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
             <TextField
               label="계좌명"
               name="name"
@@ -170,44 +177,26 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
               error={hasFieldError(validationResult, '별칭')}
               helperText={getFormHelperText(validationResult, '별칭')}
             />
-
-            {/* 은행 선택 필드 - 특정 은행이 주어지지 않았고 은행 목록이 있을 때만 표시 */}
-            {!bank && banks.length > 0 && (
-              <TextField
-                select
-                label="은행"
-                name="bank"
-                value={formData.bank}
-                onChange={handleChange}
-                required
-                fullWidth
-                error={hasFieldError(validationResult, '은행')}
-                helperText={getFormHelperText(validationResult, '은행')}
-              >
-                {banks.map((b) => (
-                  <MenuItem key={b.id} value={b.id}>
-                    {b.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-
-            {/* 계좌 관리 페이지에서는 잔액도 수정 가능 */}
-            {!bank && (
-              <TextField
-                label="잔액"
-                name="amount"
-                type="number"
-                value={formData.amount}
-                onChange={handleChange}
-                required
-                fullWidth
-                error={hasFieldError(validationResult, '잔액')}
-                helperText={getFormHelperText(validationResult, '잔액')}
-              />
-            )}
-
-            {/* 통화 선택 필드 */}
+            <TextField
+              select
+              label="계좌 유형"
+              name="account_type"
+              value={formData.account_type}
+              onChange={handleChange}
+              fullWidth
+            >
+              {Object.entries(AccountTypeEnum).map(([key, value]) => (
+                <MenuItem key={key} value={value}>
+                  {value === AccountTypeEnum.CHECKING_ACCOUNT && '입출금'}
+                  {value === AccountTypeEnum.SAVINGS_ACCOUNT && '저금'}
+                  {value === AccountTypeEnum.INSTALLMENT_SAVING && '적금'}
+                  {value === AccountTypeEnum.TIME_DEPOSIT && '예금'}
+                  {value === AccountTypeEnum.CREDIT_CARD && '신용카드'}
+                  {value === AccountTypeEnum.STOCK && '주식'}
+                  {value === AccountTypeEnum.LOAN && '대출'}
+                </MenuItem>
+              ))}
+            </TextField>
             <TextField
               select
               label="통화"
@@ -216,10 +205,12 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
               onChange={handleChange}
               required
               fullWidth
+              error={hasFieldError(validationResult, '통화')}
+              helperText={getFormHelperText(validationResult, '통화')}
             >
-              {Object.values(CurrencyToEnum).map((currency) => (
-                <MenuItem key={currency} value={currency}>
-                  {currency}
+              {Object.entries(CurrencyToEnum).map(([key, value]) => (
+                <MenuItem key={key} value={value}>
+                  {value}
                 </MenuItem>
               ))}
             </TextField>

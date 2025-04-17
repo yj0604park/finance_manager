@@ -58,7 +58,6 @@ const Accounts: React.FC = () => {
         // 추가
         const createData = {
           ...accountData,
-          user: 1 // user 필드가 필요한 경우 기본값 설정
         };
         await createAccountMutation.mutateAsync(createData as Account);
         showNotification('계좌가 추가되었습니다.', 'success');
