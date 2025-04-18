@@ -173,7 +173,7 @@ const TransactionList: React.FC = () => {
     }
   }, [bankIdFromUrl, accountIdFromUrl, transactionIdFromUrl, transactionDetail]);
 
-  // 필터링된 거래 내역을 메모이제이션 - accounts를 의존성에서 제거
+  // 필터링된 거래 내역을 메모이제이션 - accounts를 의존성으로 유지
   const memoizedFilteredTransactions = useMemo(() => {
     if (!transactions || !transactions.length) return [];
 
@@ -191,9 +191,13 @@ const TransactionList: React.FC = () => {
       // 은행 필터링
       let matchesBank = selectedBankId === 'all';
       if (!matchesBank) {
-        // 타입 안전성을 위해 타입 단언 사용
-        const accountsArray = accounts as any[];
-        const account = accountsArray.find(a => a.id === transaction.account);
+        // 타입 호환성을 위해 타입 단언 사용 (내부 model과 API model 간 차이)
+        type GenericAccount = {
+          id: number;
+          bank: number;
+        };
+        const typedAccounts = accounts as unknown as GenericAccount[];
+        const account = typedAccounts.find(a => a.id === transaction.account);
         if (account) {
           matchesBank = account.bank.toString() === selectedBankId;
         }
@@ -205,8 +209,7 @@ const TransactionList: React.FC = () => {
 
       return matchesSearch && matchesBank && matchesAccount;
     });
-    // accounts를 의존성 배열에서 제거
-  }, [transactions, searchTerm, selectedBankId, selectedAccountId]);
+  }, [transactions, searchTerm, selectedBankId, selectedAccountId, accounts]);
 
   // 필터링된 거래 내역과 페이지 업데이트
   useEffect(() => {

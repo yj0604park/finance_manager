@@ -1,142 +1,86 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  IconButton,
-  Tooltip,
-  Typography,
   Box,
+  Typography,
+  IconButton,
   Collapse,
-  Link,
+  Divider,
+  List,
+  ListItem,
+  ListItemText
 } from '@mui/material';
 import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  KeyboardArrowDown as KeyboardArrowDownIcon,
-  KeyboardArrowUp as KeyboardArrowUpIcon,
-  AddCard as AddCardIcon,
+  ExpandMore as ExpandMoreIcon,
+  ExpandLess as ExpandLessIcon,
 } from '@mui/icons-material';
 
-import { Bank } from '../../api/models/Bank';
-import { Account } from '../../api/models/Account';
+import { BankWithAccounts } from '../../types/bank';
 
 interface BankRowProps {
-  bank: Bank;
-  accounts: Account[];
-  onEdit: (bank: Bank) => void;
-  onDelete: (bank: Bank) => void;
-  onAddAccount: (bank: Bank) => void;
-  open: boolean;
-  onToggle: () => void;
+  bank: BankWithAccounts;
+  onBankNameClick: (bankId: number) => void;
 }
 
-const BankRow: React.FC<BankRowProps> = ({
-  bank,
-  accounts,
-  onEdit,
-  onDelete,
-  onAddAccount,
-  open,
-  onToggle,
-}) => {
-  const navigate = useNavigate();
-  const bankAccounts = accounts.filter((account) => account.bank === bank.id);
+const BankRow: React.FC<BankRowProps> = ({ bank, onBankNameClick }) => {
+  const [expanded, setExpanded] = useState(false);
+  const hasAccounts = bank.accounts.length > 0;
 
-  const handleBankNameClick = () => {
-    navigate(`/accounts?bankId=${bank.id}`);
+  const handleExpand = () => {
+    if (hasAccounts) {
+      setExpanded(!expanded);
+    }
   };
 
-  const handleEdit = () => {
-    onEdit(bank);
-  };
-
-  const handleDelete = () => {
-    onDelete(bank);
-  };
-
-  const handleAddAccount = () => {
-    onAddAccount(bank);
+  const handleBankClick = () => {
+    onBankNameClick(bank.id);
   };
 
   return (
-    <>
-      <TableRow>
-        <TableCell>
-          <IconButton size="small" onClick={onToggle} disabled={bankAccounts.length === 0}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell>
-          <Link
-            component="button"
-            variant="body2"
-            onClick={handleBankNameClick}
-            sx={{
-              textDecoration: 'none',
-              '&:hover': { textDecoration: 'underline', cursor: 'pointer' },
-            }}
-          >
-            {bank.name}
-          </Link>
-        </TableCell>
-        <TableCell>
-          <Box display="flex" gap={1}>
-            <Tooltip title="Edit">
-              <IconButton size="small" onClick={handleEdit}>
-                <EditIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Delete">
-              <IconButton size="small" onClick={handleDelete}>
-                <DeleteIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Add Account">
-              <IconButton size="small" onClick={handleAddAccount}>
-                <AddCardIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Accounts
-              </Typography>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>계좌명</TableCell>
-                    <TableCell>별칭</TableCell>
-                    <TableCell>계좌 유형</TableCell>
-                    <TableCell align="right">잔액</TableCell>
-                    <TableCell>통화</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {bankAccounts.map((account) => (
-                    <TableRow key={account.id}>
-                      <TableCell onClick={() => navigate(`/transactions/list?accountId=${account.id}`)}>{account.name}</TableCell>
-                      <TableCell>{account.nickname}</TableCell>
-                      <TableCell>{account.account_type}</TableCell>
-                      <TableCell align="right">{account.amount}</TableCell>
-                      <TableCell>{account.currency}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </>
+    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 1, overflow: 'hidden' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          p: 2,
+          bgcolor: '#f5f5f5'
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          component="div"
+          onClick={handleBankClick}
+          sx={{
+            fontWeight: 'medium',
+            cursor: 'pointer',
+            '&:hover': { textDecoration: 'underline' }
+          }}
+        >
+          {bank.name}
+        </Typography>
+        <IconButton
+          onClick={handleExpand}
+          disabled={!hasAccounts}
+          size="small"
+        >
+          {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </IconButton>
+      </Box>
+
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Divider />
+        <List dense disablePadding>
+          {bank.accounts.map((account) => (
+            <ListItem key={account.id} divider>
+              <ListItemText
+                primary={account.name}
+                secondary={`${account.amount.toLocaleString()} ${account.currency}`}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </Collapse>
+    </Box>
   );
 };
 

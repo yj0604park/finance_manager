@@ -7,7 +7,6 @@ import {
   ExpandLess,
   ExpandMore,
   ExitToApp as LogoutIcon,
-  AttachMoney as MoneyIcon,
   Inventory as InventoryIcon,
   Settings as SettingsIcon,
   Receipt as TransactionIcon,
