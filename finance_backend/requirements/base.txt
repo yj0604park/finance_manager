@@ -12,10 +12,13 @@ django-environ==0.12.0  # https://github.com/joke2k/django-environ
 django-model-utils==5.0.0  # https://github.com/jazzband/django-model-utils
 django-redis==5.4.0  # https://github.com/jazzband/django-redis
 django_choices_field==2.3.0  # https://github.com/bellini666/django-choices-field
-# Django REST Framework
+
+# Django REST Framework & Related
+# ------------------------------------------------------------------------------
 djangorestframework==3.16.0  # https://github.com/encode/django-rest-framework
-# DRF-spectacular for api documentation
+django-filter==24.2  # https://github.com/carltongibson/django-filter
 drf-spectacular==0.28.0  # https://github.com/tfranzel/drf-spectacular
+
 hiredis==3.1.0  # https://github.com/redis/hiredis-py
 Pillow==11.2.1  # https://github.com/python-pillow/Pillow
 python-slugify==8.0.4  # https://github.com/un33k/python-slugify

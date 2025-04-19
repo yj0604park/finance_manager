@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
@@ -21,6 +22,7 @@ from finance_backend.money.api.serializers.transactions_serializers import (
     ItemTransactionSerializer,
     TransactionSerializer,
 )
+from finance_backend.money.filters import AccountFilter, ItemFilter, TransactionFilter
 from finance_backend.money.models.accounts import Account, AccountSnapshot, Bank
 from finance_backend.money.models.exchanges import Exchange
 from finance_backend.money.models.incomes import Salary
@@ -31,6 +33,7 @@ from finance_backend.money.models.transactions import ItemTransaction, Transacti
 
 class BaseUserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
 
     def get_queryset(self):
         """기본적으로 사용자의 데이터만 필터링하여 반환"""
@@ -49,6 +52,7 @@ class BankViewSet(BaseUserViewSet):
 class AccountViewSet(BaseUserViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
+    filterset_class = AccountFilter
 
 
 class AccountSnapshotViewSet(BaseUserViewSet):
@@ -59,6 +63,7 @@ class AccountSnapshotViewSet(BaseUserViewSet):
 class TransactionViewSet(BaseUserViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
+    filterset_class = TransactionFilter
 
 
 class ItemTransactionViewSet(BaseUserViewSet):
@@ -79,6 +84,7 @@ class SalaryViewSet(BaseUserViewSet):
 class ItemViewSet(BaseUserViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
+    filterset_class = ItemFilter
 
 
 class RetailerViewSet(BaseUserViewSet):
