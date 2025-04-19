@@ -6,6 +6,9 @@ from finance_backend.money.models.transactions import ItemTransaction, Transacti
 class TransactionSerializer(serializers.ModelSerializer[Transaction]):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     note = serializers.CharField(required=False, allow_blank=True, default="")
+    transaction_type_display = serializers.CharField(
+        source="get_transaction_type_display", read_only=True
+    )
 
     class Meta:
         model = Transaction

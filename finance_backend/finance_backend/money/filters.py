@@ -22,9 +22,13 @@ class TransactionFilter(django_filters.FilterSet):
     transaction_type = django_filters.CharFilter(
         field_name="transaction_type", lookup_expr="exact"
     )
+    # 연도 및 월 필터 추가
+    year = django_filters.NumberFilter(field_name="date", lookup_expr="year")
+    month = django_filters.NumberFilter(field_name="date", lookup_expr="month")
 
     class Meta:
         model = Transaction
+        # fields 목록에 year, month 추가
         fields = [
             "account",
             "date_after",
@@ -32,6 +36,8 @@ class TransactionFilter(django_filters.FilterSet):
             "transaction_type",
             "amount_min",
             "amount_max",
+            "year",
+            "month",
         ]
 
 

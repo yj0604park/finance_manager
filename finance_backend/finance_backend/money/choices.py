@@ -39,6 +39,7 @@ class TransactionCategory(models.TextChoices):
     MEMBERSHIP = "MEMBERSHIP", "맴버십"
     SERVICE = "SERVICE", "서비스"
     EAT_OUT = "EAT_OUT", "외식"
+    ELECTRONICS = "ELECTRONICS", "전자기기"
     CLOTHING = "CLOTHING", "옷"
     PRESENT = "PRESENT", "선물"
     TRANSPORTATION = "CAR", "이동수단"
