@@ -289,6 +289,13 @@ SOCIALACCOUNT_ADAPTER = "finance_backend.users.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_FORMS = {"signup": "finance_backend.users.forms.UserSocialSignupForm"}
 
+# dj-rest-auth 설정 추가
+# ------------------------------------------------------------------------------
+REST_AUTH = {
+    "USER_DETAILS_SERIALIZER": "finance_backend.users.api.serializers.CustomUserDetailsSerializer",
+    # 필요한 다른 dj-rest-auth 설정 추가 가능
+}
+
 # django-rest-framework
 # -------------------------------------------------------------------------------
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
@@ -299,6 +306,8 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20,
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
@@ -312,6 +321,16 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
     "SCHEMA_PATH_PREFIX": "/api/",
+    "ENUM_NAME_OVERRIDES": {
+        "finance_backend.money.choices.CurrencyType": "CurrencyTypeEnum",
+        "finance_backend.money.choices.TransactionCategory": "TransactionCategoryEnum",
+        "finance_backend.money.choices.Country": "CountryEnum",
+        "finance_backend.money.choices.AccountType": "AccountTypeEnum",
+        "finance_backend.money.choices.ItemType": "ItemTypeEnum",
+        "finance_backend.money.choices.RetailerType": "RetailerTypeEnum",
+        "finance_backend.money.choices.ExchangeType": "ExchangeTypeEnum",
+        "finance_backend.money.choices.DetailItemCategory": "DetailItemCategoryEnum",
+    },
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
