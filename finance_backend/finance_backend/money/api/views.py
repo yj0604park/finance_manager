@@ -1,5 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
+from rest_framework import viewsets, filters, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,6 +12,9 @@ from finance_backend.money.api.serializers.accounts_serializers import (
     AccountSerializer,
     AccountSnapshotSerializer,
     BankSerializer,
+)
+from finance_backend.money.api.serializers.dashboard_serializers import (
+    DashboardRecentTransactionSerializer,
 )
 from finance_backend.money.api.serializers.exchanges_serializers import (
     ExchangeSerializer,
@@ -29,6 +32,7 @@ from finance_backend.money.api.serializers.transactions_serializers import (
     TransactionSerializer,
 )
 from finance_backend.money.filters import AccountFilter, ItemFilter, TransactionFilter
+from finance_backend.money.pagination import TransactionPagination
 from finance_backend.money.models.accounts import Account, AccountSnapshot, Bank
 from finance_backend.money.models.exchanges import Exchange
 from finance_backend.money.models.incomes import Salary
@@ -39,7 +43,7 @@ from finance_backend.money.models.transactions import ItemTransaction, Transacti
 
 class BaseUserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
 
     def get_queryset(self):
         """기본적으로 사용자의 데이터만 필터링하여 반환"""
@@ -53,54 +57,75 @@ class BaseUserViewSet(viewsets.ModelViewSet):
 class BankViewSet(BaseUserViewSet):
     queryset = Bank.objects.all()
     serializer_class = BankSerializer
+    ordering_fields = ["name", "country", "created_at"]
+    ordering = ["name"]
 
 
 class AccountViewSet(BaseUserViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
     filterset_class = AccountFilter
+    ordering_fields = ["name", "balance", "created_at"]
+    ordering = ["name"]
 
 
 class AccountSnapshotViewSet(BaseUserViewSet):
     queryset = AccountSnapshot.objects.all()
     serializer_class = AccountSnapshotSerializer
+    ordering_fields = ["date", "amount"]
+    ordering = ["-date"]
 
 
 class TransactionViewSet(BaseUserViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
     filterset_class = TransactionFilter
+    ordering_fields = ["date", "amount", "created_at", "balance"]
+    ordering = ["-date", "-id"]
+    pagination_class = TransactionPagination
 
 
 class ItemTransactionViewSet(BaseUserViewSet):
     queryset = ItemTransaction.objects.all()
     serializer_class = ItemTransactionSerializer
+    ordering_fields = ["date", "purchase_price", "quantity"]
+    ordering = ["-date", "-id"]
 
 
 class ExchangeViewSet(BaseUserViewSet):
     queryset = Exchange.objects.all()
     serializer_class = ExchangeSerializer
+    ordering_fields = ["date", "amount", "rate"]
+    ordering = ["-date"]
 
 
 class SalaryViewSet(BaseUserViewSet):
     queryset = Salary.objects.all()
     serializer_class = SalarySerializer
+    ordering_fields = ["date", "amount"]
+    ordering = ["-date"]
 
 
 class ItemViewSet(BaseUserViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     filterset_class = ItemFilter
+    ordering_fields = ["name", "item_type", "created_at"]
+    ordering = ["name"]
 
 
 class RetailerViewSet(BaseUserViewSet):
     queryset = Retailer.objects.all()
     serializer_class = RetailerSerializer
+    ordering_fields = ["name", "retailer_type"]
+    ordering = ["name"]
 
 
 class ItemPriceViewSet(BaseUserViewSet):
     queryset = ItemPrice.objects.all()
     serializer_class = ItemPriceSerializer
+    ordering_fields = ["date", "price"]
+    ordering = ["-date"]
 
 
 # 계좌 이체 거래 연결을 위한 API View
@@ -209,3 +234,28 @@ class LinkTransferView(APIView):
             {"message": f"거래 {t1.id}와(과) {t2.id}가 성공적으로 연결되었습니다."},
             status=status.HTTP_200_OK,
         )
+
+
+# --- 대시보드 최근 거래 내역 API View 추가 ---
+class DashboardRecentTransactionsView(generics.ListAPIView):
+    """
+    대시보드에 표시할 최근 거래 내역 N개를 반환합니다.
+    판매처 및 계좌 정보를 포함합니다.
+    """
+
+    serializer_class = DashboardRecentTransactionSerializer
+    permission_classes = [IsAuthenticated]
+    # 페이지네이션은 적용하지 않음 (최근 N개만 반환하므로)
+    pagination_class = None
+
+    def get_queryset(self):
+        """
+        요청 사용자의 최근 거래 10개를 날짜 내림차순으로 가져옵니다.
+        성능을 위해 select_related를 사용합니다.
+        """
+        user = self.request.user
+        return (
+            Transaction.objects.filter(user=user)
+            .select_related("account", "retailer")
+            .order_by("-date", "-id")[:10]
+        )  # 최근 10개

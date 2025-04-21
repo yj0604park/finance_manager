@@ -42,7 +42,7 @@ def update_account_balance_on_transaction_save(
         # db_transaction.on_commit: 현재 트랜잭션이 성공적으로 커밋된 후에 실행되도록 보장
         db_transaction.on_commit(
             lambda: Account.objects.filter(pk=account.pk).update(
-                balance=F("balance") + new_amount
+                amount=F("amount") + new_amount
             )
         )
 
@@ -60,7 +60,7 @@ def update_account_balance_on_transaction_save(
                 if difference != 0:  # 금액 변경이 있을 때만 업데이트
                     db_transaction.on_commit(
                         lambda: Account.objects.filter(pk=new_account_id).update(
-                            balance=F("balance") + difference
+                            amount=F("amount") + difference
                         )
                     )
             else:
@@ -68,12 +68,12 @@ def update_account_balance_on_transaction_save(
                 # 이전 계좌 업데이트
                 db_transaction.on_commit(
                     lambda: Account.objects.filter(pk=old_account_id).update(
-                        balance=F("balance") - old_amount
+                        amount=F("amount") - old_amount
                     )
                 )
                 # 새 계좌 업데이트
                 db_transaction.on_commit(
                     lambda: Account.objects.filter(pk=new_account_id).update(
-                        balance=F("balance") + new_amount
+                        amount=F("amount") + new_amount
                     )
                 )

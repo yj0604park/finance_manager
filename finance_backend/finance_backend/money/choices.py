@@ -17,6 +17,7 @@ class AccountType(models.TextChoices):
     INSTALLMENT_SAVING = "INSTALLMENT_SAVING", "적금"
     TIME_DEPOSIT = "TIME_DEPOSIT", "예금"
     CREDIT_CARD = "CREDIT_CARD", "신용카드"
+    REAL_ESTATE = "REAL_ESTATE", "부동산"
     STOCK = "STOCK", "주식"
     LOAN = "LOAN", "대출"
 

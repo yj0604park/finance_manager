@@ -7,6 +7,9 @@ from finance_backend.money.models.accounts import Account, AccountSnapshot, Bank
 class BankSerializer(serializers.ModelSerializer[Bank]):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     amount = serializers.DecimalField(max_digits=15, decimal_places=2, default=0)
+    country_display = serializers.CharField(
+        source="get_country_display", read_only=True
+    )
 
     def create(self, validated_data):
         validated_data["user"] = self.context["request"].user
@@ -22,6 +25,12 @@ class AccountSerializer(serializers.ModelSerializer[Account]):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     nickname = serializers.CharField(
         max_length=100, default="", allow_blank=True, allow_null=True
+    )
+    account_type_display = serializers.CharField(
+        source="get_account_type_display", read_only=True
+    )
+    currency_display = serializers.CharField(
+        source="get_currency_display", read_only=True
     )
 
     def create(self, validated_data):
@@ -54,6 +63,18 @@ class AccountDetailSerializer(serializers.ModelSerializer[Account]):
         model = Account
         fields = "__all__"
         depth = 1
+
+
+class SimpleAccountSerializer(serializers.ModelSerializer):
+    """간단한 계좌 정보 Serializer (ID, 이름, 통화만 포함)"""
+
+    currency_display = serializers.CharField(
+        source="get_currency_display", read_only=True
+    )
+
+    class Meta:
+        model = Account
+        fields = ["id", "name", "currency", "currency_display"]
 
 
 class AccountSnapshotSerializer(serializers.ModelSerializer[AccountSnapshot]):
