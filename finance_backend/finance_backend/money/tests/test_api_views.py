@@ -104,14 +104,14 @@ class APIViewsTest(APITestCase):
     def test_bank_viewset(self):
         response = self.client.get("/api/banks/")
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]["name"] == "Test Bank"
+        assert len(response.data["results"]) == 1
+        assert response.data["results"][0]["name"] == "Test Bank"
 
     def test_account_viewset(self):
         response = self.client.get("/api/accounts/")
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]["name"] == "Test Account"
+        assert len(response.data["results"]) == 1
+        assert response.data["results"][0]["name"] == "Test Account"
 
     def test_account_snapshot_viewset(self):
         response = self.client.get("/api/account-snapshots/")
@@ -120,51 +120,51 @@ class APIViewsTest(APITestCase):
     def test_transaction_viewset(self):
         response = self.client.get("/api/transactions/")
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]["amount"] == "100.00"
+        assert len(response.data["results"]) == 1
+        assert response.data["results"][0]["amount"] == "100.00"
 
     def test_item_transaction_viewset(self):
         response = self.client.get("/api/item-transactions/")
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]["purchase_price"] == "100.00"
+        assert len(response.data["results"]) == 1
+        assert response.data["results"][0]["purchase_price"] == "100.00"
 
     def test_exchange_viewset(self):
         response = self.client.get("/api/exchanges/")
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]["exchange_ratio"] == "1.5000"
+        assert len(response.data["results"]) == 1
+        assert response.data["results"][0]["exchange_ratio"] == "1.5000"
 
     def test_salary_viewset(self):
         response = self.client.get("/api/salaries/")
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]["gross_pay"] == "1000.00"
+        assert len(response.data["results"]) == 1
+        assert response.data["results"][0]["gross_pay"] == "1000.00"
 
     def test_item_viewset(self):
         response = self.client.get("/api/items/")
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]["name"] == "Test Item"
+        assert len(response.data["results"]) == 1
+        assert response.data["results"][0]["name"] == "Test Item"
 
     def test_retailer_viewset(self):
         response = self.client.get("/api/retailers/")
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]["name"] == "Test Retailer"
+        assert len(response.data["results"]) == 1
+        assert response.data["results"][0]["name"] == "Test Retailer"
 
     def test_item_price_viewset(self):
         response = self.client.get("/api/item-prices/")
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]["price"] == "100.00"
+        assert len(response.data["results"]) == 1
+        assert response.data["results"][0]["price"] == "100.00"
 
     def test_base_user_viewset_filtering(self):
         other_user = UserFactory()
         Bank.objects.create(user=other_user, name="Other Bank", amount=Decimal("0.00"))
         response = self.client.get("/api/banks/")
-        assert len(response.data) == 1
-        assert response.data[0]["name"] == "Test Bank"
+        assert len(response.data["results"]) == 1
+        assert response.data["results"][0]["name"] == "Test Bank"
 
     def test_base_user_viewset_create(self):
         data = {

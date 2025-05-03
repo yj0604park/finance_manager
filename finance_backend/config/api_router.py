@@ -1,7 +1,8 @@
 from django.conf import settings
+from django.urls import path
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
-from finance_backend.money.api.views import (
+from finance_backend.money.api.viewsets import (
     AccountSnapshotViewSet,
     AccountViewSet,
     BankViewSet,
@@ -12,6 +13,10 @@ from finance_backend.money.api.views import (
     RetailerViewSet,
     SalaryViewSet,
     TransactionViewSet,
+)
+from finance_backend.money.api.views import (
+    LinkTransferView,
+    DashboardRecentTransactionsView,
 )
 from finance_backend.users.api.views import UserViewSet
 
@@ -29,6 +34,12 @@ router.register("items", ItemViewSet)
 router.register("item-prices", ItemPriceViewSet)
 router.register("retailers", RetailerViewSet)
 
-
 app_name = "api"
-urlpatterns = router.urls
+urlpatterns = router.urls + [
+    path("link-transfer/", LinkTransferView.as_view(), name="link-transfer"),
+    path(
+        "dashboard-recent-transactions/",
+        DashboardRecentTransactionsView.as_view(),
+        name="dashboard-recent-transactions",
+    ),
+]
