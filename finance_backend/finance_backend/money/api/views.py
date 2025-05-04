@@ -6,11 +6,16 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.db import transaction as db_transaction
 from datetime import timedelta
+from rest_framework.decorators import action
 
+from finance_backend.money.api.serializers.transactions_serializers import (
+    TransactionSerializer,
+)
 from finance_backend.money.api.serializers.dashboard_serializers import (
     DashboardRecentTransactionSerializer,
 )
 from finance_backend.money.models.transactions import Transaction
+from finance_backend.money.models.accounts import Account
 
 
 # 계좌 이체 거래 연결을 위한 API View
@@ -144,3 +149,24 @@ class DashboardRecentTransactionsView(generics.ListAPIView):
             .select_related("account", "retailer")
             .order_by("-date", "-id")[:10]
         )  # 최근 10개
+
+
+class TransactionViewSet(APIView):
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="account/(?P<account_id>[^/.]+)/with-balance",
+    )
+    def account_transactions_with_balance(self, request, account_id=None):
+        account = get_object_or_404(Account, pk=account_id, user=request.user)
+        transactions = Transaction.objects.filter(account=account).order_by(
+            "date", "amount", "id"
+        )
+        result = []
+        balance = 0
+        for tx in transactions:
+            balance += tx.amount
+            tx_data = TransactionSerializer(tx).data
+            tx_data["balance"] = str(balance)
+            result.append(tx_data)
+        return Response(result, status=status.HTTP_200_OK)

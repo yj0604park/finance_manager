@@ -1,6 +1,6 @@
 from django.db import transaction as db_transaction
-from django.db.models import F
-from django.db.models.signals import post_save, pre_save
+from django.db.models import F, Q
+from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
 
 from .models.accounts import Account
@@ -77,3 +77,69 @@ def update_account_balance_on_transaction_save(
                         amount=F("amount") + new_amount
                     )
                 )
+
+
+def recalculate_account_transaction_balances(account_id, from_transaction=None):
+    """
+    특정 계좌의 거래 중 from_transaction(포함) 이후의 거래만 balance를 누적 계산해 저장합니다.
+    from_transaction이 None이면 전체를 갱신합니다.
+    """
+    from .models.transactions import Transaction  # 순환참조 방지
+
+    qs = Transaction.objects.filter(account_id=account_id).order_by(
+        "date", "amount", "id"
+    )
+    prev_balance = 0
+    started = from_transaction is None
+    for tx in qs:
+        if not started:
+            if tx.pk == from_transaction.pk:
+                started = True
+                # from_transaction 이전까지의 balance 누적
+                prev_balance = tx.balance - tx.amount
+        if started:
+            prev_balance += tx.amount
+            if tx.balance != prev_balance:
+                tx.balance = prev_balance
+                tx.save(update_fields=["balance"])
+
+
+def get_from_transaction(instance, deleted=False):
+    """
+    변경된 거래(생성/수정/삭제) 이후의 거래부터 balance를 갱신하기 위해 기준 거래를 찾음.
+    삭제의 경우, 삭제된 거래의 pk가 없으므로 date/amount/id로 가장 가까운 거래를 찾음.
+    """
+    from .models.transactions import Transaction
+
+    if not deleted:
+        return instance
+    # 삭제의 경우: 해당 거래와 동일/이후 거래 중 가장 첫 번째 거래
+    qs = (
+        Transaction.objects.filter(account_id=instance.account_id)
+        .filter(
+            Q(date__gt=instance.date)
+            | Q(date=instance.date, amount__gt=instance.amount)
+            | Q(date=instance.date, amount=instance.amount, id__gt=instance.id)
+        )
+        .order_by("date", "amount", "id")
+    )
+    return qs.first() if qs.exists() else None
+
+
+@receiver(post_save, sender=Transaction)
+def update_transaction_balances_on_save(sender, instance, **kwargs):
+    db_transaction.on_commit(
+        lambda: recalculate_account_transaction_balances(
+            instance.account_id, from_transaction=instance
+        )
+    )
+
+
+@receiver(post_delete, sender=Transaction)
+def update_transaction_balances_on_delete(sender, instance, **kwargs):
+    from_tx = get_from_transaction(instance, deleted=True)
+    db_transaction.on_commit(
+        lambda: recalculate_account_transaction_balances(
+            instance.account_id, from_transaction=from_tx
+        )
+    )
