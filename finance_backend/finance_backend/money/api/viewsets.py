@@ -1,6 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, serializers, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from finance_backend.money.api.serializers.accounts_serializers import (
     AccountSerializer,
@@ -67,6 +71,10 @@ class AccountSnapshotViewSet(BaseUserViewSet):
     ordering = ["-date"]
 
 
+class TransactionWithBalanceSerializer(TransactionSerializer):
+    balance = serializers.DecimalField(max_digits=15, decimal_places=2, read_only=True)
+
+
 class TransactionViewSet(BaseUserViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
@@ -74,6 +82,43 @@ class TransactionViewSet(BaseUserViewSet):
     ordering_fields = ["date", "amount", "created_at", "balance"]
     ordering = ["-date", "-id"]
     pagination_class = TransactionPagination
+
+    @extend_schema(
+        summary="계좌별 거래 내역 (잔액 포함)",
+        description="특정 계좌의 모든 거래 내역을 날짜 오름차순으로 조회하며, 각 거래 시점의 누적 잔액(balance)을 포함합니다.",
+        parameters=[
+            OpenApiParameter(
+                name="account_id",
+                location=OpenApiParameter.PATH,
+                description="계좌 ID",
+                required=True,
+                type=int,
+            )
+        ],
+        responses={200: TransactionWithBalanceSerializer(many=True)},
+    )
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="account/(?P<account_id>[^/.]+)/with-balance",
+    )
+    def account_transactions_with_balance(self, request, account_id=None):
+        account = get_object_or_404(Account, pk=account_id, user=request.user)
+        transactions = Transaction.objects.filter(account=account).order_by(
+            "date", "amount", "id"
+        )
+        result = []
+        balance = 0
+        for tx in transactions:
+            balance += tx.amount
+            if tx.balance != balance:
+                tx.balance = balance
+                tx.save(update_fields=["balance"])
+            # Create a temporary dict or object to hold data including balance
+            tx_data = {**TransactionSerializer(tx).data, "balance": str(balance)}
+            result.append(tx_data)
+        # Return the result list directly as it already has the correct structure
+        return Response(result, status=status.HTTP_200_OK)
 
 
 class ItemTransactionViewSet(BaseUserViewSet):

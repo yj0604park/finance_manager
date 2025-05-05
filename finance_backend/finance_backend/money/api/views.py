@@ -6,7 +6,6 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.db import transaction as db_transaction
 from datetime import timedelta
-from rest_framework.decorators import action
 import openai
 import json
 import re
@@ -15,17 +14,12 @@ from drf_spectacular.utils import (
     extend_schema,
     OpenApiExample,
     OpenApiResponse,
-    OpenApiParameter,
 )
 
-from finance_backend.money.api.serializers.transactions_serializers import (
-    TransactionSerializer,
-)
 from finance_backend.money.api.serializers.dashboard_serializers import (
     DashboardRecentTransactionSerializer,
 )
 from finance_backend.money.models.transactions import Transaction
-from finance_backend.money.models.accounts import Account
 
 
 class LinkTransferSerializer(serializers.Serializer):
@@ -45,10 +39,6 @@ class ParsedTransactionSerializer(serializers.Serializer):
 
 class TransactionParseRawResponseSerializer(serializers.Serializer):
     transactions = ParsedTransactionSerializer(many=True)
-
-
-class TransactionWithBalanceSerializer(TransactionSerializer):
-    balance = serializers.DecimalField(max_digits=15, decimal_places=2, read_only=True)
 
 
 # 계좌 이체 거래 연결을 위한 API View
@@ -214,43 +204,6 @@ class DashboardRecentTransactionsView(generics.ListAPIView):
             .select_related("account", "retailer")
             .order_by("-date", "-id")[:10]
         )  # 최근 10개
-
-
-class TransactionViewSet(APIView):
-    @extend_schema(
-        summary="계좌별 거래 내역 (잔액 포함)",
-        description="특정 계좌의 모든 거래 내역을 날짜 오름차순으로 조회하며, 각 거래 시점의 누적 잔액(balance)을 포함합니다.",
-        parameters=[
-            OpenApiParameter(
-                name="account_id",
-                location=OpenApiParameter.PATH,
-                description="계좌 ID",
-                required=True,
-                type=int,
-            )
-        ],
-        responses={200: TransactionWithBalanceSerializer(many=True)},
-    )
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path="account/(?P<account_id>[^/.]+)/with-balance",
-    )
-    def account_transactions_with_balance(self, request, account_id=None):
-        account = get_object_or_404(Account, pk=account_id, user=request.user)
-        transactions = Transaction.objects.filter(account=account).order_by(
-            "date", "amount", "id"
-        )
-        result = []
-        balance = 0
-        for tx in transactions:
-            balance += tx.amount
-            tx_data = TransactionSerializer(tx).data
-            tx_data["balance"] = str(balance)
-            result.append(tx_data)
-        # Use the specific serializer for the response schema
-        serializer = TransactionWithBalanceSerializer(result, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @extend_schema(
