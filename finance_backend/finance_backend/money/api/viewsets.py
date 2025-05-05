@@ -117,6 +117,9 @@ class TransactionViewSet(BaseUserViewSet):
             # Create a temporary dict or object to hold data including balance
             tx_data = {**TransactionSerializer(tx).data, "balance": str(balance)}
             result.append(tx_data)
+        if account.amount != balance:
+            account.amount = balance
+            account.save(update_fields=["amount"])
         # Return the result list directly as it already has the correct structure
         return Response(result, status=status.HTTP_200_OK)
 
