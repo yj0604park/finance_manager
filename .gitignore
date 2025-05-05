@@ -4,6 +4,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+finance_backend/.envs/.local/.openai
+
 # C extensions
 *.so
 

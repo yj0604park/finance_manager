@@ -24,7 +24,7 @@
 - [x] 거래 내역 조회 API (account, date, type, amount, year, month 필터링 추가)
 - [x] 거래 생성 API (계좌 잔액 자동 업데이트)
 - [x] 거래 수정 API (계좌 잔액 자동 업데이트)
-- [ ] 거래 삭제 API (계좌 잔액 자동 업데이트 추가 필요)
+- [x] 거래 삭제 API (계좌 잔액 자동 업데이트 추가 필요)
 - [x] 거래 필터링/검색 API
 - [ ] 거래 내역 내보내기 API (CSV, PDF, Excel)
 - [ ] 반복 거래 설정/관리 API
@@ -238,3 +238,15 @@
 6. 코드 구조 개선 (중/장기)
    - 서비스 계층 도입
    - 앱 분리 검토
+
+## 진행 완료
+- 거래(Transaction) 생성/수정/삭제 시 balance 필드 자동 갱신 (최적화 적용)
+- OpenAI API를 활용한 거래 내역(raw text) 파싱 API 구현
+  - POST /api/money/transactions/parse-raw/
+  - 입력: raw_text
+  - 출력: 파싱된 거래 리스트 (date, retailer, amount 등)
+
+## 앞으로 할 일
+- 프론트엔드와 연동 테스트
+- 파싱 결과를 바로 Transaction으로 저장하는 기능 추가(선택)
+- 파싱 프롬프트/출력 포맷 커스터마이즈(필요시)

@@ -17,8 +17,10 @@ from finance_backend.money.api.viewsets import (
 from finance_backend.money.api.views import (
     LinkTransferView,
     DashboardRecentTransactionsView,
+    TransactionParseRawView,
 )
 from finance_backend.users.api.views import UserViewSet
+
 
 router = DefaultRouter() if settings.DEBUG else SimpleRouter()
 
@@ -41,5 +43,10 @@ urlpatterns = router.urls + [
         "dashboard-recent-transactions/",
         DashboardRecentTransactionsView.as_view(),
         name="dashboard-recent-transactions",
+    ),
+    path(
+        "parse-raw/",
+        TransactionParseRawView.as_view(),
+        name="parse-raw",
     ),
 ]
