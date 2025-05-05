@@ -330,7 +330,7 @@ class TransactionParseRawView(APIView):
             return Response({"error": "raw_text is required"}, status=400)
 
         prompt = f"""
-아래의 거래 내역에서 각 거래별로 날짜(date), 판매처(retailer), 금액(amount)을 추출해서 JSON 배열로 만들어줘.\n금액은 부호까지 정확히 다만 통화 기호는 제거해줘줘, 날짜는 YYYY-MM-DD로 변환해줘.\n\n거래 내역:\n{raw_text}
+아래의 거래 내역에서 각 거래별로 날짜(date), 판매처(retailer), 금액(amount)을 추출해서 JSON 배열로 만들어줘.\n금액은 부호는 주어진 부호를 따라줘 (은행마다 지출과 입금 부호가 다르므로 frontend에서 처리해줄 것 임). 다만 통화 기호는 제거해줘, 날짜는 YYYY-MM-DD로 변환해줘.\n\n거래 내역:\n{raw_text}
 """
         client = openai.OpenAI()  # 환경변수 OPENAI_API_KEY 사용
         response = client.chat.completions.create(
