@@ -44,6 +44,7 @@ class TransactionCategory(models.TextChoices):
     CLOTHING = "CLOTHING", "옷"
     PRESENT = "PRESENT", "선물"
     TRANSPORTATION = "CAR", "이동수단"
+    COMMUNICATION = "COMMUNICATION", "통신"
     HOUSING = "HOUSING", "월세"
     LEISURE = "LEISURE", "여가"
     MEDICAL = "MEDICAL", "의료"
