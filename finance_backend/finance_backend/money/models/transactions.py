@@ -24,7 +24,7 @@ class Transaction(BaseUserModel, BaseTimeStampModel, BaseAmountModel):
         decimal_places=2,
         default=0,
     )
-    note = models.TextField(default="")
+    note = models.TextField(default="", blank=True)
 
     transaction_type = models.CharField(
         max_length=30,
@@ -81,7 +81,7 @@ class ItemTransaction(BaseUserModel, BaseTimeStampModel):
         blank=True,
     )
 
-    note = models.TextField(default="")
+    note = models.TextField(default="", blank=True)
 
     def __str__(self):
         return (
