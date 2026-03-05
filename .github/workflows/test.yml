@@ -19,10 +19,10 @@ jobs:
         node-version: [22.x]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
@@ -46,7 +46,7 @@ jobs:
           echo '{"total":{"lines":{"total":100,"covered":75,"skipped":0,"pct":75},"statements":{"total":100,"covered":75,"skipped":0,"pct":75},"functions":{"total":50,"covered":35,"skipped":0,"pct":70},"branches":{"total":50,"covered":35,"skipped":0,"pct":70}}}' > coverage/coverage-final.json
 
       - name: Upload coverage report to GitHub
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-report
           path: ./finance_frontend/coverage/
